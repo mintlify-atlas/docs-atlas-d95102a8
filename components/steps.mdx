@@ -1,0 +1,200 @@
+---
+title: Steps
+description: Step indicator for multi-step workflows and order timelines.
+---
+
+## Overview
+
+Steps displays progress through a multi-step process. It supports horizontal and vertical layouts, descriptions, and responsive breakpoints. Use it for onboarding flows, order status tracking, and wizard-style forms.
+
+## Usage
+
+```tsx
+import { AxSteps } from "@axmed/design-system"
+
+function OnboardingFlow() {
+  const [current, setCurrent] = useState(0)
+
+  const steps = [
+    { title: "Business Profile" },
+    { title: "Commercial Activity" },
+    { title: "Quality Assurance" },
+  ]
+
+  return (
+    <AxSteps current={current} items={steps} />
+  )
+}
+```
+
+## With Descriptions
+
+```tsx
+const steps = [
+  { title: "Submitted", description: "Jan 5, 2025" },
+  { title: "Under Quotation", description: "Jan 6, 2025" },
+  { title: "Quotation Ready", description: "Jan 8, 2025" },
+  { title: "Under Evaluation" },
+  { title: "Completed" },
+]
+
+<AxSteps current={2} items={steps} />
+```
+
+## Vertical Layout
+
+Use vertical orientation for timeline-style displays:
+
+```tsx
+<AxSteps
+  orientation="vertical"
+  current={3}
+  items={[
+    { title: "Order Placed", description: "Jan 5, 2025 — 09:30 AM" },
+    { title: "Quotation Received", description: "Jan 6, 2025 — 02:15 PM" },
+    { title: "Payment Confirmed", description: "Jan 7, 2025 — 10:00 AM" },
+    { title: "Shipping Arranged", description: "In progress" },
+    { title: "Delivered" },
+  ]}
+/>
+```
+
+## Sizes
+
+- **`sm`** — Compact (for inside modals and cards)
+- **`md`** — Standard (default)
+
+```tsx
+<AxSteps
+  size="sm"
+  current={1}
+  items={[
+    { title: "Select Products" },
+    { title: "Review Quantities" },
+    { title: "Submit Bid" },
+  ]}
+/>
+```
+
+## Onboarding Flow
+
+```tsx
+const [current, setCurrent] = useState(0)
+
+const steps = [
+  { title: "Business Profile" },
+  { title: "Commercial Activity" },
+  { title: "Quality Assurance" },
+  { title: "Operating Standards" },
+  { title: "Financial Standards" },
+]
+
+return (
+  <Flex vertical gap={24}>
+    <AxSteps current={current} items={steps} />
+    
+    <div style={{ padding: 40, background: "var(--neutral-50)" }}>
+      Step {current + 1}: {steps[current].title}
+    </div>
+    
+    <Flex justify="space-between">
+      <AxButton
+        variant="ghost"
+        onClick={() => setCurrent(Math.max(0, current - 1))}
+        disabled={current === 0}
+      >
+        Back
+      </AxButton>
+      <AxButton
+        onClick={() => setCurrent(Math.min(steps.length - 1, current + 1))}
+        disabled={current === steps.length - 1}
+      >
+        {current === steps.length - 1 ? "Submit" : "Next"}
+      </AxButton>
+    </Flex>
+  </Flex>
+)
+```
+
+## Order Status
+
+```tsx
+<AxSteps
+  current={2}
+  items={[
+    { title: "Submitted", description: "Jan 5, 2025" },
+    { title: "Under Quotation", description: "Jan 6, 2025" },
+    { title: "Quotation Ready", description: "Jan 8, 2025" },
+    { title: "Under Evaluation" },
+    { title: "Logistics Arrangement" },
+    { title: "Shipping Confirmed" },
+    { title: "Completed" },
+  ]}
+  labelPlacement="vertical"
+  size="sm"
+/>
+```
+
+## Props
+
+<ResponseField name="items" type="StepItem[]" required>
+  Array of step items. Each item:
+  
+  - `title: string` — Step label
+  - `description?: string` — Optional subtitle (e.g., date, time)
+  - `icon?: ReactNode` — Custom icon (default: step number)
+</ResponseField>
+
+<ResponseField name="current" type="number" default="0">
+  Index of the currently active step (0-based)
+</ResponseField>
+
+<ResponseField name="size" type="'sm' | 'md'" default="'md'">
+  Step indicator size:
+  - `sm`: compact (inside modals/cards)
+  - `md`: standard (default)
+</ResponseField>
+
+<ResponseField name="orientation" type="'horizontal' | 'vertical'" default="'horizontal'">
+  Layout direction:
+  - `horizontal`: steps arranged left-to-right (auto-collapses to vertical on mobile)
+  - `vertical`: timeline-style layout
+</ResponseField>
+
+<ResponseField name="labelPlacement" type="'horizontal' | 'vertical'">
+  Label position relative to the step icon (Ant Design prop)
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional class name
+</ResponseField>
+
+## Best Practices
+
+<Check>Use horizontal layout for onboarding and wizards (3-5 steps)</Check>
+<Check>Use vertical layout for order timelines and activity logs</Check>
+<Check>Show descriptions for dates, times, or additional context</Check>
+<Check>Keep step titles short (1-3 words) for readability</Check>
+
+<Warning>Don't use more than 7 steps in horizontal mode — it gets cramped</Warning>
+<Warning>Avoid skipping steps — users should always progress linearly</Warning>
+
+## Responsive Behavior
+
+Horizontal steps automatically collapse to vertical on small screens (< 768px).
+
+## Accessibility
+
+- Uses Ant Design Steps component with built-in ARIA attributes
+- Current step is announced as "Step X of Y"
+- Completed steps are visually distinguished
+
+## API Reference
+
+See the [Steps API](/api/steps) for the complete TypeScript interface.
+
+## Related Components
+
+- [Button](/components/button) — Use for step navigation (Back/Next)
+- [Card](/components/card) — Wrap steps in a card for visual containment
+- [Modal](/components/modal) — Use steps inside modals for multi-step forms

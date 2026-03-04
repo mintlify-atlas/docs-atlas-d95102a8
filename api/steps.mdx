@@ -1,0 +1,321 @@
+---
+title: "AxSteps"
+description: "A step indicator component for multi-step processes, wizards, and order tracking."
+---
+
+## Overview
+
+`AxSteps` is a step indicator component that visualizes progress through a multi-step process. It supports both horizontal and vertical orientations, two sizes, and automatically adapts to mobile screens.
+
+## Import
+
+```tsx
+import AxSteps from "@axmed/design-system/components/AxSteps"
+```
+
+## Basic Usage
+
+```tsx
+const steps = [
+  { title: "Select Products" },
+  { title: "Review Quantities" },
+  { title: "Submit Bid" },
+]
+
+<AxSteps current={1} items={steps} />
+```
+
+## Props
+
+<ParamField path="items" type="StepItem[]" required>
+  Array of step items. Each item should have at least a `title`. Inherited from Ant Design Steps component.
+</ParamField>
+
+<ParamField path="current" type="number" default={0}>
+  Index of the currently active step (0-based). Steps before this index are marked as completed, this step is active, and steps after are waiting.
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'md'" default="'md'">
+  Step indicator size:
+  - `"sm"` - Compact size for dense layouts
+  - `"md"` - Standard size (default)
+</ParamField>
+
+<ParamField path="orientation" type="'horizontal' | 'vertical'" default="'horizontal'">
+  Layout direction:
+  - `"horizontal"` - Steps arranged horizontally (auto-collapses to vertical on mobile)
+  - `"vertical"` - Timeline-style vertical layout
+</ParamField>
+
+<ParamField path="status" type="'wait' | 'process' | 'finish' | 'error'">
+  Status of the current step. Inherited from Ant Design Steps.
+</ParamField>
+
+<ParamField path="labelPlacement" type="'horizontal' | 'vertical'">
+  Position of step labels relative to the step indicator. Inherited from Ant Design Steps.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS class name.
+</ParamField>
+
+## StepItem
+
+Each item in the `items` array can have the following properties:
+
+<Expandable title="StepItem Properties">
+
+<ParamField path="title" type="string | React.ReactNode" required>
+  Step title displayed below or beside the step indicator.
+</ParamField>
+
+<ParamField path="description" type="string | React.ReactNode">
+  Optional description shown below the title (e.g., date, time, or additional context).
+</ParamField>
+
+<ParamField path="icon" type="React.ReactNode">
+  Custom icon to replace the default step number.
+</ParamField>
+
+<ParamField path="status" type="'wait' | 'process' | 'finish' | 'error'">
+  Override the status for this specific step.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable interaction with this step.
+</ParamField>
+
+</Expandable>
+
+## Examples
+
+### Onboarding Wizard
+
+```tsx
+import { useState } from "react"
+
+function OnboardingWizard() {
+  const [current, setCurrent] = useState(0)
+
+  const steps = [
+    { title: "Business Profile" },
+    { title: "Commercial Activity" },
+    { title: "Quality Assurance" },
+    { title: "Operating Standards" },
+    { title: "Financial Standards" },
+  ]
+
+  return (
+    <div>
+      <AxSteps current={current} items={steps} />
+      
+      <div style={{ marginTop: 32 }}>
+        {/* Step content */}
+        <StepContent step={current} />
+      </div>
+
+      <div style={{ marginTop: 24, display: "flex", justifyContent: "space-between" }}>
+        <AxButton
+          variant="ghost"
+          onClick={() => setCurrent(current - 1)}
+          disabled={current === 0}
+        >
+          Back
+        </AxButton>
+        <AxButton
+          onClick={() => setCurrent(current + 1)}
+          disabled={current === steps.length - 1}
+        >
+          {current === steps.length - 1 ? "Submit" : "Next"}
+        </AxButton>
+      </div>
+    </div>
+  )
+}
+```
+
+### Order Status Tracker
+
+```tsx
+const orderSteps = [
+  { title: "Submitted", description: "Jan 5, 2025" },
+  { title: "Under Quotation", description: "Jan 6, 2025" },
+  { title: "Quotation Ready", description: "Jan 8, 2025" },
+  { title: "Under Evaluation" },
+  { title: "Logistics Arrangement" },
+  { title: "Shipping Confirmed" },
+  { title: "Completed" },
+]
+
+<AxSteps
+  current={2}
+  items={orderSteps}
+  size="sm"
+  labelPlacement="vertical"
+/>
+```
+
+### Vertical Timeline
+
+Use vertical orientation for timeline-style displays:
+
+```tsx
+const timeline = [
+  { title: "Order Placed", description: "Jan 5, 2025 — 09:30 AM" },
+  { title: "Quotation Received", description: "Jan 6, 2025 — 02:15 PM" },
+  { title: "Payment Confirmed", description: "Jan 7, 2025 — 10:00 AM" },
+  { title: "Shipping Arranged", description: "In progress" },
+  { title: "Delivered" },
+]
+
+<AxSteps
+  orientation="vertical"
+  current={3}
+  items={timeline}
+/>
+```
+
+### With Error State
+
+```tsx
+const steps = [
+  { title: "Account Details" },
+  { title: "Verification", status: "error" as const },
+  { title: "Confirmation" },
+]
+
+<AxSteps
+  current={1}
+  status="error"
+  items={steps}
+/>
+```
+
+### Compact Size
+
+Use `size="sm"` for dense layouts:
+
+```tsx
+const compactSteps = [
+  { title: "Select Products" },
+  { title: "Review Quantities" },
+  { title: "Submit Bid" },
+]
+
+<AxSteps
+  current={1}
+  items={compactSteps}
+  size="sm"
+/>
+```
+
+### With Custom Icons
+
+```tsx
+import { UserOutlined, SolutionOutlined, LoadingOutlined, SmileOutlined } from "@ant-design/icons"
+
+const stepsWithIcons = [
+  { title: "Register", icon: <UserOutlined /> },
+  { title: "Verify", icon: <SolutionOutlined /> },
+  { title: "Processing", icon: <LoadingOutlined /> },
+  { title: "Done", icon: <SmileOutlined /> },
+]
+
+<AxSteps current={2} items={stepsWithIcons} />
+```
+
+## Sizes
+
+### Small
+
+Compact size for dense layouts:
+
+```tsx
+<AxSteps size="sm" current={1} items={steps} />
+```
+
+### Medium (Default)
+
+Standard size:
+
+```tsx
+<AxSteps size="md" current={1} items={steps} />
+```
+
+## Orientations
+
+### Horizontal
+
+Default layout. Automatically collapses to vertical on small screens:
+
+```tsx
+<AxSteps orientation="horizontal" current={1} items={steps} />
+```
+
+### Vertical
+
+Timeline-style vertical layout:
+
+```tsx
+<AxSteps orientation="vertical" current={1} items={steps} />
+```
+
+## Common Use Cases
+
+### Multi-Step Forms
+
+Use for onboarding, registration, or checkout flows:
+
+```tsx
+const formSteps = [
+  { title: "Personal Info" },
+  { title: "Business Details" },
+  { title: "Verification" },
+  { title: "Review & Submit" },
+]
+```
+
+### Order Tracking
+
+Visualize order fulfillment progress:
+
+```tsx
+const orderStatus = [
+  { title: "Submitted", description: "Jan 5, 2025" },
+  { title: "Under Quotation", description: "Jan 6, 2025" },
+  { title: "Quotation Ready", description: "Jan 8, 2025" },
+  { title: "Under Evaluation", description: "Pending" },
+  { title: "Completed" },
+]
+```
+
+### Application Status
+
+Show progress of tender, bid, or application submissions:
+
+```tsx
+const bidStatus = [
+  { title: "Draft" },
+  { title: "Submitted" },
+  { title: "Under Review" },
+  { title: "Awarded" },
+]
+```
+
+## Mobile Responsiveness
+
+Horizontal steps automatically collapse to vertical layout on mobile devices when `orientation="horizontal"` is used. This ensures optimal readability on smaller screens.
+
+## Accessibility
+
+- Uses semantic HTML structure
+- Current step is marked with appropriate ARIA attributes
+- Keyboard navigation support
+- Color is not the only indicator (uses numbers/icons + color)
+- Completed steps show checkmark icons
+
+## Related Components
+
+- [AxButton](/api/button) - Navigation buttons for wizards
+- [AxModal](/api/modal) - Use steps inside modals for multi-step forms
+- [AxDrawer](/api/drawer) - Use steps inside drawers for guided flows

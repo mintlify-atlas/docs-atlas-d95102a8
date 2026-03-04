@@ -1,0 +1,264 @@
+---
+title: Uploader
+description: Drag-and-drop file upload zone with validation and size presets.
+---
+
+## Overview
+
+Uploader provides a drag-and-drop zone for file uploads with automatic validation, max file size enforcement, and customizable descriptions. It's designed for portfolio uploads, document submissions, and image attachments.
+
+## Usage
+
+```tsx
+import { AxUploader } from "@axmed/design-system"
+import { useState } from "react"
+
+function PortfolioUpload() {
+  const [file, setFile] = useState<File | null>(null)
+
+  return (
+    <AxUploader
+      description="Drag & drop or choose file to upload"
+      hint="Supports .xlsx, .xls and .csv (max 10MB)"
+      accept=".xlsx,.xls,.csv"
+      maxSizeMB={10}
+      beforeUpload={(file) => {
+        setFile(file)
+        return false  // Prevent auto-upload
+      }}
+    />
+  )
+}
+```
+
+## File Validation
+
+```tsx
+<AxUploader
+  hint="Only .csv and .xlsx accepted — max 2MB"
+  accept=".csv,.xlsx"
+  maxSizeMB={2}
+  onReject={(file, reason) => {
+    toast.error(reason)  // Show error toast
+  }}
+  beforeUpload={(file) => {
+    console.log("File selected:", file.name)
+    return false
+  }}
+/>
+```
+
+## Sizes
+
+- **`sm`** — Compact (inside modals)
+- **`md`** — Standard (default)
+- **`lg`** — Full-width page uploader
+
+```tsx
+<AxUploader size="sm" hint="max 10MB" />
+<AxUploader size="md" hint="max 10MB" />
+<AxUploader size="lg" hint="max 10MB" />
+```
+
+## With AxFileItem
+
+Combine Uploader with AxFileItem to show selected files:
+
+```tsx
+const [file, setFile] = useState<File | null>(null)
+
+return (
+  <Flex vertical gap={16}>
+    {!file ? (
+      <AxUploader
+        hint="Supports .xlsx, .xls and .csv files (max 10MB)"
+        accept=".xlsx,.xls,.csv"
+        maxSizeMB={10}
+        beforeUpload={(f) => {
+          setFile(f)
+          return false
+        }}
+      />
+    ) : (
+      <AxFileItem
+        name={file.name}
+        fileSize={file.size}
+        status="success"
+        onRemove={() => setFile(null)}
+      />
+    )}
+  </Flex>
+)
+```
+
+## Multiple Files
+
+```tsx
+const [files, setFiles] = useState<File[]>([])
+
+return (
+  <Flex vertical gap={16}>
+    <AxUploader
+      description="Drag & drop or choose file to upload"
+      hint="Supports .pdf, .jpg, .png (max 5MB)"
+      accept=".pdf,.jpg,.jpeg,.png"
+      maxSizeMB={5}
+      multiple
+      beforeUpload={(file) => {
+        setFiles(prev => [...prev, file])
+        return false
+      }}
+    />
+    
+    {files.length > 0 && (
+      <Flex vertical gap={8}>
+        {files.map((f, i) => (
+          <AxFileItem
+            key={i}
+            name={f.name}
+            fileSize={f.size}
+            status="success"
+            onRemove={() => setFiles(prev => prev.filter((_, j) => j !== i))}
+          />
+        ))}
+      </Flex>
+    )}
+  </Flex>
+)
+```
+
+## Inside Modal
+
+```tsx
+const [open, setOpen] = useState(false)
+const [file, setFile] = useState<File | null>(null)
+
+return (
+  <>
+    <AxButton onClick={() => setOpen(true)}>Upload Portfolio</AxButton>
+    
+    <AxModal
+      title="Upload Your Portfolio"
+      description="Upload a CSV or Excel file with your product catalog."
+      open={open}
+      onCancel={() => {
+        setOpen(false)
+        setFile(null)
+      }}
+      footer={
+        <Flex justify="flex-end" gap={8}>
+          <AxButton variant="secondary" onClick={() => setOpen(false)}>
+            Cancel
+          </AxButton>
+          <AxButton disabled={!file} onClick={() => uploadFile(file)}>
+            Continue
+          </AxButton>
+        </Flex>
+      }
+    >
+      <Flex vertical gap={16}>
+        {!file ? (
+          <AxUploader
+            hint="Supports .xlsx, .xls and .csv files (max 10MB)"
+            accept=".xlsx,.xls,.csv"
+            maxSizeMB={10}
+            size="sm"
+            beforeUpload={(f) => {
+              setFile(f)
+              return false
+            }}
+          />
+        ) : (
+          <AxFileItem
+            name={file.name}
+            fileSize={file.size}
+            status="success"
+            onRemove={() => setFile(null)}
+          />
+        )}
+      </Flex>
+    </AxModal>
+  </>
+)
+```
+
+## Props
+
+<ResponseField name="description" type="string" default="'Drag & drop or choose file to upload'">
+  Main text inside the dragger area. The text "choose file" is automatically styled as a link.
+</ResponseField>
+
+<ResponseField name="hint" type="string">
+  Hint text below the description — file type and size constraints.
+  
+  Example: `"Supports .xlsx, .xls and .csv (max 10MB)"`
+</ResponseField>
+
+<ResponseField name="icon" type="ReactNode">
+  Icon displayed in the dragger area. Default: `CloudUploadOutlined`
+</ResponseField>
+
+<ResponseField name="maxSizeMB" type="number">
+  Maximum file size in megabytes. Files exceeding this limit are rejected and `onReject` is called.
+</ResponseField>
+
+<ResponseField name="onReject" type="(file: File, reason: string) => void">
+  Called when a file is rejected (e.g. exceeds `maxSizeMB`). Use to show a toast or error message.
+</ResponseField>
+
+<ResponseField name="size" type="'sm' | 'md' | 'lg'" default="'md'">
+  Size preset — controls padding and icon sizing:
+  - `sm`: compact (inside modals)
+  - `md`: standard (default)
+  - `lg`: full-width page
+</ResponseField>
+
+<ResponseField name="showFileList" type="boolean" default="false">
+  Show the built-in file list after upload. Default: `false` — consumers handle the file-selected state themselves.
+</ResponseField>
+
+<ResponseField name="accept" type="string">
+  Accepted file types (MIME types or extensions). Example: `".xlsx,.xls,.csv"`
+</ResponseField>
+
+<ResponseField name="multiple" type="boolean">
+  Allow multiple file selection
+</ResponseField>
+
+<ResponseField name="beforeUpload" type="(file: File, fileList: File[]) => boolean | Promise<File>">
+  Called before upload. Return `false` to prevent auto-upload and handle manually.
+</ResponseField>
+
+<ResponseField name="disabled" type="boolean">
+  Disable the upload zone
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional class name
+</ResponseField>
+
+## Best Practices
+
+<Check>Always set `maxSizeMB` to prevent users from uploading huge files</Check>
+<Check>Provide clear `hint` text with file types and size limits</Check>
+<Check>Use `size="sm"` inside modals to save space</Check>
+<Check>Return `false` from `beforeUpload` to handle uploads manually</Check>
+
+<Warning>Don't show the built-in file list (`showFileList={true}`) — use AxFileItem instead</Warning>
+<Warning>Always validate file types on the server — client-side validation can be bypassed</Warning>
+
+## Accessibility
+
+- Uses Ant Design Upload component with built-in keyboard support
+- Drag-and-drop zone is fully keyboard-accessible
+- File input has proper labels and ARIA attributes
+
+## API Reference
+
+See the [Uploader API](/api/uploader) for the complete TypeScript interface.
+
+## Related Components
+
+- [File Item](/components/file-item) — Display uploaded files with status
+- [Modal](/components/modal) — Use Uploader inside modals for workflows
+- [Button](/components/button) — Trigger upload modals

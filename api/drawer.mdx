@@ -1,0 +1,489 @@
+---
+title: AxDrawer
+description: Side panel component for forms, details, and multi-step flows
+---
+
+## Overview
+
+AxDrawer is a styled wrapper around Ant Design's Drawer component, providing preset sizes, loading states, and consistent styling with the design system. Use drawers for forms, detail views, profiles, and multi-step workflows.
+
+## Import
+
+```tsx
+import AxDrawer from "@/components/AxDrawer"
+```
+
+## Basic Usage
+
+```tsx
+import { useState } from "react"
+import AxDrawer from "@/components/AxDrawer"
+import AxButton from "@/components/AxButton"
+
+function Example() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <AxButton onClick={() => setOpen(true)}>Open Drawer</AxButton>
+      <AxDrawer
+        title="Drawer Title"
+        description="Additional context about this drawer"
+        open={open}
+        onClose={() => setOpen(false)}
+        footer={
+          <Flex justify="flex-end" gap={8}>
+            <AxButton variant="secondary" onClick={() => setOpen(false)}>
+              Cancel
+            </AxButton>
+            <AxButton onClick={() => setOpen(false)}>Save</AxButton>
+          </Flex>
+        }
+      >
+        Drawer content goes here
+      </AxDrawer>
+    </>
+  )
+}
+```
+
+## Props
+
+### AxDrawer-specific Props
+
+<ParamField path="description" type="React.ReactNode">
+  Short description rendered below the title in muted text. Provides additional context for the drawer content. Same pattern as AxModal and AxCard.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md' | 'lg'" default="'md'">
+  Preset widths:
+  - `xs`: 400px — quick actions, simple confirmations
+  - `sm`: 500px — detail views, bid summaries
+  - `md`: 600px — forms, multi-step flows
+  - `lg`: 640px — profiles, rich side panels
+  
+  You can still override with the `width` prop for custom sizes.
+</ParamField>
+
+<ParamField path="loading" type="boolean" default="false">
+  Show a loading spinner overlay over the drawer body. Use while fetching data or during async submission.
+</ParamField>
+
+### Common Drawer Props
+
+<ParamField path="open" type="boolean" required>
+  Whether the drawer is visible.
+</ParamField>
+
+<ParamField path="title" type="React.ReactNode">
+  The drawer title. Combined with `description` to form the header block.
+</ParamField>
+
+<ParamField path="placement" type="'left' | 'right' | 'top' | 'bottom'" default="'right'">
+  The placement of the drawer on the screen.
+</ParamField>
+
+<ParamField path="width" type="number | string">
+  Custom width of the drawer (when placement is left or right). Overrides the `size` preset.
+</ParamField>
+
+<ParamField path="height" type="number | string">
+  Custom height of the drawer (when placement is top or bottom).
+</ParamField>
+
+<ParamField path="footer" type="React.ReactNode">
+  Footer content, typically used for action buttons.
+</ParamField>
+
+<ParamField path="extra" type="React.ReactNode">
+  Extra actions displayed in the top-right corner of the drawer header.
+</ParamField>
+
+<ParamField path="onClose" type="(e: React.MouseEvent | React.KeyboardEvent) => void">
+  Callback when the drawer is closed (via close button, mask click, or Escape key).
+</ParamField>
+
+<ParamField path="rootClassName" type="string">
+  Additional class name for the drawer's root element.
+</ParamField>
+
+<ParamField path="closable" type="boolean" default="true">
+  Whether to show the close icon in the top right corner.
+</ParamField>
+
+<ParamField path="mask" type="boolean" default="true">
+  Whether to show the mask (backdrop).
+</ParamField>
+
+<ParamField path="maskClosable" type="boolean" default="true">
+  Whether clicking the mask closes the drawer.
+</ParamField>
+
+<ParamField path="keyboard" type="boolean" default="true">
+  Whether the Escape key closes the drawer.
+</ParamField>
+
+<ParamField path="destroyOnClose" type="boolean" default="false">
+  Whether to unmount child components when the drawer is closed.
+</ParamField>
+
+<ParamField path="destroyOnHidden" type="boolean" default="false">
+  Whether to destroy content when hidden (similar to destroyOnClose but also applies when transitioning).
+</ParamField>
+
+<ParamField path="afterOpenChange" type="(open: boolean) => void">
+  Callback when the open state changes, fired after animation completes.
+</ParamField>
+
+<ParamField path="zIndex" type="number" default="1000">
+  The z-index of the drawer.
+</ParamField>
+
+<ParamField path="push" type="boolean | { distance: number }" default="true">
+  Whether to push other drawers when this one opens. Can specify a custom push distance.
+</ParamField>
+
+<ParamField path="forceRender" type="boolean" default="false">
+  Whether to render the drawer content before it's opened for the first time.
+</ParamField>
+
+## Examples
+
+### Sizes
+
+AxDrawer provides four preset sizes optimized for different use cases:
+
+```tsx
+// Extra Small (400px) - quick actions
+<AxDrawer
+  size="xs"
+  title="Quick confirmation"
+  open={open}
+  onClose={() => setOpen(false)}
+/>
+
+// Small (500px) - detail views and summaries
+<AxDrawer
+  size="sm"
+  title="Bid Details"
+  description="Submitted by PharmaCorp Ltd · 3 days ago"
+  open={open}
+  onClose={() => setOpen(false)}
+>
+  {/* Bid summary content */}
+</AxDrawer>
+
+// Medium (600px) - forms and multi-step flows (default)
+<AxDrawer
+  size="md"
+  title="Review quantities"
+  description="Confirm the quantities you can supply before submitting."
+  open={open}
+  onClose={() => setOpen(false)}
+>
+  {/* Form content */}
+</AxDrawer>
+
+// Large (640px) - profiles and rich content
+<AxDrawer
+  size="lg"
+  title="Supplier Profile"
+  open={open}
+  onClose={() => setOpen(false)}
+>
+  {/* Profile content */}
+</AxDrawer>
+```
+
+### Detail View
+
+Use for read-only data display:
+
+```tsx
+<AxDrawer
+  title="Bid #BID-2024-0892"
+  description="Submitted by PharmaCorp Ltd · 3 days ago"
+  size="sm"
+  open={open}
+  onClose={() => setOpen(false)}
+  footer={
+    <Flex justify="flex-end" gap={8}>
+      <AxButton variant="secondary" onClick={() => setOpen(false)}>
+        Reject
+      </AxButton>
+      <AxButton onClick={handleAccept}>Accept Bid</AxButton>
+    </Flex>
+  }
+>
+  <Flex vertical gap={24}>
+    <Flex justify="space-between" align="center">
+      <AxText variant="body-sm" color="secondary">Status</AxText>
+      <AxTag tone="info" dot>In Review</AxTag>
+    </Flex>
+    
+    <Divider />
+    
+    {/* Line items */}
+    <Flex vertical gap={12}>
+      <AxText variant="body-sm" weight="medium">Line Items</AxText>
+      {items.map(item => (
+        <div key={item.id} style={{ background: "var(--neutral-50)", borderRadius: 8, padding: "12px 16px" }}>
+          <Flex justify="space-between">
+            <AxText variant="body-sm" weight="medium">{item.name}</AxText>
+            <AxText variant="body-sm" weight="semibold">{item.total}</AxText>
+          </Flex>
+        </div>
+      ))}
+    </Flex>
+  </Flex>
+</AxDrawer>
+```
+
+### Form Drawer
+
+Use for input collection:
+
+```tsx
+<AxDrawer
+  title="Review quantities"
+  description="Confirm the quantities you can supply before submitting."
+  size="md"
+  open={open}
+  onClose={() => setOpen(false)}
+  footer={
+    <Flex justify="space-between">
+      <AxButton variant="ghost" onClick={() => setOpen(false)}>
+        Back
+      </AxButton>
+      <AxButton onClick={handleSubmit}>Accept & Continue</AxButton>
+    </Flex>
+  }
+>
+  <Flex vertical gap={16}>
+    {medications.map(med => (
+      <div key={med.id}>
+        <Flex justify="space-between" style={{ marginBottom: 4 }}>
+          <span>{med.name}</span>
+          <AxText variant="body-xs" color="secondary">
+            Requested: {med.quantity}
+          </AxText>
+        </Flex>
+        <AxInput placeholder="Enter quantity you can supply" suffix="units" />
+      </div>
+    ))}
+    <div>
+      <AxText variant="body-sm" weight="medium" style={{ marginBottom: 8 }}>
+        Notes (optional)
+      </AxText>
+      <Input.TextArea
+        placeholder="Add any notes about availability, lead times, or substitutions..."
+        rows={3}
+      />
+    </div>
+  </Flex>
+</AxDrawer>
+```
+
+### Multi-Step Flow
+
+Use for wizard-style interactions:
+
+```tsx
+function MultiStepDrawer() {
+  const [open, setOpen] = useState(false)
+  const [step, setStep] = useState(0)
+
+  const steps = [
+    { title: "Confirm order details", description: "Step 1 of 3 — Review your order" },
+    { title: "Select delivery address", description: "Step 2 of 3 — Choose delivery location" },
+    { title: "Review & submit", description: "Step 3 of 3 — Final confirmation" },
+  ]
+
+  return (
+    <AxDrawer
+      title={steps[step].title}
+      description={steps[step].description}
+      size="md"
+      open={open}
+      onClose={() => setOpen(false)}
+      footer={
+        <Flex justify="space-between">
+          {step > 0 ? (
+            <AxButton variant="ghost" onClick={() => setStep(s => s - 1)}>
+              Back
+            </AxButton>
+          ) : (
+            <AxButton variant="ghost" onClick={() => setOpen(false)}>
+              Cancel
+            </AxButton>
+          )}
+          {step < steps.length - 1 ? (
+            <AxButton onClick={() => setStep(s => s + 1)}>Next</AxButton>
+          ) : (
+            <AxButton onClick={handleSubmit}>Submit Order</AxButton>
+          )}
+        </Flex>
+      }
+    >
+      {/* Render content based on current step */}
+      {step === 0 && <OrderSummary />}
+      {step === 1 && <AddressSelection />}
+      {step === 2 && <FinalReview />}
+    </AxDrawer>
+  )
+}
+```
+
+### Profile Drawer
+
+Use for rich, content-heavy side panels:
+
+```tsx
+<AxDrawer
+  title="PharmaCorp Ltd"
+  description="Verified supplier · Nairobi, Kenya"
+  size="lg"
+  open={open}
+  onClose={() => setOpen(false)}
+  destroyOnHidden
+  footer={
+    <Flex justify="flex-end">
+      <AxButton onClick={() => setOpen(false)}>Close</AxButton>
+    </Flex>
+  }
+>
+  <Flex vertical gap={24}>
+    {/* Identity */}
+    <Flex gap={16} align="center">
+      <Avatar size={64} icon={<UserOutlined />} />
+      <Flex vertical gap={4}>
+        <AxText variant="body-lg" weight="semibold">PharmaCorp Ltd</AxText>
+        <AxTag tone="success" dot>Verified</AxTag>
+      </Flex>
+    </Flex>
+    
+    <Divider />
+    
+    {/* Contact */}
+    <Flex vertical gap={12}>
+      <AxText variant="body-sm" weight="medium">Contact Information</AxText>
+      <Flex gap={8} align="center">
+        <MailOutlined />
+        <AxText variant="body-sm">contact@pharmacorp.co.ke</AxText>
+      </Flex>
+      {/* More contact info */}
+    </Flex>
+    
+    {/* Performance stats, recent activity, etc. */}
+  </Flex>
+</AxDrawer>
+```
+
+### Loading State
+
+Show loading overlay during data fetch:
+
+```tsx
+function LoadingDrawer() {
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const handleOpen = () => {
+    setOpen(true)
+    setLoading(true)
+    fetchData().then(() => setLoading(false))
+  }
+
+  return (
+    <AxDrawer
+      title="Purchase Order #PO-2024-0044"
+      description="Loading order details..."
+      size="sm"
+      open={open}
+      loading={loading}
+      onClose={() => setOpen(false)}
+      footer={
+        <Flex justify="flex-end">
+          <AxButton onClick={() => setOpen(false)}>Close</AxButton>
+        </Flex>
+      }
+    >
+      {/* Content will be covered by spinner while loading */}
+      <OrderDetails />
+    </AxDrawer>
+  )
+}
+```
+
+### Left Placement
+
+Place drawer on the left side:
+
+```tsx
+<AxDrawer
+  title="Navigation"
+  placement="left"
+  size="sm"
+  open={open}
+  onClose={() => setOpen(false)}
+>
+  <Navigation />
+</AxDrawer>
+```
+
+### Extra Actions
+
+Add extra actions in the header:
+
+```tsx
+<AxDrawer
+  title="Settings"
+  open={open}
+  onClose={() => setOpen(false)}
+  extra={
+    <AxButton variant="ghost" size="sm" onClick={handleReset}>
+      Reset All
+    </AxButton>
+  }
+>
+  <SettingsForm />
+</AxDrawer>
+```
+
+## Accessibility
+
+- The drawer automatically sets `aria-describedby` when a `description` is provided
+- Keyboard navigation is enabled by default (Escape to close)
+- Focus is trapped within the drawer when open
+- The drawer uses semantic HTML with proper ARIA attributes
+- Loading state includes `aria-busy` attribute
+
+## Best Practices
+
+1. **Choose the right size**:
+   - `xs` (400px) for quick actions and confirmations
+   - `sm` (500px) for detail views and summaries
+   - `md` (600px) for forms and multi-step flows
+   - `lg` (640px) for profiles and content-rich panels
+
+2. **Use loading state** when fetching data to provide visual feedback
+
+3. **Provide descriptions** to give users context about the drawer content
+
+4. **Use footer buttons** consistently:
+   - Left: Secondary/Back/Cancel actions
+   - Right: Primary/Save/Continue actions
+
+5. **Consider destroyOnClose** for drawers with forms to reset state when closed
+
+6. **Prefer right placement** (default) for most use cases
+
+7. **Drawers vs Modals**:
+   - Use drawers for forms, details, and workflows
+   - Use modals for confirmations and brief interactions
+
+## Related Components
+
+- [AxModal](/api/modal) — Dialog for confirmations and focused interactions
+- [AxButton](/api/button) — Used for drawer actions
+- [AxCard](/api/card) — For content layout within drawers

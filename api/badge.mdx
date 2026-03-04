@@ -1,0 +1,177 @@
+---
+title: AxBadge
+description: Notification count badges and dot indicators
+---
+
+## Component
+
+### AxBadge
+
+Notification badges with semantic tone presets for counts and dot indicators.
+
+```tsx
+import AxBadge from "@axmedds/badge"
+import type { AxBadgeProps, AxBadgeTone } from "@axmedds/badge"
+```
+
+#### Props
+
+Extends all [Ant Design Badge props](https://ant.design/components/badge#api) except `size` and `color`.
+
+<ParamField path="tone" type="AxBadgeTone" default="primary">
+  Semantic tone mapped to design token colors:
+  
+  - `"primary"` — purple — default nav counts, active items
+  - `"success"` — green — completed, verified
+  - `"warning"` — orange — draft quotes, expiring soon
+  - `"error"` — red — critical alerts, overdue
+  - `"neutral"` — gray — informational counts
+  
+  For inline status labels, use `AxTag` instead.
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'md'" default="md">
+  Badge size:
+  
+  - `"sm"` — small (18px)
+  - `"md"` — default (22px)
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+export type AxBadgeTone = "primary" | "success" | "warning" | "error" | "neutral"
+
+export type AxBadgeProps = {
+  tone?: AxBadgeTone
+  size?: "sm" | "md"
+} & Omit<AntBadgeProps, "size" | "color">
+```
+
+#### Tone Color Map
+
+```tsx
+const toneColorMap: Record<AxBadgeTone, string> = {
+  primary: "var(--primary)",
+  success: "var(--success)",
+  warning: "var(--orange-500)",
+  error: "var(--error)",
+  neutral: "var(--neutral-500)",
+}
+```
+
+#### Usage
+
+```tsx
+import AxBadge from "@axmedds/badge"
+import { BellOutlined, MailOutlined, ShoppingCartOutlined } from "@ant-design/icons"
+import { Avatar } from "antd"
+
+// Count badges
+<AxBadge tone="primary" count={12}>
+  <BellOutlined style={{ fontSize: 24 }} />
+</AxBadge>
+
+<AxBadge tone="error" count={5}>
+  <MailOutlined style={{ fontSize: 24 }} />
+</AxBadge>
+
+<AxBadge tone="warning" count={3}>
+  <ShoppingCartOutlined style={{ fontSize: 24 }} />
+</AxBadge>
+
+// Dot indicators
+<AxBadge tone="error" dot>
+  <BellOutlined style={{ fontSize: 24 }} />
+</AxBadge>
+
+<AxBadge tone="success" dot>
+  <Avatar icon={<UserOutlined />} />
+</AxBadge>
+
+// Small size
+<AxBadge tone="primary" count={99} size="sm">
+  <BellOutlined style={{ fontSize: 20 }} />
+</AxBadge>
+
+// Overflow count
+<AxBadge tone="primary" count={150} overflowCount={99}>
+  <MailOutlined style={{ fontSize: 24 }} />
+</AxBadge>
+// Displays "99+"
+
+// Show zero
+<AxBadge tone="primary" count={0} showZero>
+  <BellOutlined style={{ fontSize: 24 }} />
+</AxBadge>
+
+// Standalone badge (no children)
+<AxBadge tone="error" count={5} />
+```
+
+#### Navigation Example
+
+```tsx
+import AxBadge from "@axmedds/badge"
+import { Flex } from "antd"
+import { 
+  ShoppingCartOutlined,
+  FileTextOutlined,
+  BellOutlined,
+  MailOutlined 
+} from "@ant-design/icons"
+
+function Navigation() {
+  return (
+    <Flex gap={24} align="center">
+      <AxBadge tone="primary" count={3} size="sm">
+        <ShoppingCartOutlined style={{ fontSize: 22 }} />
+      </AxBadge>
+      
+      <AxBadge tone="warning" count={7} size="sm">
+        <FileTextOutlined style={{ fontSize: 22 }} />
+      </AxBadge>
+      
+      <AxBadge tone="error" dot size="sm">
+        <BellOutlined style={{ fontSize: 22 }} />
+      </AxBadge>
+      
+      <AxBadge tone="primary" count={12} size="sm">
+        <MailOutlined style={{ fontSize: 22 }} />
+      </AxBadge>
+    </Flex>
+  )
+}
+```
+
+#### With Avatars
+
+```tsx
+import AxBadge from "@axmedds/badge"
+import { Avatar } from "antd"
+import { UserOutlined } from "@ant-design/icons"
+
+<AxBadge tone="success" dot>
+  <Avatar size={48} icon={<UserOutlined />} />
+</AxBadge>
+
+<AxBadge tone="error" count={5}>
+  <Avatar size={48} src="/avatar.jpg" />
+</AxBadge>
+```
+
+#### Status Indicators
+
+```tsx
+// Online status
+<AxBadge tone="success" status="success" text="Online" />
+
+// Processing
+<AxBadge tone="info" status="processing" text="Processing" />
+
+// Error
+<AxBadge tone="error" status="error" text="Failed" />
+
+// Warning
+<AxBadge tone="warning" status="warning" text="Pending" />
+```

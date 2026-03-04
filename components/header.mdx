@@ -1,0 +1,285 @@
+---
+title: Header
+description: Top navigation bar with sidebar toggle, horizontal nav, and action slots.
+---
+
+## Overview
+
+Header provides a flexible top bar for dashboards and marketplace pages. It supports sidebar toggle buttons, horizontal navigation items, custom content slots (left/center/right), and two visual variants (default white and branded navy).
+
+## Usage
+
+```tsx
+import { AxHeader } from "@axmed/design-system"
+import { AxBrand, AxButton } from "@axmed/design-system"
+import { BellOutlined } from "@ant-design/icons"
+import { useState } from "react"
+
+function AppShell() {
+  const [collapsed, setCollapsed] = useState(false)
+
+  return (
+    <AxHeader
+      onSidebarToggle={() => setCollapsed(!collapsed)}
+      sidebarCollapsed={collapsed}
+      left={<AxBrand variant="wordmark" size="md" />}
+      right={
+        <Flex gap={12}>
+          <AxButton variant="secondary" icon={<BellOutlined />} />
+          <Avatar icon={<UserOutlined />} />
+        </Flex>
+      }
+    />
+  )
+}
+```
+
+## Variants
+
+### Default (Dashboard)
+
+White background with bottom border — used for internal dashboards.
+
+```tsx
+<AxHeader
+  variant="default"
+  onSidebarToggle={() => setCollapsed(!collapsed)}
+  right={
+    <Flex gap={12}>
+      <AxButton variant="text" icon={<RobotOutlined />}>Ask Axmed AI</AxButton>
+      <Badge count={3}>
+        <AxButton variant="secondary" icon={<ShoppingCartOutlined />}>Draft Orders</AxButton>
+      </Badge>
+    </Flex>
+  }
+/>
+```
+
+### Branded (Marketplace)
+
+Navy background with white text — used for marketplace pages.
+
+```tsx
+<AxHeader
+  variant="branded"
+  left={<AxBrand variant="wordmark" theme="dark" />}
+  navItems={[
+    { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined /> },
+    { key: "catalogue", label: "Catalogue", icon: <AppstoreOutlined /> },
+    { key: "orders", label: "My Orders", icon: <ShoppingCartOutlined />, badge: 3 },
+  ]}
+  selectedKey="dashboard"
+  right={
+    <Flex gap={12}>
+      <AxButton variant="text" icon={<QuestionCircleOutlined />} style={{ color: "white" }} />
+      <Avatar icon={<UserOutlined />} />
+    </Flex>
+  }
+/>
+```
+
+## Horizontal Navigation
+
+```tsx
+const [active, setActive] = useState("dashboard")
+
+const navItems = [
+  {
+    key: "dashboard",
+    label: "Dashboard",
+    icon: <DashboardOutlined />,
+    onClick: () => setActive("dashboard"),
+  },
+  {
+    key: "catalogue",
+    label: "Catalogue",
+    icon: <AppstoreOutlined />,
+    onClick: () => setActive("catalogue"),
+  },
+  {
+    key: "orders",
+    label: "My Orders",
+    icon: <ShoppingCartOutlined />,
+    badge: 3,
+    onClick: () => setActive("orders"),
+  },
+  {
+    key: "reports",
+    label: "Reports",
+    disabled: true,
+  },
+]
+
+<AxHeader
+  navItems={navItems}
+  selectedKey={active}
+/>
+```
+
+On mobile, nav items collapse into a hamburger menu dropdown.
+
+## Sidebar Toggle
+
+```tsx
+const [collapsed, setCollapsed] = useState(false)
+
+<AxHeader
+  onSidebarToggle={() => setCollapsed(!collapsed)}
+  sidebarCollapsed={collapsed}
+  right={<ActionButtons />}
+/>
+```
+
+- **Desktop**: Shows fold/unfold icon (MenuFoldOutlined / MenuUnfoldOutlined)
+- **Mobile**: Shows hamburger icon (MenuOutlined)
+
+## Custom Center Content
+
+Override the center zone with any content:
+
+```tsx
+<AxHeader
+  left={<AxBrand variant="wordmark" />}
+  center={
+    <Breadcrumb>
+      <Breadcrumb.Item>Home</Breadcrumb.Item>
+      <Breadcrumb.Item>Orders</Breadcrumb.Item>
+      <Breadcrumb.Item>ORD-2401</Breadcrumb.Item>
+    </Breadcrumb>
+  }
+  right={<ActionButtons />}
+/>
+```
+
+When `center` is provided, `navItems` are ignored.
+
+## Mobile Logo
+
+When using a bottom nav instead of a sidebar on mobile, show a logo instead of the hamburger:
+
+```tsx
+<AxHeader
+  onSidebarToggle={() => setCollapsed(!collapsed)}
+  mobileLogo={<AxBrand variant="wordmark" size="md" />}
+  right={<ActionButtons />}
+/>
+```
+
+## With Side Nav
+
+```tsx
+const [collapsed, setCollapsed] = useState(false)
+
+return (
+  <div style={{ display: "flex", height: "100vh" }}>
+    <AxSideNav
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      hideCollapseButton  // Header provides the toggle
+      logo={<AxBrand variant={collapsed ? "icon" : "wordmark"} />}
+      items={navItems}
+    />
+    
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <AxHeader
+        onSidebarToggle={() => setCollapsed(!collapsed)}
+        sidebarCollapsed={collapsed}
+        mobileLogo={<AxBrand variant="wordmark" />}
+        right={<ActionButtons />}
+      />
+      <main style={{ flex: 1, overflow: "auto", padding: 24 }}>
+        {/* Page content */}
+      </main>
+    </div>
+  </div>
+)
+```
+
+## Props
+
+<ResponseField name="left" type="ReactNode">
+  Left slot — logo, breadcrumbs, or any content. Renders after the sidebar toggle (if present).
+</ResponseField>
+
+<ResponseField name="center" type="ReactNode">
+  Center slot — custom content that overrides `navItems`. Hidden on mobile (< 768px).
+</ResponseField>
+
+<ResponseField name="right" type="ReactNode">
+  Right slot — action buttons, badges, profile dropdown.
+</ResponseField>
+
+<ResponseField name="navItems" type="HeaderNavItem[]">
+  Horizontal nav items rendered in the center zone. Ignored when `center` is provided.
+  
+  Each item: `{ key, label, icon?, onClick?, badge?, disabled? }`
+</ResponseField>
+
+<ResponseField name="selectedKey" type="string">
+  Key of the currently active nav item
+</ResponseField>
+
+<ResponseField name="onSidebarToggle" type="() => void">
+  Callback when sidebar toggle is clicked. When provided, renders a toggle button on the far left.
+</ResponseField>
+
+<ResponseField name="sidebarCollapsed" type="boolean">
+  Whether the companion sidebar is collapsed. Controls which toggle icon is shown.
+</ResponseField>
+
+<ResponseField name="variant" type="'default' | 'branded'" default="'default'">
+  Visual variant:
+  - `default` — white background, bottom border (dashboard)
+  - `branded` — navy background, white text (marketplace)
+</ResponseField>
+
+<ResponseField name="sticky" type="boolean" default="true">
+  Use sticky positioning
+</ResponseField>
+
+<ResponseField name="height" type="number" default="56">
+  Header height in pixels
+</ResponseField>
+
+<ResponseField name="bordered" type="boolean">
+  Show a bottom border. Defaults to `true` for "default" variant, `false` for "branded".
+</ResponseField>
+
+<ResponseField name="mobileLogo" type="ReactNode">
+  Logo shown on mobile in place of the sidebar toggle. Use when the sidebar is replaced by bottom navigation.
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional class name
+</ResponseField>
+
+<ResponseField name="style" type="CSSProperties">
+  Inline styles
+</ResponseField>
+
+## Best Practices
+
+<Check>Use `variant="default"` for dashboard pages, `variant="branded"` for marketplace</Check>
+<Check>Limit nav items to 4-5 for readability</Check>
+<Check>Place critical actions (search, cart, profile) in the `right` slot</Check>
+<Check>Sync `sidebarCollapsed` state with AxSideNav for consistent toggle behavior</Check>
+
+<Warning>Don't put long text or many items in the center — it will overflow on small screens</Warning>
+<Warning>Avoid nesting other headers inside — use breadcrumbs for sub-navigation</Warning>
+
+## Accessibility
+
+- Uses semantic `<header>` element with `role="banner"`
+- Nav items use `aria-current="page"` for active state
+- Toggle buttons have proper `aria-label` attributes
+- Badge counts are announced by screen readers
+
+## API Reference
+
+See the [Header API](/api/header) for the complete TypeScript interface.
+
+## Related Components
+
+- [Side Nav](/components/sidenav) — Pair with Header for full app layout
+- [Brand](/components/brand) — Use in the `left` or `mobileLogo` slot
+- [Button](/components/button) — Add actions to the `right` slot

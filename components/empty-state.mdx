@@ -1,0 +1,170 @@
+---
+title: Empty State
+description: Display helpful zero-state messages when content is unavailable or filtered out.
+---
+
+## Overview
+
+Empty State provides contextual messages when data is unavailable—whether a list is empty, search returns no results, or filters produce no matches. It supports custom illustrations, descriptions, and action buttons to guide users toward next steps.
+
+## Usage
+
+```tsx
+import { AxEmptyState } from "@axmed/design-system"
+import { InboxOutlined } from "@ant-design/icons"
+import { AxButton } from "@axmed/design-system"
+
+function OrdersList() {
+  return (
+    <AxEmptyState
+      illustration={<InboxOutlined style={{ fontSize: 48, color: "var(--neutral-300)" }} />}
+      title="No orders yet"
+      description="Once you publish your first tender, it will appear here for suppliers to bid on."
+      action={<AxButton>Create Order</AxButton>}
+    />
+  )
+}
+```
+
+## Sizes
+
+Three size presets control padding and typography scale:
+
+- **`sm`** — Inside tables and compact cards (heading-sm, 24px padding)
+- **`md`** — Card panels and drawer bodies (heading-md, 48px padding) — **default**
+- **`lg`** — Full-page zero-states (heading-xl, 80px padding)
+
+```tsx
+// Inside a table
+<AxTable
+  dataSource={[]}
+  locale={{
+    emptyText: (
+      <AxEmptyState
+        size="sm"
+        illustration={<InboxOutlined style={{ fontSize: 32 }} />}
+        title="No medications found"
+        description="Try adjusting your filters or search term."
+      />
+    )
+  }}
+/>
+
+// Full-page empty state
+<AxEmptyState
+  size="lg"
+  illustration={<InboxOutlined style={{ fontSize: 80 }} />}
+  title="No tenders available"
+  description="There are no open tenders matching your profile right now."
+  action={<AxButton>Browse All Tenders</AxButton>}
+/>
+```
+
+## Common Patterns
+
+### No Search Results
+
+```tsx
+<AxEmptyState
+  illustration={<SearchOutlined style={{ fontSize: 48 }} />}
+  title="No results found"
+  description='No medications matched "amoxici". Try a different search term.'
+  action={<AxButton variant="secondary">Clear Search</AxButton>}
+/>
+```
+
+### No Filter Results
+
+```tsx
+<AxEmptyState
+  illustration={<FilterOutlined style={{ fontSize: 48 }} />}
+  title="No matches"
+  description="No results match your current filters. Try adjusting or clearing some filters."
+  action={<AxButton variant="secondary">Clear Filters</AxButton>}
+/>
+```
+
+### Empty Cart
+
+```tsx
+<AxEmptyState
+  illustration={<ShoppingCartOutlined style={{ fontSize: 48 }} />}
+  title="Your cart is empty"
+  description="Browse the catalog and add medications to your cart to get started."
+  action={<AxButton>Browse Catalog</AxButton>}
+/>
+```
+
+### Text Only (No Illustration)
+
+```tsx
+<AxEmptyState
+  title="No results"
+  description="Try broadening your search."
+  size="sm"
+  action={<AxButton size="small" variant="secondary">Clear</AxButton>}
+/>
+```
+
+## Props
+
+<ResponseField name="title" type="string" required>
+  Main heading
+</ResponseField>
+
+<ResponseField name="description" type="ReactNode">
+  Muted description below the title
+</ResponseField>
+
+<ResponseField name="illustration" type="ReactNode">
+  Illustration — any SVG, icon, or image node. Size it before passing (e.g. `style={{ fontSize: 48 }}` on an antd icon).
+</ResponseField>
+
+<ResponseField name="action" type="ReactNode">
+  Action area — pass an AxButton or any ReactNode. Rendered below the description.
+</ResponseField>
+
+<ResponseField name="size" type="'sm' | 'md' | 'lg'" default="'md'">
+  Controls padding and typography scale:
+  - `sm`: inside tables and compact cards (heading-sm, body-xs, 24px padding)
+  - `md`: card panels and drawer bodies (heading-md, body-sm, 48px padding)
+  - `lg`: full-page zero-states (heading-xl, body-md, 80px padding)
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional class name
+</ResponseField>
+
+## When to Use
+
+- **Empty lists** — Show when a data table, card list, or inbox has no items
+- **No search results** — Guide users to refine their query or clear the search
+- **No filter matches** — Suggest clearing or adjusting active filters
+- **First-time experience** — Encourage users to take their first action (e.g., "Create your first order")
+- **Errors or unavailable data** — Inform users when data failed to load
+
+## Best Practices
+
+<Check>Use action-oriented language in the button ("Create Order", "Browse Catalog")</Check>
+<Check>Match the illustration to the context (e.g., shopping cart icon for empty cart)</Check>
+<Check>Keep descriptions concise and helpful — explain why it's empty and what to do next</Check>
+<Check>Use `size="sm"` inside tables and cards to avoid excessive whitespace</Check>
+
+<Warning>Don't use Empty State for loading states — use skeletons instead</Warning>
+<Warning>Avoid vague messages like "No data" — be specific about what's missing</Warning>
+
+## Accessibility
+
+- Uses semantic heading and text elements
+- Illustrations are marked `aria-hidden="true"`
+- Action buttons are fully keyboard-navigable
+
+## API Reference
+
+See the [Empty State API](/api/empty-state) for the complete TypeScript interface.
+
+## Related Components
+
+- [Table](/components/table) — Use Empty State in the `locale.emptyText` prop
+- [Card](/components/card) — Wrap Empty State inside card content
+- [Button](/components/button) — Add CTAs to guide users

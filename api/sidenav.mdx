@@ -1,0 +1,336 @@
+---
+title: "AxSideNav"
+description: "A collapsible vertical navigation sidebar with groups, sections, and mobile bottom navigation."
+---
+
+## Overview
+
+`AxSideNav` is a full-featured sidebar component that supports collapsible groups, section labels, dividers, and automatic mobile navigation. It includes a built-in mobile bottom tab bar that displays the first 4 items with overflow behind a "More" menu.
+
+## Import
+
+```tsx
+import AxSideNav from "@axmed/design-system/components/AxSideNav"
+import type { NavItem, NavDivider, NavGroup, NavSection } from "@axmed/design-system/components/AxSideNav"
+```
+
+## Basic Usage
+
+```tsx
+import { DashboardOutlined, ShoppingCartOutlined, SettingOutlined } from "@ant-design/icons"
+
+const items = [
+  { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined /> },
+  {
+    type: "group",
+    key: "orders",
+    label: "Orders",
+    icon: <ShoppingCartOutlined />,
+    children: [
+      { key: "orders-all", label: "All Orders" },
+      { key: "orders-pending", label: "Pending" },
+    ],
+  },
+  { type: "divider", key: "div-1" },
+  { key: "settings", label: "Settings", icon: <SettingOutlined /> },
+]
+
+function AppSidebar() {
+  const [collapsed, setCollapsed] = useState(false)
+  const [selected, setSelected] = useState("dashboard")
+
+  return (
+    <AxSideNav
+      items={items}
+      selectedKey={selected}
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      logo={<YourLogo />}
+      user={<UserProfile />}
+    />
+  )
+}
+```
+
+## Props
+
+<ParamField path="items" type="(NavItem | NavDivider | NavGroup | NavSection)[]" required>
+  Navigation items array. Can include regular items, dividers, collapsible groups, and section labels.
+</ParamField>
+
+<ParamField path="selectedKey" type="string">
+  Key of the currently active item. Used to highlight the active navigation item.
+</ParamField>
+
+<ParamField path="collapsed" type="boolean" default="false">
+  Whether the sidebar is collapsed to icon-only mode. When collapsed, labels are hidden and items show tooltips on hover.
+</ParamField>
+
+<ParamField path="onCollapse" type="(collapsed: boolean) => void">
+  Callback when the user toggles collapse state via the built-in toggle button.
+</ParamField>
+
+<ParamField path="logo" type="React.ReactNode">
+  Logo or brand element rendered at the top of the sidebar.
+</ParamField>
+
+<ParamField path="user" type="React.ReactNode">
+  User profile element pinned to the bottom of the sidebar.
+</ParamField>
+
+<ParamField path="width" type="number" default={240}>
+  Sidebar width in pixels when expanded.
+</ParamField>
+
+<ParamField path="collapsedWidth" type="number" default={64}>
+  Sidebar width in pixels when collapsed to icon-only mode.
+</ParamField>
+
+<ParamField path="hideCollapseButton" type="boolean" default={false}>
+  Hide the built-in collapse toggle button in the logo area. Use when `AxHeader` provides the toggle instead.
+</ParamField>
+
+<ParamField path="userActions" type="(ActionItem | ActionDivider)[]">
+  Action menu items shown when clicking the user area. When provided, wraps the `user` slot with a dropdown menu (e.g., My Account, Settings, Log Out).
+</ParamField>
+
+<ParamField path="showMobileNav" type="boolean" default={true}>
+  Show a fixed bottom tab bar on mobile (< 768px) instead of the sidebar. The first 4 top-level items appear as tabs; overflow items go behind a "More" menu.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS class name.
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles.
+</ParamField>
+
+## Item Types
+
+### NavItem
+
+<Expandable title="NavItem Properties">
+
+<ParamField path="key" type="string" required>
+  Unique key used to match `selectedKey`.
+</ParamField>
+
+<ParamField path="label" type="string" required>
+  Label text shown when sidebar is expanded.
+</ParamField>
+
+<ParamField path="icon" type="React.ReactNode" required>
+  Icon displayed in the sidebar (Ant Design icon or any ReactNode).
+</ParamField>
+
+<ParamField path="onClick" type="() => void">
+  Click handler for navigation.
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable interaction with this item.
+</ParamField>
+
+</Expandable>
+
+```tsx
+type NavItem = {
+  type?: never
+  key: string
+  label: string
+  icon: React.ReactNode
+  onClick?: () => void
+  disabled?: boolean
+}
+```
+
+### NavGroup
+
+Collapsible group with text-only children. Expands/collapses inline when sidebar is open. Shows a popover flyout when sidebar is collapsed.
+
+<Expandable title="NavGroup Properties">
+
+<ParamField path="type" type="'group'" required>
+  Must be `"group"` to identify this as a collapsible group.
+</ParamField>
+
+<ParamField path="key" type="string" required>
+  Unique identifier for the group.
+</ParamField>
+
+<ParamField path="label" type="string" required>
+  Group label text.
+</ParamField>
+
+<ParamField path="icon" type="React.ReactNode" required>
+  Icon displayed for the group.
+</ParamField>
+
+<ParamField path="children" type="NavItem[]" required>
+  Array of child items (text-only, no icons).
+</ParamField>
+
+<ParamField path="defaultOpen" type="boolean" default={false}>
+  Whether the group starts expanded.
+</ParamField>
+
+</Expandable>
+
+```tsx
+type NavGroup = {
+  type: "group"
+  key: string
+  label: string
+  icon: React.ReactNode
+  children: NavItem[]
+  defaultOpen?: boolean
+}
+```
+
+### NavDivider
+
+<Expandable title="NavDivider Properties">
+
+<ParamField path="type" type="'divider'" required>
+  Must be `"divider"` to render a horizontal separator.
+</ParamField>
+
+<ParamField path="key" type="string" required>
+  Unique key for the divider.
+</ParamField>
+
+</Expandable>
+
+```tsx
+type NavDivider = {
+  type: "divider"
+  key: string
+}
+```
+
+### NavSection
+
+Static section label (non-interactive, visually groups items). Hidden when sidebar is collapsed.
+
+<Expandable title="NavSection Properties">
+
+<ParamField path="type" type="'section'" required>
+  Must be `"section"` to render a section label.
+</ParamField>
+
+<ParamField path="key" type="string" required>
+  Unique key for the section.
+</ParamField>
+
+<ParamField path="label" type="string" required>
+  Section label text.
+</ParamField>
+
+</Expandable>
+
+```tsx
+type NavSection = {
+  type: "section"
+  key: string
+  label: string
+}
+```
+
+## Examples
+
+### With Collapsible Groups
+
+```tsx
+const items = [
+  { type: "section", key: "sec-main", label: "Main" },
+  { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined /> },
+  {
+    type: "group",
+    key: "orders",
+    label: "Orders",
+    icon: <ShoppingCartOutlined />,
+    defaultOpen: true,
+    children: [
+      { key: "orders-all", label: "All Orders", onClick: () => navigate("/orders") },
+      { key: "orders-pending", label: "Pending", onClick: () => navigate("/orders/pending") },
+      { key: "orders-completed", label: "Completed", onClick: () => navigate("/orders/completed") },
+    ],
+  },
+  { type: "divider", key: "div-1" },
+  { key: "settings", label: "Settings", icon: <SettingOutlined /> },
+]
+```
+
+### With User Actions Menu
+
+```tsx
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons"
+
+const userActions = [
+  { key: "account", label: "My Account", icon: <UserOutlined /> },
+  { key: "settings", label: "Settings", icon: <SettingOutlined /> },
+  { type: "divider" },
+  { key: "logout", label: "Log Out", icon: <LogoutOutlined />, danger: true },
+]
+
+<AxSideNav
+  items={items}
+  user={<UserProfile name="Ahmed Al-Rashid" email="ahmed@axmed.com" />}
+  userActions={userActions}
+/>
+```
+
+### With AxHeader Integration
+
+```tsx
+function AppLayout() {
+  const [collapsed, setCollapsed] = useState(false)
+
+  return (
+    <div style={{ display: "flex", height: "100vh" }}>
+      <AxSideNav
+        items={navItems}
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+        hideCollapseButton  {/* Hide sidebar's toggle */}
+        logo={<AxBrand variant={collapsed ? "icon" : "wordmark"} />}
+      />
+      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <AxHeader
+          onSidebarToggle={() => setCollapsed(!collapsed)}
+          sidebarCollapsed={collapsed}
+          mobileLogo={<AxBrand variant="wordmark" />}
+        />
+        <main>{/* Page content */}</main>
+      </div>
+    </div>
+  )
+}
+```
+
+## Mobile Navigation
+
+By default, `AxSideNav` automatically displays a fixed bottom tab bar on mobile devices (< 768px). The first 4 top-level items appear as tabs, with overflow items accessible via a "More" menu.
+
+```tsx
+// Mobile nav is enabled by default
+<AxSideNav items={items} showMobileNav={true} />
+
+// Disable mobile nav to keep sidebar visible on mobile
+<AxSideNav items={items} showMobileNav={false} />
+```
+
+## Accessibility
+
+- Uses semantic `<nav>` and `role="navigation"`
+- Active items marked with `aria-current="page"`
+- Collapse button has proper `aria-label`
+- Groups have `aria-expanded` state
+- Labels hidden visually when collapsed but available to screen readers
+- Tooltips shown on hover in collapsed mode
+
+## Related Components
+
+- [AxHeader](/api/header) - Horizontal header with sidebar toggle
+- [AxActionMenu](/api/action-menu) - Dropdown action menus (used for user actions)

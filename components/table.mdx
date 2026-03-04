@@ -1,0 +1,350 @@
+---
+title: Table
+description: Responsive data tables with sorting, filtering, and mobile card view.
+icon: table
+---
+
+AxTable provides a powerful data table component with responsive behavior, row states, and automatic column management. On mobile devices, tables automatically switch to a card-based layout.
+
+## Basic Usage
+
+<CodeGroup>
+```tsx TypeScript
+import { AxTable } from '@axmed/design-system'
+import type { ColumnsType } from 'antd/es/table'
+
+interface Medication {
+  key: string
+  name: string
+  manufacturer: string
+  unitPrice: number
+  quantity: number
+  status: string
+}
+
+const columns: ColumnsType<Medication> = [
+  { title: 'Medication', dataIndex: 'name', key: 'name' },
+  { title: 'Manufacturer', dataIndex: 'manufacturer', key: 'manufacturer' },
+  { title: 'Unit Price', dataIndex: 'unitPrice', key: 'unitPrice', align: 'right' },
+  { title: 'Quantity', dataIndex: 'quantity', key: 'quantity', align: 'right' },
+]
+
+const data: Medication[] = [
+  { key: '1', name: 'Amoxicillin 500mg', manufacturer: 'Cipla Ltd', unitPrice: 0.45, quantity: 12000, status: 'In Stock' },
+  { key: '2', name: 'Metformin 850mg', manufacturer: 'Novartis', unitPrice: 0.32, quantity: 8500, status: 'In Stock' },
+]
+
+function Example() {
+  return <AxTable columns={columns} dataSource={data} />
+}
+```
+
+```jsx JavaScript
+import { AxTable } from '@axmed/design-system'
+
+const columns = [
+  { title: 'Medication', dataIndex: 'name', key: 'name' },
+  { title: 'Manufacturer', dataIndex: 'manufacturer', key: 'manufacturer' },
+  { title: 'Unit Price', dataIndex: 'unitPrice', key: 'unitPrice', align: 'right' },
+  { title: 'Quantity', dataIndex: 'quantity', key: 'quantity', align: 'right' },
+]
+
+const data = [
+  { key: '1', name: 'Amoxicillin 500mg', manufacturer: 'Cipla Ltd', unitPrice: 0.45, quantity: 12000 },
+  { key: '2', name: 'Metformin 850mg', manufacturer: 'Novartis', unitPrice: 0.32, quantity: 8500 },
+]
+
+function Example() {
+  return <AxTable columns={columns} dataSource={data} />
+}
+```
+</CodeGroup>
+
+## Pagination
+
+```tsx
+<AxTable
+  columns={columns}
+  dataSource={data}
+  pagination={{
+    pageSize: 10,
+    showSizeChanger: true,
+    showTotal: (total) => `${total} medications`,
+  }}
+/>
+```
+
+## Sorting
+
+Add sorter functions to columns:
+
+```tsx
+const columns = [
+  {
+    title: 'Medication',
+    dataIndex: 'name',
+    key: 'name',
+    sorter: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    title: 'Unit Price',
+    dataIndex: 'unitPrice',
+    key: 'unitPrice',
+    align: 'right',
+    sorter: (a, b) => a.unitPrice - b.unitPrice,
+  },
+]
+```
+
+## Filtering
+
+```tsx
+const columns = [
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+    filters: [
+      { text: 'In Stock', value: 'In Stock' },
+      { text: 'Low Stock', value: 'Low Stock' },
+      { text: 'Out of Stock', value: 'Out of Stock' },
+    ],
+    onFilter: (value, record) => record.status === value,
+  },
+]
+```
+
+## Row States
+
+Highlight selected or disabled rows:
+
+```tsx
+import { useState } from 'react'
+
+function TableWithSelection() {
+  const [selectedKeys, setSelectedKeys] = useState(['1', '3'])
+  const disabledKeys = ['5']  // Rows that cannot be selected
+
+  // Build rowStates object
+  const rowStates = {}
+  disabledKeys.forEach(key => rowStates[key] = 'disabled')
+  selectedKeys.forEach(key => rowStates[key] = 'selected')
+
+  return (
+    <AxTable
+      columns={columns}
+      dataSource={data}
+      rowStates={rowStates}
+      rowSelection={{
+        selectedRowKeys: selectedKeys,
+        onChange: setSelectedKeys,
+        getCheckboxProps: (record) => ({
+          disabled: disabledKeys.includes(record.key)
+        }),
+      }}
+    />
+  )
+}
+```
+
+## Custom Cell Rendering
+
+### Status Tags
+
+```tsx
+import { AxTag } from '@axmed/design-system'
+
+const columns = [
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+    render: (status: string) => {
+      const toneMap = {
+        'In Stock': 'success',
+        'Low Stock': 'warning',
+        'Out of Stock': 'error',
+      }
+      return <AxTag tone={toneMap[status]}>{status}</AxTag>
+    },
+  },
+]
+```
+
+### Two-Line Cell
+
+```tsx
+import { AxText } from '@axmed/design-system'
+
+const columns = [
+  {
+    title: 'Medication',
+    dataIndex: 'name',
+    key: 'name',
+    render: (name: string, record: any) => (
+      <div>
+        <AxText variant="body-sm" weight="medium">{name}</AxText>
+        <AxText variant="body-xs" color="secondary">
+          {record.dosage} · {record.form}
+        </AxText>
+      </div>
+    ),
+  },
+]
+```
+
+## Expandable Rows
+
+Show additional details when clicking a row:
+
+```tsx
+<AxTable
+  columns={columns}
+  dataSource={data}
+  expandable={{
+    expandedRowRender: (record) => (
+      <div style={{ padding: 16 }}>
+        <div><strong>Generic Name:</strong> {record.genericName}</div>
+        <div><strong>Batch Number:</strong> {record.batchNumber}</div>
+        <div><strong>Expiry Date:</strong> {record.expiryDate}</div>
+      </div>
+    ),
+  }}
+/>
+```
+
+## Horizontal Scroll
+
+For tables with many columns:
+
+```tsx
+<AxTable
+  columns={columns}
+  dataSource={data}
+  scroll={{ x: 1500 }}
+/>
+```
+
+Use `fixed: 'left'` or `fixed: 'right'` on columns to keep them visible while scrolling.
+
+## Responsive Behavior
+
+### Auto-Responsive Columns
+
+By default, middle columns automatically hide as the viewport shrinks. The first and last columns always stay visible.
+
+```tsx
+// Columns hide automatically right-to-left across xl → lg → md breakpoints
+<AxTable
+  columns={columns}
+  dataSource={data}
+  autoResponsive={true}  {/* default */}
+/>
+```
+
+### Mobile Card Layout
+
+On screens below 576px, tables automatically switch to a card-based layout:
+
+```tsx
+<AxTable
+  columns={columns}
+  dataSource={data}
+  mobileLayout="cards"  {/* default - auto-switches on mobile */}
+  mobilePageSize={5}  {/* limit cards per page on mobile */}
+/>
+```
+
+Set `mobileLayout="scroll"` to keep the table scrollable on mobile instead.
+
+## Common Patterns
+
+### With Action Buttons
+
+```tsx
+import { AxButton } from '@axmed/design-system'
+import { EditOutlined, EyeOutlined } from '@ant-design/icons'
+
+const columns = [
+  // ... other columns
+  {
+    title: 'Actions',
+    key: 'actions',
+    align: 'center',
+    width: 120,
+    render: (_, record) => (
+      <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+        <AxButton variant="text" size="small" icon={<EditOutlined />} />
+        <AxButton variant="text" size="small" icon={<EyeOutlined />} />
+      </div>
+    ),
+  },
+]
+```
+
+### Empty State
+
+```tsx
+import { AxEmptyState, AxButton } from '@axmed/design-system'
+import { InboxOutlined } from '@ant-design/icons'
+
+<AxTable
+  columns={columns}
+  dataSource={[]}
+  locale={{
+    emptyText: (
+      <AxEmptyState
+        size="sm"
+        illustration={<InboxOutlined style={{ fontSize: 48, color: 'var(--neutral-300)' }} />}
+        title="No medications found"
+        description="Try adjusting your filters or search term."
+        action={<AxButton size="small">Clear Filters</AxButton>}
+      />
+    ),
+  }}
+/>
+```
+
+## Props
+
+<ResponseField name="columns" type="ColumnsType[]" required>
+  Column definitions with title, dataIndex, key, and render functions
+</ResponseField>
+
+<ResponseField name="dataSource" type="any[]" required>
+  Array of data records to display
+</ResponseField>
+
+<ResponseField name="rowStates" type="Record<string | number, 'selected' | 'disabled'>">
+  Visual state per row key: selected (blue) or disabled (reduced opacity)
+</ResponseField>
+
+<ResponseField name="rowKey" type="string | function" default="key">
+  Key property name or function to extract unique row keys
+</ResponseField>
+
+<ResponseField name="pagination" type="object | false">
+  Pagination config or `false` to disable
+</ResponseField>
+
+<ResponseField name="autoResponsive" type="boolean" default="true">
+  Automatically hide middle columns as viewport shrinks
+</ResponseField>
+
+<ResponseField name="mobileLayout" type="string" default="cards">
+  Layout on mobile: `cards` (stacked cards) or `scroll` (horizontal scroll)
+</ResponseField>
+
+<ResponseField name="mobilePageSize" type="number" default="5">
+  Page size for mobile card view
+</ResponseField>
+
+<ResponseField name="loading" type="boolean" default="false">
+  Show loading spinner overlay
+</ResponseField>
+
+<ResponseField name="size" type="string" default="middle">
+  Table density: `small`, `middle`, or `large`
+</ResponseField>
+
+See the [full API reference](/api/table) for all available props.

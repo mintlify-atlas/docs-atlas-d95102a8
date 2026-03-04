@@ -1,0 +1,155 @@
+---
+title: Company Logo
+description: Display company logos with automatic fallback initials and deterministic colors.
+---
+
+## Overview
+
+Company Logo renders supplier and organization logos with automatic fallback to colored initials when no image is provided. Colors are deterministically generated from the company name for consistency.
+
+## Usage
+
+```tsx
+import { AxCompanyLogo } from "@axmed/design-system"
+
+function SupplierCard() {
+  return (
+    <AxCompanyLogo
+      name="PharmaCorp Ltd"
+      size="md"
+    />
+  )
+}
+```
+
+## With Image
+
+```tsx
+<AxCompanyLogo
+  name="PharmaCorp Ltd"
+  src="https://example.com/logo.png"
+  size="md"
+/>
+```
+
+When `src` is provided, it renders an image. Otherwise, it shows initials.
+
+## Sizes
+
+- **`sm`** — 28px (inline with text, compact lists)
+- **`md`** — 36px (default, list rows)
+- **`lg`** — 48px (cards, profile headers)
+- **`xl`** — 64px (organization pages, onboarding)
+
+```tsx
+<AxCompanyLogo name="PharmaCorp Ltd" size="sm" />
+<AxCompanyLogo name="PharmaCorp Ltd" size="md" />
+<AxCompanyLogo name="PharmaCorp Ltd" size="lg" />
+<AxCompanyLogo name="PharmaCorp Ltd" size="xl" />
+```
+
+## Shapes
+
+```tsx
+// Square (default)
+<AxCompanyLogo name="PharmaCorp Ltd" shape="square" />
+
+// Circle
+<AxCompanyLogo name="PharmaCorp Ltd" shape="circle" />
+```
+
+## Initials & Colors
+
+Initials are automatically extracted from the company name:
+
+- **"PharmaCorp Ltd"** → **"PC"**
+- **"Axmed"** → **"AX"**
+- **"Global Health Partners"** → **"GH"**
+
+Colors are deterministically generated from the name hash, ensuring the same company always gets the same color.
+
+```tsx
+<AxCompanyLogo name="PharmaCorp Ltd" />  {/* Always primary-100/600 */}
+<AxCompanyLogo name="MediGlobal SA" />   {/* Always cyan-100/700 */}
+<AxCompanyLogo name="AfriPharma Co" />   {/* Always green-100/700 */}
+```
+
+## Supplier List Row
+
+```tsx
+<Flex align="center" gap={12}>
+  <AxCompanyLogo name="PharmaCorp Ltd" size="md" />
+  <Flex vertical>
+    <AxText variant="body-sm" weight="medium">PharmaCorp Ltd</AxText>
+    <AxText variant="body-xs" color="secondary">Supplier · Active</AxText>
+  </Flex>
+</Flex>
+```
+
+## Order Card
+
+```tsx
+<Flex gap={12} align="center">
+  <AxCompanyLogo name="MediGlobal SA" size="lg" />
+  <Flex vertical>
+    <AxText variant="heading-sm">MediGlobal SA</AxText>
+    <AxText variant="body-sm" color="secondary">Pharmaceutical Supplier</AxText>
+  </Flex>
+</Flex>
+```
+
+## Props
+
+<ResponseField name="name" type="string" required>
+  Company/supplier name — used to derive initials and fallback color
+</ResponseField>
+
+<ResponseField name="src" type="string">
+  Optional logo image URL. When provided, renders an image instead of initials.
+</ResponseField>
+
+<ResponseField name="size" type="'sm' | 'md' | 'lg' | 'xl'" default="'md'">
+  Size preset:
+  - `sm`: 28px
+  - `md`: 36px (default)
+  - `lg`: 48px
+  - `xl`: 64px
+</ResponseField>
+
+<ResponseField name="shape" type="'square' | 'circle'" default="'square'">
+  Shape of the avatar
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional class name
+</ResponseField>
+
+<ResponseField name="style" type="CSSProperties">
+  Inline styles
+</ResponseField>
+
+## Best Practices
+
+<Check>Use `size="md"` for list rows and table cells</Check>
+<Check>Use `size="lg"` or `size="xl"` for profile pages and onboarding</Check>
+<Check>Keep `shape="square"` for company logos — it's more professional</Check>
+<Check>Let the component generate initials automatically — don't override</Check>
+
+<Warning>Don't use circle shape for logos with square branding — it crops the image</Warning>
+<Warning>Ensure logo images are square (1:1 aspect ratio) for best results</Warning>
+
+## Accessibility
+
+- Uses `role="img"` with `aria-label={name}` for initials
+- Image variant uses proper `alt` text
+- Colors meet WCAG AA contrast requirements
+
+## API Reference
+
+See the [Company Logo API](/api/company-logo) for the complete TypeScript interface.
+
+## Related Components
+
+- [Text](/components/text) — Pair with company names
+- [Tag](/components/tag) — For supplier status badges
+- [Badge](/components/badge) — For notification counts

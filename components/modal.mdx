@@ -1,0 +1,362 @@
+---
+title: Modal
+description: Dialog overlays for focused interactions and user confirmations.
+icon: window
+---
+
+AxModal provides dialog overlays for forms, confirmations, and focused content. It features built-in description text, danger mode for destructive actions, and three preset sizes.
+
+## Basic Usage
+
+<CodeGroup>
+```tsx TypeScript
+import { AxModal, AxButton } from '@axmed/design-system'
+import { useState } from 'react'
+
+function Example() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <AxButton onClick={() => setOpen(true)}>Open Modal</AxButton>
+      <AxModal
+        title="Modal Title"
+        description="This is a description below the title."
+        open={open}
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+      >
+        Modal body content goes here.
+      </AxModal>
+    </>
+  )
+}
+```
+
+```jsx JavaScript
+import { AxModal, AxButton } from '@axmed/design-system'
+import { useState } from 'react'
+
+function Example() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <AxButton onClick={() => setOpen(true)}>Open Modal</AxButton>
+      <AxModal
+        title="Modal Title"
+        description="This is a description below the title."
+        open={open}
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+      >
+        Modal body content goes here.
+      </AxModal>
+    </>
+  )
+}
+```
+</CodeGroup>
+
+## Sizes
+
+Three preset widths:
+
+```tsx
+<AxModal size="sm" title="Small Modal" open={open}>  {/* 380px */}
+  Compact size for simple confirmations
+</AxModal>
+
+<AxModal size="md" title="Medium Modal" open={open}>  {/* 520px - default */}
+  Standard size for forms and content
+</AxModal>
+
+<AxModal size="lg" title="Large Modal" open={open}>  {/* 720px */}
+  Wide size for tables and complex content
+</AxModal>
+```
+
+## Danger Mode
+
+Make the primary action button red for destructive actions:
+
+```tsx
+<AxModal
+  title="Cancel this order?"
+  description="This action cannot be undone. The order will be permanently cancelled."
+  open={open}
+  danger
+  size="sm"
+  okText="Yes, Cancel Order"
+  cancelText="Keep Order"
+  onOk={handleDelete}
+  onCancel={() => setOpen(false)}
+>
+  <Alert type="warning" showIcon message="2 suppliers have already submitted bids." />
+</AxModal>
+```
+
+## Loading State
+
+Show loading spinner on the OK button:
+
+```tsx
+import { useState } from 'react'
+
+function ModalWithLoading() {
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const handleOk = async () => {
+    setLoading(true)
+    await saveChanges()
+    setLoading(false)
+    setOpen(false)
+  }
+
+  return (
+    <AxModal
+      title="Save changes?"
+      open={open}
+      confirmLoading={loading}
+      onOk={handleOk}
+      onCancel={() => setOpen(false)}
+    >
+      Your changes will be applied immediately.
+    </AxModal>
+  )
+}
+```
+
+## Custom Footer
+
+Replace the default footer buttons:
+
+```tsx
+<AxModal
+  title="Success"
+  open={open}
+  footer={
+    <AxButton onClick={() => setOpen(false)} style={{ width: '100%' }}>
+      View Your Orders
+    </AxButton>
+  }
+  onCancel={() => setOpen(false)}
+>
+  Your order has been submitted successfully.
+</AxModal>
+```
+
+Set `footer={null}` to remove the footer entirely.
+
+## Common Patterns
+
+### Confirmation Modal
+
+```tsx
+import { Alert } from 'antd'
+
+function DeleteConfirmation() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <AxButton variant="danger" onClick={() => setOpen(true)}>
+        Cancel Order
+      </AxButton>
+      <AxModal
+        title="Cancel this order?"
+        description="This action cannot be undone. The order will be permanently cancelled and all associated bids will be withdrawn."
+        open={open}
+        danger
+        size="sm"
+        okText="Yes, Cancel Order"
+        cancelText="Keep Order"
+        onOk={() => {
+          handleCancel()
+          setOpen(false)
+        }}
+        onCancel={() => setOpen(false)}
+      >
+        <Alert
+          type="warning"
+          showIcon
+          message="2 suppliers have already submitted bids for this order."
+        />
+      </AxModal>
+    </>
+  )
+}
+```
+
+### Success Modal
+
+```tsx
+import { CheckCircleFilled } from '@ant-design/icons'
+
+<AxModal
+  title={
+    <div style={{ textAlign: 'center' }}>
+      <CheckCircleFilled style={{ fontSize: 40, color: 'var(--success)', display: 'block', marginBottom: 12 }} />
+      Order submitted successfully
+    </div>
+  }
+  description={
+    <span style={{ display: 'block', textAlign: 'center' }}>
+      Your order has been received and is being reviewed by our team.
+    </span>
+  }
+  open={open}
+  size="sm"
+  footer={
+    <AxButton onClick={() => setOpen(false)} style={{ width: '100%' }}>
+      View Your Orders
+    </AxButton>
+  }
+  onCancel={() => setOpen(false)}
+/>
+```
+
+### Form Modal
+
+```tsx
+import { AxInput } from '@axmed/design-system'
+import { Select, Checkbox } from 'antd'
+
+function AddAddressModal() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <AxButton onClick={() => setOpen(true)}>Add Address</AxButton>
+      <AxModal
+        title="Add delivery address"
+        description="This address will be available for all future orders."
+        open={open}
+        okText="Add Address"
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <AxInput label="Address Name" placeholder="e.g. Main Warehouse" />
+          <div style={{ display: 'flex', gap: 12 }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: 4, fontSize: 13, fontWeight: 500 }}>
+                Country
+              </label>
+              <Select
+                placeholder="Select country"
+                style={{ width: '100%' }}
+                options={[
+                  { value: 'ke', label: 'Kenya' },
+                  { value: 'ng', label: 'Nigeria' },
+                ]}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: 4, fontSize: 13, fontWeight: 500 }}>
+                City
+              </label>
+              <Select placeholder="Select city" style={{ width: '100%' }} />
+            </div>
+          </div>
+          <AxInput label="Address Line" placeholder="Street address, building, floor..." />
+          <Checkbox>Use as billing address</Checkbox>
+        </div>
+      </AxModal>
+    </>
+  )
+}
+```
+
+### Detail View Modal
+
+```tsx
+import { AxText } from '@axmed/design-system'
+
+<AxModal
+  title="Supplier Details"
+  open={open}
+  footer={
+    <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+      <AxButton variant="secondary" onClick={() => setOpen(false)}>
+        View Full Profile
+      </AxButton>
+      <AxButton onClick={() => setOpen(false)}>Got It</AxButton>
+    </div>
+  }
+  onCancel={() => setOpen(false)}
+>
+  <div style={{
+    background: 'var(--neutral-50)',
+    borderRadius: 8,
+    padding: 16,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 12
+  }}>
+    {[
+      { label: 'Supplier', value: 'PharmaCorp Ltd' },
+      { label: 'Unit Price', value: '$2.40 / unit' },
+      { label: 'Lead Time', value: '14 days' },
+    ].map((item) => (
+      <div key={item.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <AxText variant="body-sm" color="secondary">{item.label}</AxText>
+        <AxText variant="body-sm" weight="medium">{item.value}</AxText>
+      </div>
+    ))}
+  </div>
+</AxModal>
+```
+
+## Props
+
+<ResponseField name="title" type="ReactNode" required>
+  Modal title text
+</ResponseField>
+
+<ResponseField name="description" type="ReactNode">
+  Muted subtitle displayed below the title
+</ResponseField>
+
+<ResponseField name="open" type="boolean" required>
+  Whether the modal is visible
+</ResponseField>
+
+<ResponseField name="size" type="string" default="md">
+  Preset width: `sm` (380px), `md` (520px), or `lg` (720px)
+</ResponseField>
+
+<ResponseField name="danger" type="boolean" default="false">
+  Make the primary action button red for destructive actions
+</ResponseField>
+
+<ResponseField name="okText" type="string" default="OK">
+  Text for the OK button
+</ResponseField>
+
+<ResponseField name="cancelText" type="string" default="Cancel">
+  Text for the Cancel button
+</ResponseField>
+
+<ResponseField name="confirmLoading" type="boolean" default="false">
+  Show loading spinner on the OK button
+</ResponseField>
+
+<ResponseField name="footer" type="ReactNode">
+  Custom footer content. Set to `null` to hide footer.
+</ResponseField>
+
+<ResponseField name="centered" type="boolean" default="true">
+  Center the modal vertically on the screen
+</ResponseField>
+
+<ResponseField name="onOk" type="function">
+  OK button click handler
+</ResponseField>
+
+<ResponseField name="onCancel" type="function">
+  Cancel button and close icon click handler
+</ResponseField>
+
+See the [full API reference](/api/modal) for all available props.

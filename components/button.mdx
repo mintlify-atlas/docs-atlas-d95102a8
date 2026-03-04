@@ -1,0 +1,187 @@
+---
+title: Button
+description: Trigger actions with primary, secondary, and danger button variants.
+icon: hand-pointer
+---
+
+Buttons allow users to trigger actions and make choices with a single click. The AxButton component provides six semantic variants and supports icons, loading states, and multiple sizes.
+
+## Basic Usage
+
+<CodeGroup>
+```tsx TypeScript
+import { AxButton } from '@axmed/design-system'
+
+function Example() {
+  return (
+    <AxButton variant="primary" onClick={() => console.log('Clicked')}>
+      Submit Order
+    </AxButton>
+  )
+}
+```
+
+```jsx JavaScript
+import { AxButton } from '@axmed/design-system'
+
+function Example() {
+  return (
+    <AxButton variant="primary" onClick={() => console.log('Clicked')}>
+      Submit Order
+    </AxButton>
+  )
+}
+```
+</CodeGroup>
+
+## Variants
+
+Buttons come in six semantic variants to communicate different action priorities.
+
+<Tabs>
+  <Tab title="Preview">
+    The button renders with different visual styles based on the `variant` prop:
+    - **primary** - Main call-to-action (solid purple background)
+    - **secondary** - Secondary actions (outlined)
+    - **ghost** - Subtle actions (transparent with border on hover)
+    - **danger** - Destructive actions (solid red background)
+    - **link** - Navigation-style (text only, no border)
+    - **text** - Minimal actions (text only, subtle hover)
+  </Tab>
+  <Tab title="Code">
+    ```tsx
+    <AxButton variant="primary">Primary</AxButton>
+    <AxButton variant="secondary">Secondary</AxButton>
+    <AxButton variant="ghost">Ghost</AxButton>
+    <AxButton variant="danger">Danger</AxButton>
+    <AxButton variant="link">Link</AxButton>
+    <AxButton variant="text">Text</AxButton>
+    ```
+  </Tab>
+</Tabs>
+
+## Sizes
+
+Three size options for different contexts.
+
+```tsx
+<AxButton size="small">Small</AxButton>
+<AxButton size="middle">Middle</AxButton>  {/* default */}
+<AxButton size="large">Large</AxButton>
+```
+
+## With Icons
+
+Buttons can display icons before or after the label text.
+
+```tsx
+import { SearchOutlined, DownloadOutlined, PlusOutlined } from '@ant-design/icons'
+
+<AxButton icon={<SearchOutlined />}>Search</AxButton>
+<AxButton icon={<DownloadOutlined />} iconPlacement="end">Download</AxButton>
+<AxButton icon={<PlusOutlined />} shape="circle" />  {/* Icon only */}
+```
+
+## States
+
+### Loading
+
+Show a spinner during async operations:
+
+```tsx
+const [loading, setLoading] = useState(false)
+
+const handleSubmit = async () => {
+  setLoading(true)
+  await submitOrder()
+  setLoading(false)
+}
+
+<AxButton loading={loading} onClick={handleSubmit}>
+  Submit Order
+</AxButton>
+```
+
+### Disabled
+
+```tsx
+<AxButton disabled>Not Available</AxButton>
+```
+
+## Full Width
+
+Make the button span the full width of its container:
+
+```tsx
+<AxButton block>Full Width Button</AxButton>
+```
+
+## Common Patterns
+
+### Form Actions
+
+```tsx
+<div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+  <AxButton variant="secondary" onClick={onCancel}>Cancel</AxButton>
+  <AxButton variant="primary" onClick={onSubmit}>Submit</AxButton>
+</div>
+```
+
+### Danger Confirmation
+
+```tsx
+<AxButton variant="danger" onClick={handleDelete}>
+  Delete Order
+</AxButton>
+```
+
+### Icon-Only Actions
+
+```tsx
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+
+<div style={{ display: 'flex', gap: 8 }}>
+  <AxButton variant="text" size="small" icon={<EditOutlined />} />
+  <AxButton variant="text" size="small" icon={<DeleteOutlined />} />
+</div>
+```
+
+## Props
+
+<ResponseField name="variant" type="string" default="primary">
+  Visual variant: `primary`, `secondary`, `ghost`, `danger`, `link`, or `text`
+</ResponseField>
+
+<ResponseField name="size" type="string" default="middle">
+  Button size: `small`, `middle`, or `large`
+</ResponseField>
+
+<ResponseField name="loading" type="boolean" default="false">
+  Show loading spinner
+</ResponseField>
+
+<ResponseField name="disabled" type="boolean" default="false">
+  Disable the button
+</ResponseField>
+
+<ResponseField name="block" type="boolean" default="false">
+  Make button full width
+</ResponseField>
+
+<ResponseField name="icon" type="ReactNode">
+  Icon to display before the button text
+</ResponseField>
+
+<ResponseField name="iconPlacement" type="string" default="start">
+  Icon position: `start` or `end`
+</ResponseField>
+
+<ResponseField name="shape" type="string">
+  Button shape: `default`, `circle`, or `round`
+</ResponseField>
+
+<ResponseField name="onClick" type="function">
+  Click event handler
+</ResponseField>
+
+See the [full API reference](/api/button) for all available props.

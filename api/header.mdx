@@ -1,0 +1,327 @@
+---
+title: "AxHeader"
+description: "A flexible horizontal header with sidebar toggle, navigation items, and customizable slots."
+---
+
+## Overview
+
+`AxHeader` is a horizontal navigation header that supports sidebar integration, horizontal navigation items, and flexible content zones. It includes two visual variants (default white and branded navy) and automatic mobile responsiveness.
+
+## Import
+
+```tsx
+import AxHeader from "@axmed/design-system/components/AxHeader"
+import type { HeaderNavItem } from "@axmed/design-system/components/AxHeader"
+```
+
+## Basic Usage
+
+```tsx
+import { BellOutlined } from "@ant-design/icons"
+
+function AppHeader() {
+  const [collapsed, setCollapsed] = useState(false)
+
+  return (
+    <AxHeader
+      onSidebarToggle={() => setCollapsed(!collapsed)}
+      sidebarCollapsed={collapsed}
+      left={<Logo />}
+      right={
+        <>
+          <Badge count={3}>
+            <Button icon={<BellOutlined />} />
+          </Badge>
+          <Avatar icon={<UserOutlined />} />
+        </>
+      }
+    />
+  )
+}
+```
+
+## Props
+
+<ParamField path="left" type="React.ReactNode">
+  Left slot - logo, breadcrumbs, or any content. Renders after the sidebar toggle button (if present).
+</ParamField>
+
+<ParamField path="center" type="React.ReactNode">
+  Center slot - custom content that overrides `navItems`. Hidden on mobile (< 768px).
+</ParamField>
+
+<ParamField path="right" type="React.ReactNode">
+  Right slot - action buttons, badges, profile dropdown, or any content.
+</ParamField>
+
+<ParamField path="navItems" type="HeaderNavItem[]">
+  Convenience prop for horizontal navigation items rendered in the center zone. Ignored when `center` is provided. Items automatically collapse to a dropdown menu on mobile.
+</ParamField>
+
+<ParamField path="selectedKey" type="string">
+  Key of the currently active navigation item (when using `navItems`).
+</ParamField>
+
+<ParamField path="onSidebarToggle" type="() => void">
+  Callback when sidebar toggle button is clicked. When provided, renders a toggle button on the far left. Shows fold/unfold icon on desktop, hamburger on mobile.
+</ParamField>
+
+<ParamField path="sidebarCollapsed" type="boolean">
+  Whether the companion sidebar is collapsed. Controls which toggle icon is shown (fold vs unfold).
+</ParamField>
+
+<ParamField path="variant" type="'default' | 'branded'" default="'default'">
+  Visual variant:
+  - `"default"` - White background, bottom border (dashboard)
+  - `"branded"` - Navy background, white text (marketplace)
+</ParamField>
+
+<ParamField path="sticky" type="boolean" default={true}>
+  Use sticky positioning to keep header visible on scroll.
+</ParamField>
+
+<ParamField path="height" type="number" default={56}>
+  Header height in pixels.
+</ParamField>
+
+<ParamField path="bordered" type="boolean">
+  Show a bottom border. Defaults to `true` for "default" variant, `false` for "branded" variant.
+</ParamField>
+
+<ParamField path="mobileLogo" type="React.ReactNode">
+  Logo shown on mobile in place of the sidebar toggle. Use when the sidebar is replaced by bottom navigation on mobile and the hamburger toggle is no longer needed.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS class name.
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles.
+</ParamField>
+
+## HeaderNavItem
+
+Navigation items for the center zone of the header.
+
+<Expandable title="HeaderNavItem Properties">
+
+<ParamField path="key" type="string" required>
+  Unique key used to match `selectedKey`.
+</ParamField>
+
+<ParamField path="label" type="React.ReactNode" required>
+  Visible label text or element.
+</ParamField>
+
+<ParamField path="icon" type="React.ReactNode">
+  Optional icon rendered before the label.
+</ParamField>
+
+<ParamField path="onClick" type="() => void">
+  Click handler for navigation.
+</ParamField>
+
+<ParamField path="badge" type="number">
+  Badge count shown on the item (e.g., notification count).
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable interaction with this item.
+</ParamField>
+
+</Expandable>
+
+```tsx
+type HeaderNavItem = {
+  key: string
+  label: React.ReactNode
+  icon?: React.ReactNode
+  onClick?: () => void
+  badge?: number
+  disabled?: boolean
+}
+```
+
+## Examples
+
+### Dashboard Header (Default Variant)
+
+```tsx
+import { RobotOutlined, ShoppingCartOutlined } from "@ant-design/icons"
+
+function DashboardHeader() {
+  const [collapsed, setCollapsed] = useState(false)
+
+  return (
+    <AxHeader
+      variant="default"
+      onSidebarToggle={() => setCollapsed(!collapsed)}
+      sidebarCollapsed={collapsed}
+      right={
+        <Space>
+          <AxButton variant="text" icon={<RobotOutlined />}>
+            Ask Axmed AI
+          </AxButton>
+          <Badge count={3}>
+            <AxButton variant="secondary" icon={<ShoppingCartOutlined />}>
+              Draft Orders
+            </AxButton>
+          </Badge>
+          <Avatar icon={<UserOutlined />} />
+        </Space>
+      }
+    />
+  )
+}
+```
+
+### Marketplace Header (Branded Variant)
+
+```tsx
+import { DashboardOutlined, AppstoreOutlined, ShoppingCartOutlined } from "@ant-design/icons"
+
+function MarketplaceHeader() {
+  const [active, setActive] = useState("dashboard")
+
+  const navItems = [
+    { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined />, onClick: () => setActive("dashboard") },
+    { key: "catalogue", label: "Catalogue", icon: <AppstoreOutlined />, onClick: () => setActive("catalogue") },
+    { key: "orders", label: "My Orders", icon: <ShoppingCartOutlined />, badge: 3, onClick: () => setActive("orders") },
+  ]
+
+  return (
+    <AxHeader
+      variant="branded"
+      left={<AxBrand variant="wordmark" theme="dark" />}
+      navItems={navItems}
+      selectedKey={active}
+      right={
+        <Space>
+          <Badge count={5}>
+            <AxButton variant="text" icon={<ShoppingCartOutlined />} />
+          </Badge>
+          <Avatar icon={<UserOutlined />} />
+        </Space>
+      }
+    />
+  )
+}
+```
+
+### With Sidebar Integration
+
+```tsx
+function AppLayout() {
+  const [collapsed, setCollapsed] = useState(false)
+  const [selected, setSelected] = useState("dashboard")
+
+  return (
+    <div style={{ display: "flex", height: "100vh" }}>
+      {/* Sidebar */}
+      <AxSideNav
+        items={sidenavItems}
+        selectedKey={selected}
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+        hideCollapseButton  {/* Let header control the toggle */}
+      />
+
+      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        {/* Header */}
+        <AxHeader
+          onSidebarToggle={() => setCollapsed(!collapsed)}
+          sidebarCollapsed={collapsed}
+          mobileLogo={<AxBrand variant="wordmark" />}
+          right={<UserActions />}
+        />
+
+        {/* Page content */}
+        <main style={{ flex: 1, overflow: "auto" }}>
+          {/* Your page content */}
+        </main>
+      </div>
+    </div>
+  )
+}
+```
+
+### With Horizontal Navigation
+
+```tsx
+const navItems = [
+  { key: "dashboard", label: "Dashboard", icon: <DashboardOutlined /> },
+  { key: "catalogue", label: "Catalogue", icon: <AppstoreOutlined /> },
+  { key: "orders", label: "My Orders", icon: <ShoppingCartOutlined />, badge: 3 },
+  { key: "reports", label: "Reports", icon: <BarChartOutlined />, disabled: true },
+]
+
+<AxHeader
+  left={<AxBrand variant="wordmark" />}
+  navItems={navItems}
+  selectedKey={activeKey}
+  right={<Avatar />}
+/>
+```
+
+### Custom Center Content
+
+```tsx
+<AxHeader
+  left={<Logo />}
+  center={
+    <Input.Search
+      placeholder="Search products, suppliers, tenders..."
+      style={{ maxWidth: 500 }}
+    />
+  }
+  right={<UserMenu />}
+/>
+```
+
+## Variants
+
+### Default
+
+White background with bottom border. Suitable for dashboard and internal application pages.
+
+```tsx
+<AxHeader variant="default" bordered={true} />
+```
+
+### Branded
+
+Navy background with white text. Suitable for marketplace and public-facing pages.
+
+```tsx
+<AxHeader variant="branded" bordered={false} />
+```
+
+## Mobile Behavior
+
+- Sidebar toggle shows as hamburger icon on mobile
+- `navItems` collapse into a dropdown menu on mobile
+- Center content is hidden on mobile (< 768px)
+- Use `mobileLogo` prop when sidebar uses bottom navigation instead of hamburger menu
+
+```tsx
+<AxHeader
+  onSidebarToggle={toggleSidebar}
+  mobileLogo={<AxBrand variant="wordmark" />}  {/* Shows on mobile */}
+  navItems={items}  {/* Becomes dropdown on mobile */}
+/>
+```
+
+## Accessibility
+
+- Uses semantic `<header>` with `role="banner"`
+- Toggle button has proper `aria-label` describing its action
+- Navigation uses `<nav>` with `role="navigation"`
+- Active items marked with `aria-current="page"`
+- Keyboard navigation support for all interactive elements
+
+## Related Components
+
+- [AxSideNav](/api/sidenav) - Vertical sidebar navigation
+- [AxButton](/api/button) - Action buttons for header slots
+- [AxBrand](/api/brand) - Logo component for branding

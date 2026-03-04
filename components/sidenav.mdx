@@ -1,0 +1,287 @@
+---
+title: Side Nav
+description: Collapsible sidebar navigation with icons, groups, and mobile bottom nav.
+---
+
+## Overview
+
+Side Nav is a full-featured sidebar component that supports icons, collapsible groups, section labels, and responsive mobile navigation. It collapses to icon-only mode and shows a bottom tab bar on mobile devices.
+
+## Usage
+
+```tsx
+import { AxSideNav } from "@axmed/design-system"
+import { AxBrand } from "@axmed/design-system"
+import { DashboardOutlined, ShoppingCartOutlined } from "@ant-design/icons"
+import { useState } from "react"
+
+function AppLayout() {
+  const [collapsed, setCollapsed] = useState(false)
+  const [selected, setSelected] = useState("dashboard")
+
+  const items = [
+    {
+      key: "dashboard",
+      label: "Dashboard",
+      icon: <DashboardOutlined />,
+      onClick: () => setSelected("dashboard"),
+    },
+    {
+      type: "group",
+      key: "orders",
+      label: "Orders",
+      icon: <ShoppingCartOutlined />,
+      children: [
+        { key: "orders-all", label: "All Orders", onClick: () => setSelected("orders-all") },
+        { key: "orders-pending", label: "Pending", onClick: () => setSelected("orders-pending") },
+      ],
+    },
+  ]
+
+  return (
+    <AxSideNav
+      items={items}
+      selectedKey={selected}
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      logo={<AxBrand variant="wordmark" size="md" />}
+    />
+  )
+}
+```
+
+## Navigation Items
+
+### Basic Item
+
+```tsx
+{
+  key: "dashboard",
+  label: "Dashboard",
+  icon: <DashboardOutlined />,
+  onClick: () => navigate("/dashboard"),
+}
+```
+
+### Collapsible Group
+
+```tsx
+{
+  type: "group",
+  key: "orders",
+  label: "Orders",
+  icon: <ShoppingCartOutlined />,
+  defaultOpen: true,  // Start expanded
+  children: [
+    { key: "orders-all", label: "All Orders", onClick: () => {} },
+    { key: "orders-pending", label: "Pending", onClick: () => {} },
+  ],
+}
+```
+
+When collapsed, clicking a group icon shows a popover flyout with the children.
+
+### Section Label
+
+```tsx
+{
+  type: "section",
+  key: "sec-platform",
+  label: "Platform",
+}
+```
+
+Section labels are hidden when the sidebar is collapsed.
+
+### Divider
+
+```tsx
+{
+  type: "divider",
+  key: "div-1",
+}
+```
+
+## User Profile Area
+
+```tsx
+const UserProfile = () => (
+  <Flex align="center" gap={10}>
+    <Avatar size={32} icon={<UserOutlined />} />
+    <Flex vertical>
+      <AxText variant="body-sm" weight="medium">Ahmed Al-Rashid</AxText>
+      <AxText variant="body-xs" color="secondary">ahmed@axmed.com</AxText>
+    </Flex>
+  </Flex>
+)
+
+const userActions = [
+  { key: "account", label: "My Account", icon: <UserOutlined /> },
+  { key: "settings", label: "Settings", icon: <SettingOutlined /> },
+  { type: "divider" },
+  { key: "logout", label: "Log Out", icon: <LogoutOutlined />, danger: true },
+]
+
+<AxSideNav
+  user={<UserProfile />}
+  userActions={userActions}
+  // ... other props
+/>
+```
+
+## Collapsible State
+
+```tsx
+const [collapsed, setCollapsed] = useState(false)
+
+<AxSideNav
+  collapsed={collapsed}
+  onCollapse={setCollapsed}
+  logo={<AxBrand variant={collapsed ? "icon" : "wordmark"} size="md" />}
+  // ... items
+/>
+```
+
+- **Expanded**: Shows full labels, group children inline
+- **Collapsed**: Icon-only mode, groups open in popover flyouts
+
+## Mobile Bottom Nav
+
+On screens < 768px, Side Nav automatically shows a fixed bottom tab bar with the first 4 top-level items. Overflow items go into a "More" menu.
+
+```tsx
+// Shows bottom nav on mobile by default
+<AxSideNav
+  showMobileNav={true}  // default
+  items={items}
+/>
+
+// Or disable if you have a custom mobile solution
+<AxSideNav
+  showMobileNav={false}
+  items={items}
+/>
+```
+
+## With Header
+
+Combine with AxHeader for a complete app shell:
+
+```tsx
+const [collapsed, setCollapsed] = useState(false)
+const [selected, setSelected] = useState("dashboard")
+
+return (
+  <div style={{ display: "flex", height: "100vh" }}>
+    <AxSideNav
+      items={items}
+      selectedKey={selected}
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      hideCollapseButton  // Header provides the toggle
+      logo={<AxBrand variant={collapsed ? "icon" : "wordmark"} />}
+      user={<UserProfile />}
+      userActions={userActions}
+    />
+    
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <AxHeader
+        onSidebarToggle={() => setCollapsed(!collapsed)}
+        sidebarCollapsed={collapsed}
+        mobileLogo={<AxBrand variant="wordmark" />}
+        right={<ActionButtons />}
+      />
+      <main style={{ flex: 1, overflow: "auto", padding: 24 }}>
+        {/* Page content */}
+      </main>
+    </div>
+  </div>
+)
+```
+
+## Props
+
+<ResponseField name="items" type="NavItem[]" required>
+  Array of navigation items. Each item can be:
+  
+  - **NavItem**: `{ key, label, icon, onClick?, disabled? }`
+  - **NavGroup**: `{ type: "group", key, label, icon, children: NavItem[], defaultOpen? }`
+  - **NavSection**: `{ type: "section", key, label }`
+  - **NavDivider**: `{ type: "divider", key }`
+</ResponseField>
+
+<ResponseField name="selectedKey" type="string">
+  Key of the currently active item
+</ResponseField>
+
+<ResponseField name="collapsed" type="boolean" default="false">
+  Whether the sidebar is collapsed to icon-only mode
+</ResponseField>
+
+<ResponseField name="onCollapse" type="(collapsed: boolean) => void">
+  Called when the user toggles collapse
+</ResponseField>
+
+<ResponseField name="logo" type="ReactNode">
+  Logo/brand slot rendered at the top
+</ResponseField>
+
+<ResponseField name="user" type="ReactNode">
+  User profile slot pinned to the bottom
+</ResponseField>
+
+<ResponseField name="userActions" type="ActionItem[]">
+  Profile action menu items shown when clicking the user area (e.g. My Account, Settings, Log Out)
+</ResponseField>
+
+<ResponseField name="width" type="number" default="240">
+  Width when expanded (px)
+</ResponseField>
+
+<ResponseField name="collapsedWidth" type="number" default="64">
+  Width when collapsed (px)
+</ResponseField>
+
+<ResponseField name="hideCollapseButton" type="boolean" default="false">
+  Hide the built-in collapse toggle button. Use when AxHeader provides the toggle instead.
+</ResponseField>
+
+<ResponseField name="showMobileNav" type="boolean" default="true">
+  Show a fixed bottom tab bar on mobile (< 768px) instead of the sidebar
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional class name
+</ResponseField>
+
+<ResponseField name="style" type="CSSProperties">
+  Inline styles
+</ResponseField>
+
+## Best Practices
+
+<Check>Use icons for all top-level items to support collapsed mode</Check>
+<Check>Group related pages under a NavGroup (e.g., "Orders" → "All", "Pending", "Completed")</Check>
+<Check>Sync `selectedKey` with your router to highlight the active page</Check>
+<Check>Use section labels to organize long nav lists</Check>
+
+<Warning>Don't nest groups more than one level deep — keep the hierarchy flat</Warning>
+<Warning>Avoid more than 10 top-level items — consider splitting into multiple sections</Warning>
+
+## Accessibility
+
+- Uses semantic `<nav>` element with `aria-label="Main navigation"`
+- Items use `role="list"` and `role="listitem"`
+- Active items marked with `aria-current="page"`
+- Collapsed items have `aria-label` for screen readers
+- Groups use `aria-expanded` to indicate open/closed state
+
+## API Reference
+
+See the [Side Nav API](/api/sidenav) for the complete TypeScript interface.
+
+## Related Components
+
+- [Header](/components/header) — Pair with Side Nav for full app layout
+- [Brand](/components/brand) — Use in the `logo` slot
+- [Action Menu](/components/action-menu) — Powers the user profile dropdown

@@ -1,0 +1,184 @@
+---
+title: 'Typography'
+description: 'Font families, weights, sizes, and text styles in the Axmed Design System'
+---
+
+# Typography
+
+The Axmed Design System uses a carefully crafted typographic scale built on rem units to ensure text scales with user browser font-size preferences (WCAG 1.4.4 compliant).
+
+## Font Families
+
+We use two primary typefaces across the design system:
+
+<CodeGroup>
+```css Font Family Tokens
+/* Sans-serif — Primary UI typeface */
+--font-family-sans: "Figtree", sans-serif;
+
+/* Monospace — Code and technical content */
+--font-family-mono: "Fira Code", monospace;
+```
+</CodeGroup>
+
+### Figtree Variable Font
+
+Figtree is our primary typeface, chosen for its excellent readability and modern appearance. It's a variable font that supports precise weight adjustments.
+
+## Font Weights
+
+Figtree uses specific variable font weight values for consistent weight hierarchy:
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--font-weight-regular` | 450 | Body text, default UI text |
+| `--font-weight-medium` | 550 | Emphasis, labels, nav items |
+| `--font-weight-semibold` | 650 | Headings, strong emphasis |
+| `--font-weight-bold` | 700 | High emphasis, CTAs |
+
+<CodeGroup>
+```css Font Weight Tokens
+--font-weight-regular: 450;
+--font-weight-medium: 550;
+--font-weight-semibold: 650;
+--font-weight-bold: 700;
+```
+</CodeGroup>
+
+## Font Sizes
+
+All font sizes use rem units, ensuring they scale proportionally with the user's browser font size preference. Base size is 16px at default browser settings.
+
+| Token | Value | Pixel Equivalent | Common Usage |
+|-------|-------|------------------|-------------|
+| `--font-size-11` | 0.6875rem | 11px | Fine print, metadata |
+| `--font-size-12` | 0.75rem | 12px | Small labels, captions |
+| `--font-size-13` | 0.8125rem | 13px | Compact UI text |
+| `--font-size-14` | 0.875rem | 14px | Body text, form labels |
+| `--font-size-15` | 0.9375rem | 15px | Card titles |
+| `--font-size-16` | 1rem | 16px | Base body text |
+| `--font-size-18` | 1.125rem | 18px | Modal/drawer titles |
+| `--font-size-20` | 1.25rem | 20px | Section headings |
+| `--font-size-24` | 1.5rem | 24px | Page headings |
+| `--font-size-30` | 1.875rem | 30px | Large headings |
+| `--font-size-36` | 2.25rem | 36px | Display headings |
+| `--font-size-48` | 3rem | 48px | Hero text |
+
+<CodeGroup>
+```css Font Size Tokens
+--font-size-11: 0.6875rem;  /* 11px @ 16px root */
+--font-size-12: 0.75rem;    /* 12px */
+--font-size-13: 0.8125rem;  /* 13px */
+--font-size-14: 0.875rem;   /* 14px */
+--font-size-15: 0.9375rem;  /* 15px — card titles */
+--font-size-16: 1rem;       /* 16px */
+--font-size-18: 1.125rem;   /* 18px — modal/drawer titles */
+--font-size-20: 1.25rem;    /* 20px */
+--font-size-24: 1.5rem;     /* 24px */
+--font-size-30: 1.875rem;   /* 30px */
+--font-size-36: 2.25rem;    /* 36px */
+--font-size-48: 3rem;       /* 48px */
+```
+</CodeGroup>
+
+## Line Heights
+
+Line heights maintain proportional spacing and are also defined in rem units for consistency:
+
+| Token | Value | Pixel Equivalent | Usage |
+|-------|-------|------------------|-------|
+| `--font-line-height-16` | 1rem | 16px | Tight spacing |
+| `--font-line-height-18` | 1.125rem | 18px | Body-xs (1.64× of 11px) |
+| `--font-line-height-20` | 1.25rem | 20px | Compact body text |
+| `--font-line-height-24` | 1.5rem | 24px | Default body text |
+| `--font-line-height-32` | 2rem | 32px | Headings |
+| `--font-line-height-40` | 2.5rem | 40px | Large headings |
+| `--font-line-height-48` | 3rem | 48px | Display headings |
+| `--font-line-height-52` | 3.25rem | 52px | Hero text |
+
+<CodeGroup>
+```css Line Height Tokens
+--font-line-height-16: 1rem;      /* 16px */
+--font-line-height-18: 1.125rem;  /* 18px — body-xs (1.64× of 11px) */
+--font-line-height-20: 1.25rem;   /* 20px */
+--font-line-height-24: 1.5rem;    /* 24px */
+--font-line-height-32: 2rem;      /* 32px */
+--font-line-height-40: 2.5rem;    /* 40px */
+--font-line-height-48: 3rem;      /* 48px */
+--font-line-height-52: 3.25rem;   /* 52px */
+```
+</CodeGroup>
+
+## Letter Spacing
+
+Letter spacing tokens are used for headings to achieve tighter tracking. Body text uses the browser default (0).
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--font-letter-spacing-xs` | -0.54px | Large display headings |
+| `--font-letter-spacing-sm` | -0.3px | Medium headings |
+| `--font-letter-spacing-md` | -0.2px | Small headings |
+
+<CodeGroup>
+```css Letter Spacing Tokens
+--font-letter-spacing-xs: -0.54px;
+--font-letter-spacing-sm: -0.3px;
+--font-letter-spacing-md: -0.2px;
+```
+</CodeGroup>
+
+## Usage Examples
+
+### Basic Text Styling
+
+```css
+.heading {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-24);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--font-line-height-32);
+  letter-spacing: var(--font-letter-spacing-sm);
+}
+
+.body-text {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--font-line-height-20);
+}
+
+.code {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-13);
+}
+```
+
+### Using with AxText Component
+
+The AxText component provides semantic text variants that use these tokens under the hood:
+
+```tsx
+import { AxText } from 'axmed-design-system';
+
+<AxText variant="heading-lg">Page Heading</AxText>
+<AxText variant="body">Regular body text</AxText>
+<AxText variant="caption">Small caption text</AxText>
+```
+
+<Note>
+  All typography tokens are defined in `_typography.scss` and automatically included when you import the design system's CSS.
+</Note>
+
+## Accessibility
+
+### Rem Units for User Preferences
+
+Using rem units ensures that all text scales proportionally when users adjust their browser's default font size, meeting WCAG 1.4.4 (Resize Text) requirements.
+
+### Readable Line Heights
+
+Line height ratios follow WCAG 1.4.12 (Text Spacing) guidelines, ensuring comfortable reading experiences with sufficient vertical spacing between lines.
+
+### Weight Contrast
+
+The four-step weight scale provides clear visual hierarchy while maintaining readability across different font weights.

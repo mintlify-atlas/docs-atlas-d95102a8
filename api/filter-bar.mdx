@@ -1,0 +1,300 @@
+---
+title: AxFilterBar
+description: Multi-purpose filtering component with search, dropdowns, and sorting
+---
+
+<Note>
+  **Component Location:** `design-system/components/AxFilterBar`
+</Note>
+
+## Overview
+
+`AxFilterBar` is a flexible filtering toolbar that combines search input, multiple filter dropdowns, a sort selector, and optional action buttons. Designed for list and table views where users need to refine large datasets.
+
+## Import
+
+```tsx
+import AxFilterBar from '@/design-system/components/AxFilterBar'
+import type { AxFilterBarProps, FilterConfig, SortConfig } from '@/design-system/components/AxFilterBar'
+```
+
+## Basic Usage
+
+```tsx
+<AxFilterBar
+  search={{
+    placeholder: "Search medications...",
+    value: searchQuery,
+    onChange: (e) => setSearchQuery(e.target.value)
+  }}
+  resultCount={24}
+/>
+```
+
+## With Filters and Sort
+
+```tsx
+const filters: FilterConfig[] = [
+  {
+    key: "status",
+    placeholder: "Status",
+    options: [
+      { label: "Active", value: "active" },
+      { label: "Inactive", value: "inactive" }
+    ],
+    value: statusFilter,
+    onChange: setStatusFilter
+  },
+  {
+    key: "category",
+    placeholder: "Category",
+    options: categoryOptions,
+    multiple: true,
+    maxTagCount: 2,
+    value: categoryFilter,
+    onChange: setCategoryFilter
+  }
+]
+
+const sort: SortConfig = {
+  options: [
+    { label: "Name A-Z", value: "name-asc" },
+    { label: "Name Z-A", value: "name-desc" },
+    { label: "Recently Added", value: "date-desc" }
+  ],
+  value: sortBy,
+  onChange: setSortBy
+}
+
+<AxFilterBar
+  filters={filters}
+  sort={sort}
+  resultCount="24 medications"
+  extra={<Button type="primary">Add Medication</Button>}
+/>
+```
+
+## Props
+
+### AxFilterBarProps
+
+<ParamField path="search" type="object | false">
+  Search input configuration. Pass `false` to hide the search input entirely.
+  
+  <Expandable title="Search Config Properties">
+    <ParamField path="placeholder" type="string">
+      Placeholder text for the search input.
+    </ParamField>
+    
+    <ParamField path="value" type="string">
+      Controlled value for the search input.
+    </ParamField>
+    
+    <ParamField path="onChange" type="React.ChangeEventHandler<HTMLInputElement>">
+      Change handler for the search input.
+    </ParamField>
+    
+    <ParamField path="width" type="number | string">
+      Custom width for the search input.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="filters" type="FilterConfig[]">
+  Array of filter dropdown configurations. See `FilterConfig` type below.
+</ParamField>
+
+<ParamField path="sort" type="SortConfig">
+  Sort dropdown configuration. See `SortConfig` type below.
+</ParamField>
+
+<ParamField path="resultCount" type="number | string">
+  Result count displayed below the filter bar. Pass a number for automatic "X results" formatting, or a custom string like "24 medications".
+</ParamField>
+
+<ParamField path="extra" type="React.ReactNode">
+  Extra content rendered on the right side of the bar (e.g., action buttons, CTAs).
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS class name for the container.
+</ParamField>
+
+## Type Definitions
+
+### FilterConfig
+
+```tsx
+export type FilterConfig = {
+  /** Unique key for the filter */
+  key: string
+  /** Placeholder text for the select */
+  placeholder?: string
+  /** Select options */
+  options: SelectProps["options"]
+  /** Allow multiple selections */
+  multiple?: boolean
+  /** Max tags to show before "+N more" (default: 1 for multiple) */
+  maxTagCount?: number
+  /** Width of the select (default: 160px) */
+  width?: number | string
+  /** Allow clearing the selection */
+  allowClear?: boolean
+  /** Current value (controlled) */
+  value?: SelectProps["value"]
+  /** Change handler */
+  onChange?: SelectProps["onChange"]
+}
+```
+
+<ParamField path="key" type="string" required>
+  Unique identifier for this filter. Used as the React key.
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text shown in the dropdown.
+</ParamField>
+
+<ParamField path="options" type="SelectProps['options']" required>
+  Array of select options. Each option should have `label` and `value` properties.
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  Enable multi-select mode for this filter.
+</ParamField>
+
+<ParamField path="maxTagCount" type="number" default="1">
+  Maximum number of selected tags to display before showing "+N more". Only applies when `multiple={true}`.
+</ParamField>
+
+<ParamField path="width" type="number | string" default="160px">
+  Width of the select dropdown.
+</ParamField>
+
+<ParamField path="allowClear" type="boolean" default="true">
+  Show a clear button to reset the selection.
+</ParamField>
+
+<ParamField path="value" type="any">
+  Controlled value for the filter. Can be a string, number, or array (for multi-select).
+</ParamField>
+
+<ParamField path="onChange" type="(value: any, option: any) => void">
+  Callback fired when the selection changes.
+</ParamField>
+
+### SortConfig
+
+```tsx
+export type SortConfig = {
+  /** Sort options */
+  options: SelectProps["options"]
+  /** Current value (controlled) */
+  value?: SelectProps["value"]
+  /** Change handler */
+  onChange?: SelectProps["onChange"]
+  /** Width (default: 130px) */
+  width?: number | string
+  /** Show "Sort by" label (default: true) */
+  showLabel?: boolean
+}
+```
+
+<ParamField path="options" type="SelectProps['options']" required>
+  Array of sort options (e.g., `[{ label: "Name A-Z", value: "name-asc" }]`).
+</ParamField>
+
+<ParamField path="value" type="any">
+  Controlled value for the sort dropdown.
+</ParamField>
+
+<ParamField path="onChange" type="(value: any, option: any) => void">
+  Callback fired when sort selection changes.
+</ParamField>
+
+<ParamField path="width" type="number | string" default="130px">
+  Width of the sort dropdown.
+</ParamField>
+
+<ParamField path="showLabel" type="boolean" default="true">
+  Whether to show the "Sort by" label before the dropdown.
+</ParamField>
+
+## Examples
+
+### Filter Bar Without Search
+
+```tsx
+<AxFilterBar
+  search={false}
+  filters={[
+    {
+      key: "status",
+      placeholder: "All Statuses",
+      options: statusOptions,
+      value: status,
+      onChange: setStatus
+    }
+  ]}
+/>
+```
+
+### Multi-Select Filter
+
+```tsx
+const categoryFilter: FilterConfig = {
+  key: "categories",
+  placeholder: "Categories",
+  options: [
+    { label: "Antibiotics", value: "antibiotics" },
+    { label: "Analgesics", value: "analgesics" },
+    { label: "Vaccines", value: "vaccines" }
+  ],
+  multiple: true,
+  maxTagCount: 2,
+  value: selectedCategories,
+  onChange: setSelectedCategories
+}
+
+<AxFilterBar filters={[categoryFilter]} />
+```
+
+### With Custom Result Count
+
+```tsx
+<AxFilterBar
+  search={{ placeholder: "Search suppliers..." }}
+  resultCount={`${filteredCount} of ${totalCount} suppliers`}
+/>
+```
+
+### With Action Button
+
+```tsx
+<AxFilterBar
+  search={{ placeholder: "Search..." }}
+  filters={filters}
+  sort={sortConfig}
+  extra={
+    <Button type="primary" icon={<PlusOutlined />}>
+      Add New
+    </Button>
+  }
+/>
+```
+
+## Accessibility
+
+- Uses semantic `<search>` element with `aria-label="Filter results"`
+- Each filter dropdown has appropriate `aria-label` attributes
+- Sort dropdown uses `aria-labelledby` when label is visible
+- Result count uses `role="status"` and `aria-live="polite"` for screen reader announcements
+
+## Design Notes
+
+- Search input appears first (leftmost)
+- Filters and sort are grouped in the middle
+- Extra content (buttons) is always right-aligned
+- Result count renders below the main bar
+- All dropdowns use `popupMatchSelectWidth={false}` for flexible dropdown widths
+- Default widths: Search (flexible), Filters (160px), Sort (130px)

@@ -1,0 +1,174 @@
+---
+title: Axmed Design System
+description: A React component library built on Ant Design for healthcare B2B applications
+mode: custom
+---
+
+<div className="relative overflow-hidden bg-gradient-to-br from-[#261C7A] via-[#1A1456] to-[#0f0a2e] dark:from-[#1A1456] dark:via-[#0f0a2e] dark:to-black py-20">
+  <div className="max-w-6xl mx-auto px-6 lg:px-8">
+    <div className="text-center">
+      <h1 className="text-5xl sm:text-6xl font-bold text-white mb-6">
+        Axmed Design System
+      </h1>
+      <p className="text-xl text-gray-200 dark:text-gray-300 max-w-2xl mx-auto mb-10">
+        A production-ready React component library built on Ant Design, designed specifically for healthcare B2B applications
+      </p>
+      <div className="flex flex-wrap justify-center gap-4">
+        <a 
+          href="/quickstart" 
+          className="inline-flex items-center px-6 py-3 bg-white text-[#261C7A] font-semibold rounded-lg hover:bg-gray-100 transition-colors no-underline"
+        >
+          Get Started
+        </a>
+        <a 
+          href="/components/overview" 
+          className="inline-flex items-center px-6 py-3 border-2 border-white/30 bg-white/10 text-white font-semibold rounded-lg hover:bg-white/20 transition-colors no-underline"
+        >
+          Browse Components
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
+    Quick start
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Get up and running with Axmed Design System in minutes
+  </p>
+
+  <Steps>
+    <Step title="Install the package">
+      Add Axmed Design System to your React project using your preferred package manager:
+
+      <CodeGroup>
+      ```bash npm
+      npm install axmed-design-system
+      ```
+
+      ```bash yarn
+      yarn add axmed-design-system
+      ```
+
+      ```bash pnpm
+      pnpm add axmed-design-system
+      ```
+      </CodeGroup>
+
+      <Note>
+        Axmed Design System requires React 18+, Ant Design 5+, and @ant-design/icons 5+ as peer dependencies.
+      </Note>
+    </Step>
+
+    <Step title="Import the CSS">
+      Import the design system's stylesheet in your application entry point:
+
+      ```tsx
+      import 'axmed-design-system/style.css'
+      ```
+
+      This includes all design tokens (typography, colors, spacing) and component styles.
+    </Step>
+
+    <Step title="Use components in your app">
+      Start building with Axmed components:
+
+      ```tsx
+      import { AxButton, AxCard, AxText } from 'axmed-design-system'
+
+      function App() {
+        return (
+          <AxCard>
+            <AxText variant="heading-lg">Welcome to Axmed</AxText>
+            <AxText variant="body-md">
+              Build healthcare applications with confidence
+            </AxText>
+            <AxButton variant="primary">Get Started</AxButton>
+          </AxCard>
+        )
+      }
+      ```
+    </Step>
+  </Steps>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
+    Key features
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Everything you need to build professional healthcare applications
+  </p>
+
+  <CardGroup cols={3}>
+    <Card title="21+ Components" icon="cube" href="/components/overview">
+      From buttons and inputs to complex data tables and navigation systems
+    </Card>
+    <Card title="Design Tokens" icon="palette" href="/foundations/typography">
+      Comprehensive token system for typography, colors, spacing, and motion
+    </Card>
+    <Card title="TypeScript-First" icon="code" href="/api/button">
+      Full type definitions for every component and prop
+    </Card>
+    <Card title="Built on Ant Design" icon="layer-group" href="/installation">
+      Leverage the power and flexibility of Ant Design as a foundation
+    </Card>
+    <Card title="Storybook Integration" icon="book" href="/quickstart">
+      Interactive component development and documentation
+    </Card>
+    <Card title="Healthcare-Focused" icon="hospital" href="/components/overview">
+      UI patterns designed for B2B healthcare applications
+    </Card>
+  </CardGroup>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-4">
+    Explore by category
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Jump into detailed documentation for each component category
+  </p>
+
+  <CardGroup cols={2}>
+    <Card title="Core Components" icon="circle-nodes" href="/api/button">
+      Essential building blocks: buttons, text, inputs, and OTP fields
+    </Card>
+    <Card title="Data Display" icon="table" href="/api/table">
+      Tables, cards, tags, badges, and statistics for presenting information
+    </Card>
+    <Card title="Navigation" icon="compass" href="/api/sidenav">
+      Side navigation, headers, action menus, and step indicators
+    </Card>
+    <Card title="Overlays" icon="layer-group" href="/api/modal">
+      Modals and drawers for focused user interactions
+    </Card>
+    <Card title="Foundations" icon="swatchbook" href="/foundations/typography">
+      Typography, colors, spacing, and motion design tokens
+    </Card>
+    <Card title="Utilities" icon="toolbox" href="/api/filter-bar">
+      Filter bars, file uploaders, brand elements, and more
+    </Card>
+  </CardGroup>
+</div>
+
+<div className="mt-20 mb-16 max-w-5xl mx-auto px-6">
+  <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#261C7A] to-[#4A3FAA] dark:from-[#1A1456] dark:to-[#261C7A] p-10 border border-gray-200 dark:border-[#27272a]">
+    <div className="relative z-10 text-center">
+      <h2 className="text-3xl font-bold text-white mb-4">
+        Ready to build?
+      </h2>
+      <p className="text-lg text-gray-100 dark:text-gray-200 mb-6 max-w-2xl mx-auto">
+        Start building professional healthcare applications with Axmed Design System today
+      </p>
+      <a 
+        href="/quickstart" 
+        className="inline-flex items-center px-6 py-3 bg-white text-[#261C7A] font-semibold rounded-lg hover:bg-gray-100 transition-colors no-underline"
+      >
+        View Quickstart Guide
+      </a>
+    </div>
+  </div>
+</div>

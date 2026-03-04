@@ -1,122 +1,126 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Axmed Design System",
+  "theme": "willow",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#261C7A",
+    "light": "#4A3FAA",
+    "dark": "#1A1456"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.ico",
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/ax-derrick/axmed-design-system"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/ax-derrick/axmed-design-system"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Get Started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "introduction",
+              "installation",
+              "quickstart"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Foundations",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "foundations/typography",
+              "foundations/colors",
+              "foundations/spacing",
+              "foundations/motion"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Components",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "components/overview",
+              "components/button",
+              "components/text",
+              "components/input",
+              "components/input-otp",
+              "components/table",
+              "components/tag",
+              "components/badge",
+              "components/card",
+              "components/modal",
+              "components/drawer",
+              "components/empty-state",
+              "components/filter-bar",
+              "components/sidenav",
+              "components/header",
+              "components/brand",
+              "components/company-logo",
+              "components/stat-card",
+              "components/steps",
+              "components/action-menu",
+              "components/uploader",
+              "components/file-item"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "API Reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Core Components",
             "pages": [
-              "api-reference/introduction"
+              "api/button",
+              "api/text",
+              "api/input",
+              "api/input-otp"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Data Display",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api/table",
+              "api/tag",
+              "api/badge",
+              "api/card",
+              "api/stat-card",
+              "api/empty-state"
+            ]
+          },
+          {
+            "group": "Navigation",
+            "pages": [
+              "api/sidenav",
+              "api/header",
+              "api/action-menu",
+              "api/steps"
+            ]
+          },
+          {
+            "group": "Overlays",
+            "pages": [
+              "api/modal",
+              "api/drawer"
+            ]
+          },
+          {
+            "group": "Utility",
+            "pages": [
+              "api/filter-bar",
+              "api/uploader",
+              "api/file-item",
+              "api/brand",
+              "api/company-logo"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

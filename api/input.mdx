@@ -1,0 +1,372 @@
+---
+title: AxInput & AxSearchInput
+description: Text input components with built-in label, hint, and error state support
+---
+
+## Overview
+
+The `AxInput` component provides a text input field with integrated label, helper text, and error messaging. The `AxSearchInput` variant adds search-specific features like debounced callbacks and a search icon.
+
+## Import
+
+```tsx
+import { AxInput, AxSearchInput } from "@axmed/design-system"
+import type { AxInputProps, AxSearchInputProps, AxInputSize } from "@axmed/design-system"
+```
+
+## AxInput Props
+
+<ParamField path="size" type="AxInputSize" default="'md'">
+  Preset input sizes:
+  - `"sm"` - Small input
+  - `"md"` - Medium input (default)
+  - `"lg"` - Large input
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text displayed above the input field
+</ParamField>
+
+<ParamField path="hint" type="string">
+  Helper text displayed below the input in neutral color. Useful for providing additional context or instructions.
+</ParamField>
+
+<ParamField path="error" type="string">
+  Error message displayed below the input in red. Automatically sets `status="error"` and `aria-invalid` on the input.
+</ParamField>
+
+<ParamField path="required" type="boolean" default="false">
+  Whether the field is required. Adds a red asterisk to the label. Note: This does NOT add HTML native validation.
+</ParamField>
+
+<ParamField path="value" type="string">
+  Controlled input value
+</ParamField>
+
+<ParamField path="defaultValue" type="string">
+  Uncontrolled default value
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text shown when input is empty
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Whether the input is disabled
+</ParamField>
+
+<ParamField path="readOnly" type="boolean" default="false">
+  Whether the input is read-only
+</ParamField>
+
+<ParamField path="maxLength" type="number">
+  Maximum character length
+</ParamField>
+
+<ParamField path="allowClear" type="boolean" default="false">
+  Show clear button when input has value
+</ParamField>
+
+<ParamField path="prefix" type="React.ReactNode">
+  Content to display before the input (typically an icon)
+</ParamField>
+
+<ParamField path="suffix" type="React.ReactNode">
+  Content to display after the input (typically an icon)
+</ParamField>
+
+<ParamField path="onChange" type="(e: React.ChangeEvent<HTMLInputElement>) => void">
+  Callback fired when input value changes
+</ParamField>
+
+<ParamField path="onPressEnter" type="(e: React.KeyboardEvent<HTMLInputElement>) => void">
+  Callback fired when Enter key is pressed
+</ParamField>
+
+<ParamField path="onBlur" type="(e: React.FocusEvent<HTMLInputElement>) => void">
+  Callback fired when input loses focus
+</ParamField>
+
+<ParamField path="onFocus" type="(e: React.FocusEvent<HTMLInputElement>) => void">
+  Callback fired when input gains focus
+</ParamField>
+
+<ParamField path="id" type="string">
+  HTML id attribute. If not provided, an auto-generated id is used.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles to apply
+</ParamField>
+
+## AxSearchInput Props
+
+`AxSearchInput` extends `AxInputProps` with search-specific features:
+
+<ParamField path="onSearch" type="(value: string) => void">
+  Called with the current search value after the debounce delay. If omitted, only `onChange` fires (standard controlled input behavior).
+</ParamField>
+
+<ParamField path="debounce" type="number" default="300">
+  Debounce delay in milliseconds before `onSearch` fires. Prevents excessive API calls during typing.
+</ParamField>
+
+<ParamField path="allowClear" type="boolean" default="true">
+  Show clear button. Defaults to `true` for search inputs.
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="'Search...'">
+  Placeholder text. Defaults to "Search..." for search inputs.
+</ParamField>
+
+Note: `AxSearchInput` automatically includes a search icon prefix and cannot override the `prefix` or `type` props.
+
+## Type Definitions
+
+### AxInput
+
+```typescript
+export type AxInputSize = "sm" | "md" | "lg"
+
+export type AxInputProps = {
+  /**
+   * Preset sizes: "sm" (small), "md" (middle — default), "lg" (large).
+   * Consistent with AxButton, AxModal, AxDrawer size APIs.
+   */
+  size?: AxInputSize
+
+  /** Label displayed above the input. */
+  label?: string
+
+  /** Helper text displayed below the input (neutral). */
+  hint?: string
+
+  /**
+   * Error message displayed below the input in red.
+   * Also automatically sets `status="error"` on the input.
+   */
+  error?: string
+
+  /**
+   * Whether the field is required.
+   * Adds a red asterisk to the label — does NOT add HTML native validation.
+   */
+  required?: boolean
+} & Omit<AntInputProps, "size" | "required">
+```
+
+### AxSearchInput
+
+```typescript
+export type AxSearchInputProps = {
+  /**
+   * Called with the current search value after the debounce delay.
+   * If omitted, only `onChange` fires (standard controlled input behaviour).
+   */
+  onSearch?: (value: string) => void
+
+  /**
+   * Debounce delay in ms before `onSearch` fires.
+   * @default 300
+   */
+  debounce?: number
+} & Omit<AxInputProps, "prefix" | "type">
+```
+
+## Usage Examples
+
+### Basic Input
+
+```tsx
+import { AxInput } from "@axmed/design-system"
+import { useState } from "react"
+
+function Example() {
+  const [value, setValue] = useState("")
+
+  return (
+    <AxInput
+      label="Email Address"
+      placeholder="Enter your email"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  )
+}
+```
+
+### With Helper Text
+
+```tsx
+import { AxInput } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <AxInput
+      label="Password"
+      type="password"
+      hint="Must be at least 8 characters"
+      required
+    />
+  )
+}
+```
+
+### With Error State
+
+```tsx
+import { AxInput } from "@axmed/design-system"
+import { useState } from "react"
+
+function Example() {
+  const [email, setEmail] = useState("")
+  const [error, setError] = useState("")
+
+  const validate = (value: string) => {
+    if (!value.includes("@")) {
+      setError("Please enter a valid email address")
+    } else {
+      setError("")
+    }
+  }
+
+  return (
+    <AxInput
+      label="Email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      onBlur={(e) => validate(e.target.value)}
+      error={error}
+      required
+    />
+  )
+}
+```
+
+### With Icons
+
+```tsx
+import { AxInput } from "@axmed/design-system"
+import { UserOutlined, LockOutlined } from "@ant-design/icons"
+
+function Example() {
+  return (
+    <>
+      <AxInput
+        label="Username"
+        prefix={<UserOutlined />}
+        placeholder="Enter username"
+      />
+      <AxInput
+        label="Password"
+        type="password"
+        prefix={<LockOutlined />}
+        placeholder="Enter password"
+      />
+    </>
+  )
+}
+```
+
+### Different Sizes
+
+```tsx
+import { AxInput } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <>
+      <AxInput size="sm" placeholder="Small input" />
+      <AxInput size="md" placeholder="Medium input" />
+      <AxInput size="lg" placeholder="Large input" />
+    </>
+  )
+}
+```
+
+### Search Input
+
+```tsx
+import { AxSearchInput } from "@axmed/design-system"
+import { useState } from "react"
+
+function Example() {
+  const [results, setResults] = useState([])
+
+  const handleSearch = async (query: string) => {
+    if (!query) {
+      setResults([])
+      return
+    }
+    const data = await searchAPI(query)
+    setResults(data)
+  }
+
+  return (
+    <AxSearchInput
+      label="Search Products"
+      onSearch={handleSearch}
+      debounce={500}
+    />
+  )
+}
+```
+
+### Search with Controlled Value
+
+```tsx
+import { AxSearchInput } from "@axmed/design-system"
+import { useState } from "react"
+
+function Example() {
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleSearch = (value: string) => {
+    console.log("Searching for:", value)
+    // Perform search API call
+  }
+
+  return (
+    <AxSearchInput
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      onSearch={handleSearch}
+      placeholder="Search anything..."
+    />
+  )
+}
+```
+
+### Search with Custom Debounce
+
+```tsx
+import { AxSearchInput } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <AxSearchInput
+      label="Quick Search"
+      onSearch={(value) => console.log(value)}
+      debounce={100}
+      hint="Results update as you type"
+    />
+  )
+}
+```
+
+## Accessibility
+
+- Automatic `id` generation for proper label association
+- ARIA attributes (`aria-required`, `aria-invalid`, `aria-describedby`) are automatically applied
+- Error messages are properly linked to inputs via `aria-describedby`
+- Required field indicator (asterisk) is marked with `aria-hidden` to prevent duplication
+
+## Related Components
+
+- [AxInputOTP](/api/input-otp) - For one-time password and verification code inputs
+- [AxModal](/api/modal) - Inputs are commonly used in modal forms
+- [AxFilterBar](/api/filter-bar) - For complex search and filtering interfaces

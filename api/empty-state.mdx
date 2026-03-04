@@ -1,0 +1,272 @@
+---
+title: AxEmptyState
+description: Empty state placeholder for tables, cards, and pages
+---
+
+## Component
+
+### AxEmptyState
+
+Empty state component with illustration, title, description, and action button.
+
+```tsx
+import AxEmptyState from "@axmedds/empty-state"
+import type { AxEmptyStateProps, AxEmptyStateSize } from "@axmedds/empty-state"
+```
+
+#### Props
+
+<ParamField path="title" type="string" required>
+  Main heading.
+</ParamField>
+
+<ParamField path="description" type="React.ReactNode">
+  Muted description below the title.
+</ParamField>
+
+<ParamField path="illustration" type="React.ReactNode">
+  Illustration — any SVG, icon, or image node. Size it before passing (e.g., `style={{ fontSize: 48 }}` on an antd icon).
+</ParamField>
+
+<ParamField path="action" type="React.ReactNode">
+  Action area — pass an AxButton or any ReactNode. Rendered below the description.
+</ParamField>
+
+<ParamField path="size" type="AxEmptyStateSize" default="md">
+  Controls padding and typography scale:
+  
+  - `"sm"` — inside tables and compact cards (heading-sm, body-xs, 24px padding)
+  - `"md"` — card panels and drawer bodies (heading-md, body-sm, 48px padding)
+  - `"lg"` — full-page zero-states (heading-xl, body-md, 80px padding)
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional class name.
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+export type AxEmptyStateSize = "sm" | "md" | "lg"
+
+export type AxEmptyStateProps = {
+  title: string
+  description?: React.ReactNode
+  illustration?: React.ReactNode
+  action?: React.ReactNode
+  size?: AxEmptyStateSize
+  className?: string
+}
+```
+
+#### Typography Scale
+
+```tsx
+const titleVariant = {
+  sm: "heading-sm",   // 14px, 600 weight
+  md: "heading-md",   // 16px, 600 weight
+  lg: "heading-xl",   // 24px, 600 weight
+}
+
+const descVariant = {
+  sm: "body-xs",      // 12px
+  md: "body-sm",      // 13px
+  lg: "body-md",      // 14px
+}
+
+const gapMap = {
+  sm: 8,   // 8px spacing
+  md: 12,  // 12px spacing
+  lg: 20,  // 20px spacing
+}
+```
+
+#### Usage
+
+```tsx
+import AxEmptyState from "@axmedds/empty-state"
+import AxButton from "@axmedds/button"
+import { InboxOutlined, PlusOutlined } from "@ant-design/icons"
+
+// Basic empty state
+<AxEmptyState
+  title="No data found"
+  description="Try adjusting your filters or search term."
+/>
+
+// With illustration
+<AxEmptyState
+  title="No medications found"
+  description="There are no medications matching your criteria."
+  illustration={
+    <InboxOutlined style={{ fontSize: 48, color: "var(--neutral-300)" }} />
+  }
+/>
+
+// With action button
+<AxEmptyState
+  title="No active RFQs"
+  description="You haven't created any RFQs yet. Get started by creating your first one."
+  illustration={
+    <InboxOutlined style={{ fontSize: 48, color: "var(--neutral-300)" }} />
+  }
+  action={
+    <AxButton variant="primary" icon={<PlusOutlined />}>
+      Create RFQ
+    </AxButton>
+  }
+/>
+
+// Small size (in tables)
+<AxEmptyState
+  size="sm"
+  title="No results"
+  description="Try adjusting your filters."
+  action={
+    <AxButton size="small" variant="secondary">
+      Clear Filters
+    </AxButton>
+  }
+/>
+
+// Large size (full page)
+<AxEmptyState
+  size="lg"
+  title="Welcome to Axmed"
+  description="You don't have any orders yet. Browse available RFQs to place your first bid."
+  illustration={
+    <img src="/empty-state.svg" alt="" style={{ width: 240 }} />
+  }
+  action={
+    <AxButton variant="primary" size="large">
+      Browse RFQs
+    </AxButton>
+  }
+/>
+```
+
+#### In Tables
+
+```tsx
+import AxTable from "@axmedds/table"
+import AxEmptyState from "@axmedds/empty-state"
+import AxButton from "@axmedds/button"
+import { InboxOutlined } from "@ant-design/icons"
+
+<AxTable
+  columns={columns}
+  dataSource={[]}
+  pagination={false}
+  locale={{
+    emptyText: (
+      <AxEmptyState
+        size="sm"
+        illustration={
+          <InboxOutlined style={{ fontSize: 32, color: "var(--neutral-300)" }} />
+        }
+        title="No medications found"
+        description="Try adjusting your filters or search term."
+        action={
+          <AxButton size="small" variant="secondary">
+            Clear Filters
+          </AxButton>
+        }
+      />
+    ),
+  }}
+/>
+```
+
+#### In Cards
+
+```tsx
+import AxCard from "@axmedds/card"
+import AxEmptyState from "@axmedds/empty-state"
+import AxButton from "@axmedds/button"
+import { FileTextOutlined } from "@ant-design/icons"
+
+<AxCard title="Recent Activity">
+  <AxEmptyState
+    size="md"
+    illustration={
+      <FileTextOutlined style={{ fontSize: 40, color: "var(--neutral-300)" }} />
+    }
+    title="No recent activity"
+    description="Your activity feed is empty. Start by creating an RFQ or placing a bid."
+  />
+</AxCard>
+```
+
+#### Full Page Zero State
+
+```tsx
+import AxEmptyState from "@axmedds/empty-state"
+import AxButton from "@axmedds/button"
+import { PlusOutlined } from "@ant-design/icons"
+
+function EmptyInventoryPage() {
+  return (
+    <div style={{ 
+      minHeight: "60vh", 
+      display: "flex", 
+      alignItems: "center", 
+      justifyContent: "center" 
+    }}>
+      <AxEmptyState
+        size="lg"
+        illustration={
+          <img 
+            src="/illustrations/empty-inventory.svg" 
+            alt=""
+            style={{ width: 280, height: 200 }}
+          />
+        }
+        title="Your inventory is empty"
+        description="Start by adding your first medication or medical supply to begin managing your inventory."
+        action={
+          <AxButton 
+            variant="primary" 
+            size="large" 
+            icon={<PlusOutlined />}
+          >
+            Add First Item
+          </AxButton>
+        }
+      />
+    </div>
+  )
+}
+```
+
+#### Multiple Actions
+
+```tsx
+import AxEmptyState from "@axmedds/empty-state"
+import AxButton from "@axmedds/button"
+import { Flex } from "antd"
+import { PlusOutlined, DownloadOutlined } from "@ant-design/icons"
+
+<AxEmptyState
+  size="lg"
+  title="No suppliers found"
+  description="You haven't added any suppliers yet. Add a new supplier or import from a CSV file."
+  action={
+    <Flex gap={12}>
+      <AxButton variant="primary" icon={<PlusOutlined />}>
+        Add Supplier
+      </AxButton>
+      <AxButton variant="secondary" icon={<DownloadOutlined />}>
+        Import CSV
+      </AxButton>
+    </Flex>
+  }
+/>
+```
+
+#### Size Comparison
+
+| Size | Use Case | Title | Description | Padding | Gap |
+|------|----------|-------|-------------|---------|-----|
+| `sm` | Tables, compact cards | 14px (heading-sm) | 12px (body-xs) | 24px | 8px |
+| `md` | Card panels, drawer bodies | 16px (heading-md) | 13px (body-sm) | 48px | 12px |
+| `lg` | Full-page zero states | 24px (heading-xl) | 14px (body-md) | 80px | 20px |

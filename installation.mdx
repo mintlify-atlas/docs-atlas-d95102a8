@@ -1,0 +1,155 @@
+---
+title: Installation
+description: Install and configure the Axmed Design System in your React application
+---
+
+The Axmed Design System is a React component library built on top of Ant Design, providing a consistent design language for healthcare procurement applications.
+
+## Prerequisites
+
+Before installing the Axmed Design System, ensure your project meets these requirements:
+
+- **React 18+** — The design system requires React 18 or higher
+- **Ant Design 5+** — Core UI components are built on antd
+- **@ant-design/icons 5+** — Icon library for component icons
+
+## Installation
+
+Install the design system using your preferred package manager:
+
+<CodeGroup>
+
+```bash npm
+npm install axmed-design-system
+```
+
+```bash yarn
+yarn add axmed-design-system
+```
+
+```bash pnpm
+pnpm add axmed-design-system
+```
+
+</CodeGroup>
+
+## Peer dependencies
+
+If you don't already have the peer dependencies installed, add them to your project:
+
+<CodeGroup>
+
+```bash npm
+npm install react react-dom antd @ant-design/icons
+```
+
+```bash yarn
+yarn add react react-dom antd @ant-design/icons
+```
+
+```bash pnpm
+pnpm add react react-dom antd @ant-design/icons
+```
+
+</CodeGroup>
+
+<Note>
+The design system requires:
+- `react` >= 18
+- `react-dom` >= 18
+- `antd` >= 5
+- `@ant-design/icons` >= 5
+</Note>
+
+## CSS setup
+
+The design system requires its stylesheet to be imported once in your application root.
+
+### Import the stylesheet
+
+Add the following import to your main entry file (e.g., `main.tsx`, `index.tsx`, or `App.tsx`):
+
+```tsx
+import 'axmed-design-system/style.css';
+```
+
+<Warning>
+Make sure to import the stylesheet **before** any component imports to ensure proper styling.
+</Warning>
+
+### Complete setup example
+
+Here's a complete example of a typical `main.tsx` or `index.tsx` file:
+
+```tsx main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import 'axmed-design-system/style.css';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+## Font loading
+
+The design system automatically injects the Figtree font family from Google Fonts at runtime. No additional configuration is required.
+
+<Tip>
+The font injection is handled internally and will not duplicate if multiple instances are mounted.
+</Tip>
+
+## TypeScript support
+
+The design system is built with TypeScript and includes full type definitions out of the box. No additional `@types` packages are needed.
+
+All component props are fully typed:
+
+```tsx
+import { AxButton, AxButtonProps } from 'axmed-design-system';
+
+// Props are fully typed
+const props: AxButtonProps = {
+  variant: 'primary',
+  size: 'middle',
+  onClick: () => console.log('clicked')
+};
+```
+
+## Module formats
+
+The package supports both ES modules and CommonJS:
+
+- **ESM**: `import { AxButton } from 'axmed-design-system'`
+- **CommonJS**: `const { AxButton } = require('axmed-design-system')`
+
+<Note>
+ES modules are recommended for modern bundlers like Vite, webpack 5+, or Next.js.
+</Note>
+
+## Next steps
+
+Now that you have the design system installed, you're ready to start building:
+
+<CardGroup cols={2}>
+
+<Card title="Quickstart" icon="rocket" href="/quickstart">
+  Build your first component in minutes
+</Card>
+
+<Card title="Components" icon="grid" href="/components/overview">
+  Explore all available components
+</Card>
+
+<Card title="Typography" icon="text" href="/foundations/typography">
+  Learn about text styles and hierarchy
+</Card>
+
+<Card title="Colors" icon="palette" href="/foundations/colors">
+  Understand the color system
+</Card>
+
+</CardGroup>

@@ -1,0 +1,249 @@
+---
+title: AxBrand
+description: Axmed brand logo component with icon and wordmark variants
+---
+
+<Note>
+  **Component Location:** `design-system/components/AxBrand`
+</Note>
+
+## Overview
+
+`AxBrand` renders the Axmed brand logo as an inline SVG. It supports two variants (icon-only or full wordmark), three size presets, and light/dark themes for different background contexts.
+
+## Import
+
+```tsx
+import AxBrand from '@/design-system/components/AxBrand'
+import type { AxBrandProps, AxBrandSize, AxBrandVariant, AxBrandTheme } from '@/design-system/components/AxBrand'
+```
+
+## Basic Usage
+
+```tsx
+{/* Default: wordmark variant, medium size, light theme */}
+<AxBrand />
+```
+
+## Variants
+
+```tsx
+{/* Icon only - for collapsed sidebars, favicons */}
+<AxBrand variant="icon" />
+
+{/* Wordmark - flame mark + "Axmed" text (default) */}
+<AxBrand variant="wordmark" />
+```
+
+## Sizes
+
+```tsx
+{/* Small - 20px height */}
+<AxBrand size="sm" />
+
+{/* Medium - 28px height (default) */}
+<AxBrand size="md" />
+
+{/* Large - 36px height */}
+<AxBrand size="lg" />
+```
+
+## Themes
+
+```tsx
+{/* Light theme - navy mark on light background (default) */}
+<AxBrand theme="light" />
+
+{/* Dark theme - white mark on dark/navy background */}
+<div style={{ background: 'var(--navy-900)', padding: '1rem' }}>
+  <AxBrand theme="dark" />
+</div>
+```
+
+## Props
+
+<ParamField path="variant" type="AxBrandVariant" default="wordmark">
+  Logo variant.
+  
+  - `"icon"` — Flame mark only (for collapsed sidebars, favicons, app icons)
+  - `"wordmark"` — Flame mark + "Axmed" text (default)
+</ParamField>
+
+<ParamField path="size" type="AxBrandSize" default="md">
+  Size preset controlling the logo height. Width scales proportionally.
+  
+  - `"sm"` — 20px height
+  - `"md"` — 28px height (default)
+  - `"lg"` — 36px height
+</ParamField>
+
+<ParamField path="theme" type="AxBrandTheme" default="light">
+  Color theme for the logo.
+  
+  - `"light"` — Navy mark on light backgrounds (default)
+  - `"dark"` — White mark on dark/navy backgrounds
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS class name for the root `<span>` wrapper.
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles applied to the root `<span>` wrapper.
+</ParamField>
+
+## Type Definitions
+
+### AxBrandSize
+
+```tsx
+export type AxBrandSize = "sm" | "md" | "lg"
+```
+
+| Size | Height | Use Case |
+|------|--------|----------|
+| `sm` | 20px | Compact headers, mobile nav |
+| `md` | 28px | Default size for most contexts |
+| `lg` | 36px | Hero sections, landing pages |
+
+### AxBrandVariant
+
+```tsx
+export type AxBrandVariant = "icon" | "wordmark"
+```
+
+| Variant | Description | ViewBox |
+|---------|-------------|----------|
+| `icon` | Flame mark only | `0 0 50 81` |
+| `wordmark` | Mark + "Axmed" text | `0 0 210 81` |
+
+### AxBrandTheme
+
+```tsx
+export type AxBrandTheme = "light" | "dark"
+```
+
+| Theme | Mark Color | Text Color | Background |
+|-------|------------|------------|------------|
+| `light` | Navy (`currentColor`) | Navy | Light/white |
+| `dark` | White (`currentColor`) | White | Dark/navy |
+
+### AxBrandProps
+
+```tsx
+export type AxBrandProps = {
+  variant?: AxBrandVariant
+  size?: AxBrandSize
+  theme?: AxBrandTheme
+  className?: string
+  style?: React.CSSProperties
+}
+```
+
+## Examples
+
+### Header Logo
+
+```tsx
+<header>
+  <AxBrand variant="wordmark" size="md" theme="light" />
+</header>
+```
+
+### Collapsed Sidebar
+
+```tsx
+const [collapsed, setCollapsed] = useState(false)
+
+<Sider collapsed={collapsed}>
+  <div className="logo">
+    {collapsed ? (
+      <AxBrand variant="icon" size="sm" />
+    ) : (
+      <AxBrand variant="wordmark" size="md" />
+    )}
+  </div>
+</Sider>
+```
+
+### Dark Background
+
+```tsx
+<div style={{ background: 'var(--navy-900)', padding: '2rem' }}>
+  <AxBrand variant="wordmark" size="lg" theme="dark" />
+</div>
+```
+
+### Link to Home
+
+```tsx
+import Link from 'next/link'
+
+<Link href="/" style={{ display: 'inline-block' }}>
+  <AxBrand />
+</Link>
+```
+
+### Custom Styling
+
+```tsx
+<AxBrand
+  variant="wordmark"
+  size="lg"
+  className="custom-brand"
+  style={{ marginBottom: '1rem' }}
+/>
+```
+
+## Size Calculations
+
+The component automatically calculates width based on height and the SVG's aspect ratio:
+
+**Icon variant (`0 0 50 81` viewBox):**
+- `sm`: 20px × 12px (width = 20 × 50/81)
+- `md`: 28px × 17px
+- `lg`: 36px × 22px
+
+**Wordmark variant (`0 0 210 81` viewBox):**
+- `sm`: 20px × 52px (width = 20 × 210/81)
+- `md`: 28px × 73px
+- `lg`: 36px × 93px
+
+## SVG Structure
+
+The logo consists of two parts:
+
+1. **MarkPaths** — The double-helix flame mark with cyan accents
+2. **WordmarkTextPaths** — The "Axmed" wordmark (letters A, x, m, e, d)
+
+```tsx
+// Icon variant renders only MarkPaths
+<svg viewBox="0 0 50 81">
+  <MarkPaths />
+</svg>
+
+// Wordmark variant renders both
+<svg viewBox="0 0 210 81">
+  <MarkPaths />
+  <WordmarkTextPaths />
+</svg>
+```
+
+## Color System
+
+- **Cyan accent:** `#0CC4FF` (hardcoded for the flame details)
+- **Theme colors:** Use `currentColor` which inherits from CSS based on the `theme` prop
+
+## Accessibility
+
+- Root `<span>` has `aria-label="Axmed"` for screen readers
+- SVG is marked `aria-hidden="true"` to prevent redundant announcements
+- When used as a link, ensure the parent `<a>` or `<Link>` has appropriate accessible text
+
+## Design Notes
+
+- Logo is rendered as an inline SVG for maximum quality at any scale
+- The double-helix flame mark is a distinctive visual element of the Axmed brand
+- Cyan accent color (`#0CC4FF`) is consistent across all themes
+- Width automatically scales proportionally with height to maintain aspect ratio
+- Use `theme="dark"` on navy or dark backgrounds for proper contrast

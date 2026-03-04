@@ -1,0 +1,335 @@
+---
+title: AxInputOTP
+description: One-time password input component for verification codes and PINs
+---
+
+## Overview
+
+The `AxInputOTP` component provides a specialized input for one-time passwords (OTP), verification codes, and PINs. It features individual character slots, auto-focus progression, and optional masking for sensitive inputs.
+
+## Import
+
+```tsx
+import { AxInputOTP } from "@axmed/design-system"
+import type { AxInputOTPProps, AxInputOTPSize } from "@axmed/design-system"
+```
+
+## Props
+
+<ParamField path="length" type="number" default="6">
+  Number of individual digit/character slots
+</ParamField>
+
+<ParamField path="size" type="AxInputOTPSize" default="'md'">
+  Preset sizes:
+  - `"sm"` - Small slots
+  - `"md"` - Medium slots (default)
+  - `"lg"` - Large slots
+  - `"xl"` - Extra large 56px slots for hero-style verification flows
+</ParamField>
+
+<ParamField path="masked" type="boolean | string">
+  Mask the value for sensitive codes like PINs. Pass `true` for the default bullet (•), or a custom string character (e.g., `"*"`).
+</ParamField>
+
+<ParamField path="label" type="string">
+  Label text displayed above the OTP input
+</ParamField>
+
+<ParamField path="hint" type="string">
+  Helper text displayed below the OTP input in neutral color
+</ParamField>
+
+<ParamField path="error" type="string">
+  Error message displayed below the OTP input in red. Also sets `aria-invalid` on the input group.
+</ParamField>
+
+<ParamField path="required" type="boolean" default="false">
+  Whether the field is required. Adds a red asterisk to the label.
+</ParamField>
+
+<ParamField path="value" type="string">
+  Controlled input value. Should be a string matching the length.
+</ParamField>
+
+<ParamField path="defaultValue" type="string">
+  Uncontrolled default value
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Whether the input is disabled
+</ParamField>
+
+<ParamField path="onChange" type="(value: string) => void">
+  Callback fired when OTP value changes. Receives the complete value string.
+</ParamField>
+
+<ParamField path="onFinish" type="(value: string) => void">
+  Callback fired when all slots are filled. Useful for auto-submitting the form.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles to apply
+</ParamField>
+
+## Type Definitions
+
+```typescript
+export type AxInputOTPSize = "sm" | "md" | "lg" | "xl"
+
+export type AxInputOTPProps = {
+  /**
+   * Number of individual digit/character slots.
+   * @default 6
+   */
+  length?: number
+
+  /**
+   * Preset sizes: "sm", "md" (default), "lg", "xl".
+   * xl renders 56px slots for hero-style verification flows.
+   */
+  size?: AxInputOTPSize
+
+  /**
+   * Mask the value — useful for PINs and sensitive codes.
+   * Pass `true` for the default bullet (•), or a custom string character.
+   */
+  masked?: boolean | string
+
+  /** Label displayed above the OTP input. */
+  label?: string
+
+  /** Helper text displayed below the OTP input (neutral). */
+  hint?: string
+
+  /**
+   * Error message displayed below the OTP input in red.
+   * Also sets `aria-invalid` on the input group.
+   */
+  error?: string
+
+  /**
+   * Whether the field is required.
+   * Adds a red asterisk to the label.
+   */
+  required?: boolean
+} & Omit<OTPProps, "size" | "mask" | "length">
+```
+
+## Usage Examples
+
+### Basic OTP Input
+
+```tsx
+import { AxInputOTP } from "@axmed/design-system"
+import { useState } from "react"
+
+function Example() {
+  const [otp, setOtp] = useState("")
+
+  return (
+    <AxInputOTP
+      label="Verification Code"
+      value={otp}
+      onChange={setOtp}
+      hint="Enter the 6-digit code sent to your email"
+    />
+  )
+}
+```
+
+### Custom Length
+
+```tsx
+import { AxInputOTP } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <AxInputOTP
+      label="PIN"
+      length={4}
+      masked
+      hint="Enter your 4-digit PIN"
+    />
+  )
+}
+```
+
+### Auto-Submit on Completion
+
+```tsx
+import { AxInputOTP } from "@axmed/design-system"
+import { useState } from "react"
+
+function Example() {
+  const [loading, setLoading] = useState(false)
+
+  const handleFinish = async (code: string) => {
+    setLoading(true)
+    try {
+      await verifyCode(code)
+      // Navigate to next step
+    } catch (error) {
+      // Handle error
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <AxInputOTP
+      label="Enter Verification Code"
+      onFinish={handleFinish}
+      disabled={loading}
+    />
+  )
+}
+```
+
+### With Error State
+
+```tsx
+import { AxInputOTP } from "@axmed/design-system"
+import { useState } from "react"
+
+function Example() {
+  const [otp, setOtp] = useState("")
+  const [error, setError] = useState("")
+
+  const handleFinish = async (code: string) => {
+    const isValid = await validateCode(code)
+    if (!isValid) {
+      setError("Invalid code. Please try again.")
+    } else {
+      setError("")
+      // Proceed
+    }
+  }
+
+  return (
+    <AxInputOTP
+      label="Verification Code"
+      value={otp}
+      onChange={(value) => {
+        setOtp(value)
+        setError("") // Clear error on change
+      }}
+      onFinish={handleFinish}
+      error={error}
+      required
+    />
+  )
+}
+```
+
+### Masked PIN Input
+
+```tsx
+import { AxInputOTP } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <>
+      {/* Default masking with bullet */}
+      <AxInputOTP
+        label="PIN"
+        length={4}
+        masked
+        hint="Enter your PIN"
+      />
+
+      {/* Custom mask character */}
+      <AxInputOTP
+        label="Security Code"
+        length={6}
+        masked="*"
+        hint="Enter your security code"
+      />
+    </>
+  )
+}
+```
+
+### Different Sizes
+
+```tsx
+import { AxInputOTP } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <>
+      <AxInputOTP size="sm" label="Small" />
+      <AxInputOTP size="md" label="Medium" />
+      <AxInputOTP size="lg" label="Large" />
+      <AxInputOTP size="xl" label="Extra Large (Hero)" />
+    </>
+  )
+}
+```
+
+### Hero Verification Flow
+
+```tsx
+import { AxInputOTP } from "@axmed/design-system"
+import { AxText } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <div style={{ textAlign: "center", maxWidth: 400, margin: "0 auto" }}>
+      <AxText variant="heading-2xl">Verify Your Email</AxText>
+      <AxText variant="body-md" color="secondary" style={{ marginTop: 8 }}>
+        We've sent a 6-digit code to your email address
+      </AxText>
+      
+      <AxInputOTP
+        size="xl"
+        label="Verification Code"
+        onFinish={(code) => console.log("Code:", code)}
+        style={{ marginTop: 32 }}
+      />
+    </div>
+  )
+}
+```
+
+### Uncontrolled with Default Value
+
+```tsx
+import { AxInputOTP } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <AxInputOTP
+      label="Pre-filled Code"
+      defaultValue="123456"
+      onFinish={(code) => console.log("Final code:", code)}
+    />
+  )
+}
+```
+
+## Behavior
+
+- **Auto-focus progression**: Automatically moves to the next slot as you type
+- **Backspace handling**: Pressing backspace clears the current slot and moves to the previous one
+- **Paste support**: Supports pasting complete codes from clipboard
+- **Keyboard navigation**: Arrow keys work to move between slots
+- **Auto-completion**: Triggers `onFinish` callback when all slots are filled
+
+## Accessibility
+
+- Wrapped in a `role="group"` with proper `aria-label` from the label prop
+- Error messages are linked via `aria-describedby`
+- Individual inputs are properly labeled for screen readers
+- `aria-invalid` is set when error state is present
+- Required indicator (asterisk) is marked with `aria-hidden`
+
+## Related Components
+
+- [AxInput](/api/input) - For standard text input fields
+- [AxModal](/api/modal) - OTP inputs are commonly used in verification modals
+- [AxButton](/api/button) - For submit buttons in verification flows

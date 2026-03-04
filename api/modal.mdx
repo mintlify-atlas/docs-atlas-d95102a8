@@ -1,0 +1,365 @@
+---
+title: AxModal
+description: Modal dialog component for focused interactions and confirmations
+---
+
+## Overview
+
+AxModal is a styled wrapper around Ant Design's Modal component, providing preset sizes, danger mode for destructive actions, and consistent styling with the design system.
+
+## Import
+
+```tsx
+import AxModal from "@/components/AxModal"
+```
+
+## Basic Usage
+
+```tsx
+import { useState } from "react"
+import AxModal from "@/components/AxModal"
+import AxButton from "@/components/AxButton"
+
+function Example() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <AxButton onClick={() => setOpen(true)}>Open Modal</AxButton>
+      <AxModal
+        title="Confirm action"
+        description="Are you sure you want to proceed?"
+        open={open}
+        onOk={() => setOpen(false)}
+        onCancel={() => setOpen(false)}
+      >
+        This action will update your settings.
+      </AxModal>
+    </>
+  )
+}
+```
+
+## Props
+
+### AxModal-specific Props
+
+<ParamField path="description" type="React.ReactNode">
+  Short description rendered below the title in muted text. Provides additional context for the modal action.
+</ParamField>
+
+<ParamField path="danger" type="boolean" default="false">
+  Danger mode — makes the primary action button red. Use for destructive confirmations like delete, cancel order, or withdraw bid.
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'md' | 'lg'" default="'md'">
+  Preset sizes:
+  - `sm`: 380px — compact size for simple confirmations
+  - `md`: 520px — standard size for forms and content
+  - `lg`: 720px — wide size for tables, lists, and complex content
+  
+  You can still override with the `width` prop for custom sizes.
+</ParamField>
+
+### Common Modal Props
+
+<ParamField path="open" type="boolean" required>
+  Whether the modal is visible.
+</ParamField>
+
+<ParamField path="title" type="React.ReactNode">
+  The modal title. Combined with `description` to form the header block.
+</ParamField>
+
+<ParamField path="width" type="number | string">
+  Custom width of the modal. Overrides the `size` preset.
+</ParamField>
+
+<ParamField path="footer" type="React.ReactNode | null">
+  Custom footer content. When `null`, no footer is rendered. When undefined (default), renders OK/Cancel buttons using AxButton.
+</ParamField>
+
+<ParamField path="centered" type="boolean" default="true">
+  Whether to center the modal vertically on the screen.
+</ParamField>
+
+<ParamField path="loading" type="boolean">
+  Whether the modal is in loading state. Shows a loading spinner in the modal.
+</ParamField>
+
+<ParamField path="okText" type="React.ReactNode" default="'OK'">
+  Text for the OK button.
+</ParamField>
+
+<ParamField path="cancelText" type="React.ReactNode" default="'Cancel'">
+  Text for the Cancel button.
+</ParamField>
+
+<ParamField path="confirmLoading" type="boolean">
+  Whether the OK button is in loading state. Use during async operations.
+</ParamField>
+
+<ParamField path="okButtonProps" type="ButtonProps">
+  Props passed to the OK button. Note: `variant`, `type`, `danger`, and `ghost` props are controlled by the modal and cannot be overridden.
+</ParamField>
+
+<ParamField path="cancelButtonProps" type="ButtonProps">
+  Props passed to the Cancel button. Note: `variant`, `type`, `danger`, and `ghost` props are controlled by the modal and cannot be overridden.
+</ParamField>
+
+<ParamField path="onOk" type="(e: React.MouseEvent) => void">
+  Callback when the OK button is clicked.
+</ParamField>
+
+<ParamField path="onCancel" type="(e: React.MouseEvent) => void">
+  Callback when the Cancel button or close icon is clicked, or when clicking the mask.
+</ParamField>
+
+<ParamField path="rootClassName" type="string">
+  Additional class name for the modal's root element.
+</ParamField>
+
+<ParamField path="closable" type="boolean" default="true">
+  Whether to show the close icon in the top right corner.
+</ParamField>
+
+<ParamField path="mask" type="boolean" default="true">
+  Whether to show the mask (backdrop).
+</ParamField>
+
+<ParamField path="maskClosable" type="boolean" default="true">
+  Whether clicking the mask closes the modal.
+</ParamField>
+
+<ParamField path="keyboard" type="boolean" default="true">
+  Whether the Escape key closes the modal.
+</ParamField>
+
+<ParamField path="destroyOnClose" type="boolean" default="false">
+  Whether to unmount child components when the modal is closed.
+</ParamField>
+
+<ParamField path="afterClose" type="() => void">
+  Callback executed after the modal is fully closed (animation complete).
+</ParamField>
+
+<ParamField path="afterOpenChange" type="(open: boolean) => void">
+  Callback when the open state changes, fired after animation completes.
+</ParamField>
+
+<ParamField path="zIndex" type="number" default="1000">
+  The z-index of the modal.
+</ParamField>
+
+## Examples
+
+### Sizes
+
+AxModal provides three preset sizes optimized for different use cases:
+
+```tsx
+// Small (380px) - simple confirmations
+<AxModal
+  size="sm"
+  title="Delete item?"
+  description="This action cannot be undone."
+  danger
+  okText="Delete"
+  open={open}
+  onOk={handleDelete}
+  onCancel={() => setOpen(false)}
+/>
+
+// Medium (520px) - forms and standard content (default)
+<AxModal
+  size="md"
+  title="Add delivery address"
+  description="This address will be available for all future orders."
+  open={open}
+  onOk={handleSubmit}
+  onCancel={() => setOpen(false)}
+>
+  <Form>...</Form>
+</AxModal>
+
+// Large (720px) - tables and complex content
+<AxModal
+  size="lg"
+  title="Order summary"
+  open={open}
+  onCancel={() => setOpen(false)}
+>
+  <Table columns={columns} dataSource={data} />
+</AxModal>
+```
+
+### Danger Mode
+
+Use danger mode for destructive actions:
+
+```tsx
+<AxModal
+  title="Cancel this order?"
+  description="This action cannot be undone. The order will be permanently cancelled and all associated bids will be withdrawn."
+  danger
+  size="sm"
+  okText="Yes, Cancel Order"
+  cancelText="Keep Order"
+  open={open}
+  onOk={handleCancelOrder}
+  onCancel={() => setOpen(false)}
+>
+  <Alert
+    type="warning"
+    showIcon
+    message="2 suppliers have already submitted bids for this order."
+  />
+</AxModal>
+```
+
+### Confirmation with Loading
+
+Show loading state during async operations:
+
+```tsx
+function ConfirmModal() {
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const handleOk = async () => {
+    setLoading(true)
+    try {
+      await saveChanges()
+      setOpen(false)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <AxModal
+      title="Save changes?"
+      description="Your changes will be applied immediately."
+      open={open}
+      okText="Save"
+      confirmLoading={loading}
+      onOk={handleOk}
+      onCancel={() => setOpen(false)}
+    >
+      This will update the medication details across all active orders.
+    </AxModal>
+  )
+}
+```
+
+### Form Modal
+
+Use for input collection:
+
+```tsx
+<AxModal
+  title="Add delivery address"
+  description="This address will be available for all future orders."
+  open={open}
+  okText="Add Address"
+  onOk={handleSubmit}
+  onCancel={() => setOpen(false)}
+>
+  <Flex vertical gap={16}>
+    <AxInput label="Address Name" placeholder="e.g. Main Warehouse" />
+    <Flex gap={12}>
+      <Select placeholder="Select country" style={{ flex: 1 }} />
+      <Select placeholder="Select city" style={{ flex: 1 }} />
+    </Flex>
+    <AxInput label="Address Line" placeholder="Street address, building, floor..." />
+    <Checkbox>Use as billing address</Checkbox>
+  </Flex>
+</AxModal>
+```
+
+### Success Modal
+
+Provide feedback after an action:
+
+```tsx
+<AxModal
+  title={
+    <div style={{ textAlign: "center" }}>
+      <CheckCircleFilled style={{ fontSize: 40, color: "var(--success)", marginBottom: 12 }} />
+      Order submitted successfully
+    </div>
+  }
+  description={
+    <span style={{ display: "block", textAlign: "center" }}>
+      Your order has been received and is being reviewed by our team.
+    </span>
+  }
+  open={open}
+  size="sm"
+  footer={
+    <AxButton onClick={() => setOpen(false)} style={{ width: "100%" }}>
+      View Your Orders
+    </AxButton>
+  }
+  onCancel={() => setOpen(false)}
+/>
+```
+
+### Custom Footer
+
+Provide your own footer buttons:
+
+```tsx
+<AxModal
+  title="Supplier Details"
+  open={open}
+  footer={
+    <Flex gap={8} justify="flex-end">
+      <AxButton variant="secondary" onClick={() => setOpen(false)}>
+        View Full Profile
+      </AxButton>
+      <AxButton onClick={() => setOpen(false)}>Got It</AxButton>
+    </Flex>
+  }
+  onCancel={() => setOpen(false)}
+>
+  {/* Content */}
+</AxModal>
+```
+
+### No Footer
+
+Hide the footer entirely:
+
+```tsx
+<AxModal
+  title="Read-only information"
+  open={open}
+  footer={null}
+  onCancel={() => setOpen(false)}
+>
+  {/* Content */}
+</AxModal>
+```
+
+## Accessibility
+
+- The modal automatically sets `aria-describedby` when a `description` is provided
+- Keyboard navigation is enabled by default (Escape to close)
+- Focus is trapped within the modal when open
+- The modal uses semantic HTML with proper ARIA attributes
+
+## Best Practices
+
+1. **Use appropriate sizes**: `sm` for confirmations, `md` for forms, `lg` for complex content
+2. **Enable danger mode** for destructive actions (delete, cancel, withdraw)
+3. **Provide descriptions** to give users context about the action
+4. **Use confirmLoading** to show feedback during async operations
+5. **Keep content focused** — modals should have a single clear purpose
+6. **Consider alternatives** — for extensive forms or content, consider using a drawer instead
+
+## Related Components
+
+- [AxDrawer](/api/drawer) — Side panel for forms and detail views
+- [AxButton](/api/button) — Used for modal actions
+- [AxCard](/api/card) — For content layout within modals

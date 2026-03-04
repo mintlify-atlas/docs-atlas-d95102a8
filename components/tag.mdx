@@ -1,0 +1,248 @@
+---
+title: Tag
+description: Status indicators with semantic tones and visual variants.
+icon: tag
+---
+
+AxTag provides inline status labels with five semantic tones, optional dot indicators, icons, and multiple visual variants. Use tags to communicate state, categories, or attributes.
+
+## Basic Usage
+
+<CodeGroup>
+```tsx TypeScript
+import { AxTag } from '@axmed/design-system'
+
+function Example() {
+  return <AxTag tone="success">Delivered</AxTag>
+}
+```
+
+```jsx JavaScript
+import { AxTag } from '@axmed/design-system'
+
+function Example() {
+  return <AxTag tone="success">Delivered</AxTag>
+}
+```
+</CodeGroup>
+
+## Tones
+
+Five semantic tones mapped to consistent colors:
+
+```tsx
+<AxTag tone="success">Completed</AxTag>      {/* Green - completed, delivered, in stock */}
+<AxTag tone="info">Processing</AxTag>        {/* Blue - in progress, in transit */}
+<AxTag tone="warning">Low Stock</AxTag>       {/* Orange - warnings, low stock */}
+<AxTag tone="error">Cancelled</AxTag>        {/* Red - errors, out of stock */}
+<AxTag tone="neutral">Pending</AxTag>         {/* Gray - pending, draft, expired */}
+```
+
+Tones automatically enable a colored dot indicator by default.
+
+## With Icons
+
+Replace the dot with a custom icon:
+
+```tsx
+import { CheckCircleOutlined, CarOutlined, SyncOutlined, ClockCircleOutlined } from '@ant-design/icons'
+
+<AxTag tone="success" icon={<CheckCircleOutlined />}>Delivered</AxTag>
+<AxTag tone="info" icon={<CarOutlined />}>In Transit</AxTag>
+<AxTag tone="info" icon={<SyncOutlined spin />}>Processing</AxTag>
+<AxTag tone="neutral" icon={<ClockCircleOutlined />}>Pending</AxTag>
+```
+
+## Without Dot
+
+Remove the dot indicator:
+
+```tsx
+<AxTag tone="success" dot={false}>Completed</AxTag>
+```
+
+## Pill Shape
+
+Rounded pill-shaped tags:
+
+```tsx
+<AxTag tone="success" pill>Delivered</AxTag>
+<AxTag tone="info" pill>In Transit</AxTag>
+<AxTag tone="error" pill>Cancelled</AxTag>
+```
+
+## Variants
+
+### Outlined (Default)
+
+```tsx
+<AxTag tone="success" variant="outlined">In Stock</AxTag>
+```
+
+### Filled
+
+```tsx
+<AxTag tone="success" variant="filled" dot={false}>Completed</AxTag>
+```
+
+### Solid Fill
+
+Custom background color with white text:
+
+```tsx
+<AxTag fill="var(--green-600)">Completed</AxTag>
+<AxTag fill="var(--cyan-600)">In Progress</AxTag>
+<AxTag fill="var(--red-600)">Cancelled</AxTag>
+<AxTag fill="var(--primary-600)">Axmed Purple</AxTag>
+```
+
+## Small Size
+
+Compact badge style (11px font):
+
+```tsx
+<AxTag small color="orange">Be first to bid!</AxTag>
+<AxTag small tone="info">5 active</AxTag>
+<AxTag small tone="neutral">+3</AxTag>
+<AxTag small pill fill="var(--green-600)">New</AxTag>
+```
+
+## Closeable
+
+Add a close button:
+
+```tsx
+<AxTag closable onClose={() => console.log('Closed')}>Kenya</AxTag>
+<AxTag closable onClose={() => console.log('Closed')}>Nigeria</AxTag>
+```
+
+## Common Patterns
+
+### Order Status
+
+```tsx
+const statusConfig = {
+  Delivered: { tone: 'success', icon: <CheckCircleOutlined /> },
+  'In Transit': { tone: 'info', icon: <CarOutlined /> },
+  Processing: { tone: 'info', icon: <SyncOutlined spin /> },
+  Pending: { tone: 'neutral', icon: <ClockCircleOutlined /> },
+  Cancelled: { tone: 'error', icon: <CloseCircleOutlined /> },
+}
+
+function OrderStatus({ status }) {
+  const config = statusConfig[status]
+  return (
+    <AxTag tone={config.tone} icon={config.icon} pill>
+      {status}
+    </AxTag>
+  )
+}
+```
+
+### Stock Status
+
+```tsx
+const stockToneMap = {
+  'In Stock': 'success',
+  'Low Stock': 'warning',
+  'Out of Stock': 'error',
+  'Expired': 'neutral',
+}
+
+<AxTag tone={stockToneMap[status]}>{status}</AxTag>
+```
+
+### Category Tags
+
+Use solid fill colors for category labels:
+
+```tsx
+const categoryColors = {
+  Antibiotics: 'var(--cyan-700)',
+  Antidiabetics: 'var(--primary-500)',
+  Analgesics: 'var(--orange-600)',
+  Antimalarials: 'var(--cyan-500)',
+}
+
+function CategoryTag({ category }) {
+  return <AxTag fill={categoryColors[category]}>{category}</AxTag>
+}
+```
+
+### In Table Cells
+
+```tsx
+import { AxTable, AxTag } from '@axmed/design-system'
+
+const columns = [
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+    render: (status) => (
+      <AxTag tone={statusToneMap[status]}>{status}</AxTag>
+    ),
+  },
+]
+```
+
+### In Card Headers
+
+```tsx
+import { AxCard, AxTag } from '@axmed/design-system'
+
+<AxCard
+  title="PharmaCorp Ltd"
+  extra={<AxTag tone="success">Awarded</AxTag>}
+>
+  Card content...
+</AxCard>
+```
+
+### Badge-Style Indicators
+
+```tsx
+<AxTag small pill fill="var(--primary)">Featured</AxTag>
+<AxTag small color="orange">Be first to bid!</AxTag>
+<AxTag small tone="warning" pill>Closing soon</AxTag>
+```
+
+## Props
+
+<ResponseField name="tone" type="string">
+  Semantic tone: `success`, `info`, `warning`, `error`, or `neutral`. Automatically enables dot indicator.
+</ResponseField>
+
+<ResponseField name="dot" type="boolean">
+  Show colored dot indicator (auto-enabled when tone is set, unless icon is provided)
+</ResponseField>
+
+<ResponseField name="icon" type="ReactNode">
+  Custom icon to display (replaces dot)
+</ResponseField>
+
+<ResponseField name="pill" type="boolean" default="false">
+  Pill-shaped tag with rounded corners (border-radius: 16px)
+</ResponseField>
+
+<ResponseField name="fill" type="string">
+  Solid background color with white text and no border. Pass hex value or CSS variable.
+</ResponseField>
+
+<ResponseField name="small" type="boolean" default="false">
+  Small badge variant (11px font, compact padding)
+</ResponseField>
+
+<ResponseField name="variant" type="string">
+  Ant Design variant: `outlined` (default), `filled`, or `borderless`
+</ResponseField>
+
+<ResponseField name="closable" type="boolean" default="false">
+  Show close icon
+</ResponseField>
+
+<ResponseField name="onClose" type="function">
+  Close button click handler
+</ResponseField>
+
+See the [full API reference](/api/tag) for all available props.

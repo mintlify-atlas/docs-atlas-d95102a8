@@ -1,0 +1,361 @@
+---
+title: Card
+description: Content containers with headers, footers, and flexible layouts.
+icon: rectangle
+---
+
+AxCard provides a versatile container component for grouping related content. It supports headers with descriptions, custom footers, and can wrap full-bleed content like tables and lists.
+
+## Basic Usage
+
+<CodeGroup>
+```tsx TypeScript
+import { AxCard } from '@axmed/design-system'
+
+function Example() {
+  return (
+    <AxCard title="Card Title" description="A short description">
+      Card body content goes here.
+    </AxCard>
+  )
+}
+```
+
+```jsx JavaScript
+import { AxCard } from '@axmed/design-system'
+
+function Example() {
+  return (
+    <AxCard title="Card Title" description="A short description">
+      Card body content goes here.
+    </AxCard>
+  )
+}
+```
+</CodeGroup>
+
+## With Header Actions
+
+Add actions to the card header using the `extra` prop:
+
+```tsx
+import { AxButton } from '@axmed/design-system'
+
+<AxCard
+  title="Recent Orders"
+  description="Last 30 days"
+  extra={<AxButton variant="link">View all</AxButton>}
+>
+  Card content...
+</AxCard>
+```
+
+## With Footer
+
+Add a footer section with actions or metadata:
+
+```tsx
+import { AxButton } from '@axmed/design-system'
+
+<AxCard
+  title="Order Summary"
+  description="Review before submitting"
+  footer={
+    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+      <AxButton variant="secondary">Cancel</AxButton>
+      <AxButton>Submit</AxButton>
+    </div>
+  }
+>
+  Card body content...
+</AxCard>
+```
+
+## No Padding
+
+Remove body padding for full-bleed content like tables:
+
+```tsx
+import { AxTable } from '@axmed/design-system'
+
+<AxCard
+  title="Recent Orders"
+  extra={<AxButton variant="link">See all</AxButton>}
+  noPadding
+>
+  <AxTable
+    dataSource={orders}
+    columns={columns}
+    pagination={false}
+    size="small"
+  />
+</AxCard>
+```
+
+## Sizes
+
+```tsx
+<AxCard size="default" title="Default Size">
+  Standard padding
+</AxCard>
+
+<AxCard size="small" title="Small Size">
+  Reduced padding for compact layouts
+</AxCard>
+```
+
+## Hoverable
+
+Elevate shadow on hover for clickable cards:
+
+```tsx
+<AxCard
+  title="Orders"
+  description="Track and manage all purchase orders"
+  hoverable
+  style={{ cursor: 'pointer' }}
+  onClick={() => navigate('/orders')}
+>
+  Card content...
+</AxCard>
+```
+
+## Common Patterns
+
+### Stat / Metric Cards
+
+```tsx
+import { ShoppingCartOutlined, ArrowUpOutlined } from '@ant-design/icons'
+import { AxText } from '@axmed/design-system'
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+  <AxCard>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+      <div style={{
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+        background: 'var(--cyan-50)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 18,
+        color: 'var(--cyan-600)'
+      }}>
+        <ShoppingCartOutlined />
+      </div>
+      <AxText variant="body-sm" color="secondary">Total Orders</AxText>
+    </div>
+    <AxText variant="heading-xl">142</AxText>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
+      <ArrowUpOutlined style={{ color: 'var(--green-600)', fontSize: 12 }} />
+      <AxText variant="body-xs" style={{ color: 'var(--green-600)' }}>
+        +12% from last month
+      </AxText>
+    </div>
+  </AxCard>
+</div>
+```
+
+### Navigation Cards
+
+```tsx
+import { ShoppingCartOutlined } from '@ant-design/icons'
+import { AxText } from '@axmed/design-system'
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+  <AxCard hoverable style={{ cursor: 'pointer', textAlign: 'center' }}>
+    <div style={{
+      width: 56,
+      height: 56,
+      borderRadius: 12,
+      background: 'var(--cyan-50)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: '0 auto 12px'
+    }}>
+      <ShoppingCartOutlined style={{ fontSize: 28, color: 'var(--cyan-600)' }} />
+    </div>
+    <AxText variant="body-md" weight="semibold" as="div">Orders</AxText>
+    <AxText variant="body-xs" color="secondary" style={{ marginTop: 4 }}>
+      Track and manage all purchase orders
+    </AxText>
+  </AxCard>
+</div>
+```
+
+### Detail / Entity Card
+
+```tsx
+import { AxTag, AxButton, AxText } from '@axmed/design-system'
+import { ClockCircleOutlined } from '@ant-design/icons'
+
+<AxCard
+  title="PharmaCorp Ltd"
+  description="Amoxicillin 500mg · Cipla Ltd"
+  extra={<AxTag tone="success">Awarded</AxTag>}
+  footer={
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <ClockCircleOutlined style={{ color: 'var(--text-secondary)', fontSize: 12 }} />
+        <AxText variant="body-xs" color="secondary">Expires in 14 days</AxText>
+      </div>
+      <div style={{ display: 'flex', gap: 8 }}>
+        <AxButton variant="secondary">View Profile</AxButton>
+        <AxButton>Accept Quote</AxButton>
+      </div>
+    </div>
+  }
+>
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    {[
+      { label: 'Unit Price', value: '$2.40 / unit' },
+      { label: 'Lead Time', value: '14 days' },
+      { label: 'Shelf Life', value: '18 months' },
+    ].map(({ label, value }) => (
+      <div key={label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <AxText variant="body-sm" color="secondary">{label}</AxText>
+        <AxText variant="body-sm" weight="medium">{value}</AxText>
+      </div>
+    ))}
+  </div>
+</AxCard>
+```
+
+### Content Panel (Table Wrapper)
+
+```tsx
+import { AxTable, AxButton } from '@axmed/design-system'
+
+<AxCard
+  title="Recent Orders"
+  description="Last 30 days"
+  extra={<AxButton variant="link">View all orders</AxButton>}
+  noPadding
+>
+  <AxTable
+    dataSource={orders}
+    columns={columns}
+    pagination={false}
+    size="small"
+  />
+</AxCard>
+```
+
+### Empty State Card
+
+```tsx
+import { AxEmptyState, AxButton } from '@axmed/design-system'
+import { InboxOutlined } from '@ant-design/icons'
+
+<AxCard
+  title="Recent Orders"
+  extra={<AxButton size="small">New Order</AxButton>}
+>
+  <AxEmptyState
+    size="md"
+    illustration={<InboxOutlined style={{ fontSize: 48, color: 'var(--neutral-300)' }} />}
+    title="No orders yet"
+    description="Orders you create will appear here once submitted."
+    action={<AxButton>Create Order</AxButton>}
+  />
+</AxCard>
+```
+
+### Selectable Cards
+
+```tsx
+import { useState } from 'react'
+import { CheckCircleOutlined, ShoppingCartOutlined } from '@ant-design/icons'
+import { AxText } from '@axmed/design-system'
+
+function RoleSelector() {
+  const [selected, setSelected] = useState('buyer')
+
+  return (
+    <div style={{ display: 'flex', gap: 16 }}>
+      {['buyer', 'supplier'].map((role) => {
+        const isSelected = selected === role
+        return (
+          <AxCard
+            key={role}
+            hoverable
+            onClick={() => setSelected(role)}
+            style={{
+              flex: 1,
+              cursor: 'pointer',
+              borderColor: isSelected ? 'var(--primary)' : undefined,
+              boxShadow: isSelected ? '0 0 0 2px var(--primary-focus)' : undefined,
+              position: 'relative'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{
+                width: 44,
+                height: 44,
+                borderRadius: 10,
+                background: isSelected ? 'var(--primary-50)' : 'var(--neutral-100)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 20,
+                color: isSelected ? 'var(--primary)' : 'var(--neutral-600)'
+              }}>
+                <ShoppingCartOutlined />
+              </div>
+              <div>
+                <AxText variant="body-md" weight="semibold">{role}</AxText>
+                <AxText variant="body-xs" color="secondary">
+                  I {role === 'buyer' ? 'procure' : 'supply'} medicines
+                </AxText>
+              </div>
+            </div>
+            {isSelected && (
+              <CheckCircleOutlined style={{
+                position: 'absolute',
+                top: 12,
+                right: 12,
+                color: 'var(--primary)',
+                fontSize: 16
+              }} />
+            )}
+          </AxCard>
+        )
+      })}
+    </div>
+  )
+}
+```
+
+## Props
+
+<ResponseField name="title" type="ReactNode">
+  Card header title
+</ResponseField>
+
+<ResponseField name="description" type="ReactNode">
+  Muted subtitle rendered below the title
+</ResponseField>
+
+<ResponseField name="extra" type="ReactNode">
+  Action or content displayed in the header on the right side
+</ResponseField>
+
+<ResponseField name="footer" type="ReactNode">
+  Custom footer content rendered below the body with a top border
+</ResponseField>
+
+<ResponseField name="noPadding" type="boolean" default="false">
+  Remove body padding for full-bleed content like tables or lists
+</ResponseField>
+
+<ResponseField name="size" type="string" default="default">
+  Card size: `default` or `small` (reduces padding)
+</ResponseField>
+
+<ResponseField name="hoverable" type="boolean" default="false">
+  Elevate shadow on hover (for clickable/navigation cards)
+</ResponseField>
+
+See the [full API reference](/api/card) for all available props.

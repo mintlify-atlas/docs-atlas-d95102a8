@@ -1,0 +1,154 @@
+---
+title: Brand
+description: Axmed logo and wordmark component with size and theme variants.
+---
+
+## Overview
+
+Brand renders the Axmed logo in two variants: **icon** (flame mark only) and **wordmark** (mark + "Axmed" text). It supports light and dark themes and three size presets.
+
+## Usage
+
+```tsx
+import { AxBrand } from "@axmed/design-system"
+
+function AppLogo() {
+  return <AxBrand variant="wordmark" size="md" />
+}
+```
+
+## Variants
+
+### Wordmark (Default)
+
+Flame mark + "Axmed" text — used in headers and sidebars.
+
+```tsx
+<AxBrand variant="wordmark" size="md" />
+```
+
+### Icon
+
+Flame mark only — used in collapsed sidebars, favicons, and mobile headers.
+
+```tsx
+<AxBrand variant="icon" size="md" />
+```
+
+## Sizes
+
+- **`sm`** — 20px height (compact headers, mobile)
+- **`md`** — 28px height (default, most common)
+- **`lg`** — 36px height (large headers, hero sections)
+
+```tsx
+<AxBrand size="sm" />
+<AxBrand size="md" />
+<AxBrand size="lg" />
+```
+
+Width scales proportionally to maintain aspect ratio.
+
+## Themes
+
+### Light (Default)
+
+Navy mark on light background.
+
+```tsx
+<AxBrand theme="light" />
+```
+
+### Dark
+
+White mark on dark/navy background.
+
+```tsx
+<div style={{ background: "var(--primary-600)", padding: 24 }}>
+  <AxBrand variant="wordmark" theme="dark" />
+</div>
+```
+
+## Sidebar Logo Slot
+
+Switch between wordmark (expanded) and icon (collapsed):
+
+```tsx
+const [collapsed, setCollapsed] = useState(false)
+
+<AxSideNav
+  collapsed={collapsed}
+  logo={<AxBrand variant={collapsed ? "icon" : "wordmark"} size="md" />}
+  // ... other props
+/>
+```
+
+## Header Logo
+
+```tsx
+<AxHeader
+  left={<AxBrand variant="wordmark" size="md" />}
+  right={<ActionButtons />}
+/>
+```
+
+## Branded Header
+
+```tsx
+<AxHeader
+  variant="branded"
+  left={<AxBrand variant="wordmark" size="md" theme="dark" />}
+  right={<ActionButtons />}
+/>
+```
+
+## Props
+
+<ResponseField name="variant" type="'icon' | 'wordmark'" default="'wordmark'">
+  - `icon` — flame mark only (for collapsed sidebar, favicons, etc.)
+  - `wordmark` — mark + "Axmed" text (default)
+</ResponseField>
+
+<ResponseField name="size" type="'sm' | 'md' | 'lg'" default="'md'">
+  Size preset (controls height; width scales proportionally):
+  - `sm`: 20px
+  - `md`: 28px (default)
+  - `lg`: 36px
+</ResponseField>
+
+<ResponseField name="theme" type="'light' | 'dark'" default="'light'">
+  - `light` — navy mark on light background (default)
+  - `dark` — white mark on dark/navy background
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional class name
+</ResponseField>
+
+<ResponseField name="style" type="CSSProperties">
+  Inline styles
+</ResponseField>
+
+## Best Practices
+
+<Check>Use `variant="wordmark"` in headers and expanded sidebars for brand recognition</Check>
+<Check>Use `variant="icon"` in collapsed sidebars and mobile headers to save space</Check>
+<Check>Match the `theme` to the background color (light on white, dark on navy)</Check>
+<Check>Use `size="md"` for most cases — sm/lg are for special contexts</Check>
+
+<Warning>Don't change the logo colors or aspect ratio — use the theme prop instead</Warning>
+<Warning>Avoid placing the logo on busy backgrounds — ensure sufficient contrast</Warning>
+
+## Accessibility
+
+- SVG has `aria-hidden="true"` and wrapper has `aria-label="Axmed"`
+- Logo is purely decorative — navigation is announced via parent components
+
+## API Reference
+
+See the [Brand API](/api/brand) for the complete TypeScript interface.
+
+## Related Components
+
+- [Header](/components/header) — Use Brand in the `left` slot
+- [Side Nav](/components/sidenav) — Use Brand in the `logo` slot

@@ -1,0 +1,186 @@
+---
+title: AxButton
+description: A versatile button component with multiple variants for different use cases
+---
+
+## Overview
+
+The `AxButton` component provides a set of predefined visual variants for buttons across the AxMed design system. It wraps Ant Design's Button component with custom styling and a simplified variant API.
+
+## Import
+
+```tsx
+import { AxButton } from "@axmed/design-system"
+import type { AxButtonProps } from "@axmed/design-system"
+```
+
+## Props
+
+<ParamField path="variant" type="AxButtonVariant" default="primary">
+  Visual variant of the button. Available options:
+  - `"primary"` - Primary action button with filled background
+  - `"secondary"` - Secondary action button with outlined style
+  - `"ghost"` - Transparent button with primary color border
+  - `"danger"` - Destructive action button in red
+  - `"link"` - Button styled as a text link
+  - `"text"` - Button with no border or background
+</ParamField>
+
+<ParamField path="children" type="React.ReactNode">
+  Button content (text, icons, or other elements)
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Whether the button is disabled
+</ParamField>
+
+<ParamField path="loading" type="boolean" default="false">
+  Show loading spinner and disable the button
+</ParamField>
+
+<ParamField path="icon" type="React.ReactNode">
+  Icon element to display before button text
+</ParamField>
+
+<ParamField path="iconPosition" type="'start' | 'end'" default="'start'">
+  Position of the icon relative to button text
+</ParamField>
+
+<ParamField path="block" type="boolean" default="false">
+  Whether button should take full width of its container
+</ParamField>
+
+<ParamField path="htmlType" type="'button' | 'submit' | 'reset'" default="'button'">
+  HTML button type attribute
+</ParamField>
+
+<ParamField path="onClick" type="(event: React.MouseEvent<HTMLElement>) => void">
+  Click event handler
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles to apply
+</ParamField>
+
+## Type Definitions
+
+```typescript
+type AxButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "link" | "text"
+
+export type AxButtonProps = {
+  /** Visual variant of the button */
+  variant?: AxButtonVariant
+} & Omit<AntButtonProps, "type" | "danger" | "ghost" | "variant">
+```
+
+The component extends Ant Design's `ButtonProps` while omitting conflicting props (`type`, `danger`, `ghost`, `variant`) that are mapped through the `variant` prop.
+
+## Usage Examples
+
+### Basic Variants
+
+```tsx
+import { AxButton } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <>
+      <AxButton variant="primary">Primary Action</AxButton>
+      <AxButton variant="secondary">Secondary Action</AxButton>
+      <AxButton variant="ghost">Ghost Button</AxButton>
+      <AxButton variant="danger">Delete</AxButton>
+      <AxButton variant="link">Link Button</AxButton>
+      <AxButton variant="text">Text Button</AxButton>
+    </>
+  )
+}
+```
+
+### With Icons
+
+```tsx
+import { AxButton } from "@axmed/design-system"
+import { PlusOutlined, DownloadOutlined } from "@ant-design/icons"
+
+function Example() {
+  return (
+    <>
+      <AxButton variant="primary" icon={<PlusOutlined />}>
+        Add Item
+      </AxButton>
+      <AxButton 
+        variant="secondary" 
+        icon={<DownloadOutlined />}
+        iconPosition="end"
+      >
+        Download
+      </AxButton>
+    </>
+  )
+}
+```
+
+### Loading State
+
+```tsx
+import { AxButton } from "@axmed/design-system"
+import { useState } from "react"
+
+function Example() {
+  const [loading, setLoading] = useState(false)
+
+  const handleClick = async () => {
+    setLoading(true)
+    await performAction()
+    setLoading(false)
+  }
+
+  return (
+    <AxButton 
+      variant="primary" 
+      loading={loading}
+      onClick={handleClick}
+    >
+      Submit
+    </AxButton>
+  )
+}
+```
+
+### Full Width
+
+```tsx
+import { AxButton } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <AxButton variant="primary" block>
+      Full Width Button
+    </AxButton>
+  )
+}
+```
+
+### Disabled State
+
+```tsx
+import { AxButton } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <AxButton variant="primary" disabled>
+      Disabled Button
+    </AxButton>
+  )
+}
+```
+
+## Related Components
+
+- [AxActionMenu](/api/action-menu) - For dropdown menus with actions
+- [AxModal](/api/modal) - Buttons are commonly used in modal footers
+- [AxDrawer](/api/drawer) - Buttons are commonly used in drawer footers

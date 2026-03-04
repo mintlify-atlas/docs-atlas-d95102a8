@@ -1,0 +1,307 @@
+---
+title: AxText
+description: A flexible typography component for rendering text with consistent design system styles
+---
+
+## Overview
+
+The `AxText` component provides a unified API for rendering text across the AxMed design system with predefined variants, weights, colors, and utility features like ellipsis truncation.
+
+## Import
+
+```tsx
+import { AxText } from "@axmed/design-system"
+import type { AxTextProps } from "@axmed/design-system"
+```
+
+## Props
+
+<ParamField path="variant" type="TextVariant" required>
+  Text style variant from the design system. Available options:
+  
+  **Headings:**
+  - `"heading-4xl"` - Extra large heading (h1)
+  - `"heading-3xl"` - 3XL heading (h2)
+  - `"heading-2xl"` - 2XL heading (h3)
+  - `"heading-xl"` - XL heading (h4)
+  - `"heading-lg"` - Large heading (h5)
+  - `"heading-md"` - Medium UI label (14px, semibold)
+  - `"heading-sm"` - Small UI label (13px, semibold)
+  
+  **Body:**
+  - `"body-xl"` - Extra large body text
+  - `"body-lg"` - Large body text
+  - `"body-md"` - Medium body text (default)
+  - `"body-sm"` - Small body text
+  - `"body-xs"` - Extra small body text
+</ParamField>
+
+<ParamField path="children" type="React.ReactNode" required>
+  Text content to render
+</ParamField>
+
+<ParamField path="weight" type="TextWeight" default="'regular'">
+  Font weight — applies to body variants only (headings have fixed weights):
+  - `"regular"` - Normal font weight (400)
+  - `"medium"` - Medium font weight (500)
+  - `"semibold"` - Semibold font weight (600)
+</ParamField>
+
+<ParamField path="color" type="TextColor" default="'primary'">
+  Text color from design system:
+  - `"primary"` - Primary text color (default)
+  - `"secondary"` - Secondary/muted text color
+  - `"link"` - Link/interactive color
+  - `"disabled"` - Disabled state color
+  - `"inherit"` - Inherit from parent
+</ParamField>
+
+<ParamField path="italic" type="boolean" default="false">
+  Apply italic style
+</ParamField>
+
+<ParamField path="underline" type="boolean" default="false">
+  Apply underline decoration
+</ParamField>
+
+<ParamField path="mono" type="boolean" default="false">
+  Use monospace font (Fira Code) for code snippets
+</ParamField>
+
+<ParamField path="as" type="ElementType">
+  Override the rendered HTML element. Available options:
+  - `"h1"`, `"h2"`, `"h3"`, `"h4"`, `"h5"`, `"h6"` - Heading elements
+  - `"p"`, `"span"`, `"label"`, `"div"` - Container elements
+  
+  If not provided, a semantic default is used based on the variant.
+</ParamField>
+
+<ParamField path="ellipsis" type="boolean | EllipsisConfig">
+  Truncate text with ellipsis. Pass `true` for single-line truncation, or an object for advanced configuration:
+  
+  ```typescript
+  {
+    rows?: number        // Number of rows before clamping (default: 1)
+    tooltip?: React.ReactNode | true  // Tooltip shown when truncated
+  }
+  ```
+  
+  When `tooltip` is `true`, the full children text is shown in the tooltip.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles to apply
+</ParamField>
+
+## Type Definitions
+
+```typescript
+type HeadingVariant =
+  | "heading-4xl"
+  | "heading-3xl"
+  | "heading-2xl"
+  | "heading-xl"
+  | "heading-lg"
+  | "heading-md"
+  | "heading-sm"
+
+type BodyVariant = "body-xl" | "body-lg" | "body-md" | "body-sm" | "body-xs"
+
+type TextVariant = HeadingVariant | BodyVariant
+
+type TextWeight = "regular" | "medium" | "semibold"
+
+type TextColor = "primary" | "secondary" | "link" | "disabled" | "inherit"
+
+type ElementType = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "label" | "div"
+
+type EllipsisConfig = {
+  /** Number of rows before clamping (default: 1) */
+  rows?: number
+  /** Tooltip content shown when text is truncated. Pass `true` to use the children text. */
+  tooltip?: React.ReactNode
+}
+
+export type AxTextProps = {
+  /** Text style variant from the design system */
+  variant: TextVariant
+  /** Font weight — applies to body variants (headings have fixed weights) */
+  weight?: TextWeight
+  /** Italic style */
+  italic?: boolean
+  /** Underline decoration */
+  underline?: boolean
+  /** Use monospace font (Fira Code) */
+  mono?: boolean
+  /** Text color */
+  color?: TextColor
+  /** Override the rendered HTML element */
+  as?: ElementType
+  /** Truncate text with ellipsis. Pass `true` for single-line, or a config object. */
+  ellipsis?: boolean | EllipsisConfig
+  children: React.ReactNode
+  className?: string
+} & Omit<React.HTMLAttributes<HTMLElement>, "color">
+```
+
+## Usage Examples
+
+### Headings
+
+```tsx
+import { AxText } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <>
+      <AxText variant="heading-4xl">Page Title</AxText>
+      <AxText variant="heading-2xl">Section Heading</AxText>
+      <AxText variant="heading-md">UI Label</AxText>
+    </>
+  )
+}
+```
+
+### Body Text with Weights
+
+```tsx
+import { AxText } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <>
+      <AxText variant="body-md" weight="regular">
+        Regular body text
+      </AxText>
+      <AxText variant="body-md" weight="medium">
+        Medium weight text
+      </AxText>
+      <AxText variant="body-md" weight="semibold">
+        Semibold text
+      </AxText>
+    </>
+  )
+}
+```
+
+### Color Variants
+
+```tsx
+import { AxText } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <>
+      <AxText variant="body-md" color="primary">
+        Primary text color
+      </AxText>
+      <AxText variant="body-md" color="secondary">
+        Secondary muted text
+      </AxText>
+      <AxText variant="body-md" color="link">
+        Link-styled text
+      </AxText>
+      <AxText variant="body-md" color="disabled">
+        Disabled text
+      </AxText>
+    </>
+  )
+}
+```
+
+### Text Decorations
+
+```tsx
+import { AxText } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <>
+      <AxText variant="body-md" italic>
+        Italic text
+      </AxText>
+      <AxText variant="body-md" underline>
+        Underlined text
+      </AxText>
+      <AxText variant="body-md" mono>
+        Monospace code text
+      </AxText>
+    </>
+  )
+}
+```
+
+### Ellipsis Truncation
+
+```tsx
+import { AxText } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <>
+      {/* Single-line truncation */}
+      <AxText variant="body-md" ellipsis>
+        This is a very long text that will be truncated with an ellipsis when it exceeds the container width
+      </AxText>
+
+      {/* Multi-line truncation with tooltip */}
+      <AxText 
+        variant="body-md" 
+        ellipsis={{ rows: 3, tooltip: true }}
+      >
+        This is a very long text that will be clamped to 3 lines and show a tooltip on hover when truncated
+      </AxText>
+
+      {/* Custom tooltip */}
+      <AxText 
+        variant="body-md" 
+        ellipsis={{ rows: 2, tooltip: "Full text content" }}
+      >
+        Truncated text with custom tooltip
+      </AxText>
+    </>
+  )
+}
+```
+
+### Semantic HTML Override
+
+```tsx
+import { AxText } from "@axmed/design-system"
+
+function Example() {
+  return (
+    <>
+      {/* Visual heading style but using <p> tag (default for heading-md) */}
+      <AxText variant="heading-md">UI Label</AxText>
+
+      {/* Override to use semantic <h6> */}
+      <AxText variant="heading-md" as="h6">
+        Semantic Heading
+      </AxText>
+
+      {/* Use body style as inline span */}
+      <AxText variant="body-sm" as="span">
+        Inline text
+      </AxText>
+    </>
+  )
+}
+```
+
+## Accessibility
+
+- The component automatically maps variants to semantic HTML elements by default
+- Use the `as` prop to override when needed for proper document structure
+- Ellipsis truncation includes automatic tooltip detection for screen readers
+- Color contrast ratios meet WCAG guidelines for all color variants
+
+## Related Components
+
+- [AxButton](/api/button) - For interactive button text
+- [AxBadge](/api/badge) - For labeled status indicators
+- [AxTag](/api/tag) - For categorical labels

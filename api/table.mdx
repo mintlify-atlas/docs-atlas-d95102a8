@@ -1,0 +1,369 @@
+---
+title: AxTable
+description: Data table with row states, responsive layouts, and mobile card view
+---
+
+## Components
+
+### AxTable
+
+A feature-rich data table built on Ant Design Table with row state management, responsive column hiding, and automatic mobile card layouts.
+
+```tsx
+import AxTable from "@axmedds/table"
+import type { AxTableProps } from "@axmedds/table"
+```
+
+#### Props
+
+Extends all [Ant Design Table props](https://ant.design/components/table#api).
+
+<ParamField path="rowStates" type="Record<string | number, AxTableRowState>">
+  Visual state per row key. Maps each row's unique identifier to its display state.
+  
+  - `"selected"` — blue-25 background + blue-600 left border accent
+  - `"disabled"` — reduced opacity + no pointer events
+  
+  **Example:**
+  ```tsx
+  rowStates={{ "1": "selected", "2": "selected", "3": "disabled" }}
+  ```
+</ParamField>
+
+<ParamField path="headerBg" type="string" default="#FAFAFA">
+  Override the header background color. Pass any CSS color value or design token.
+</ParamField>
+
+<ParamField path="mobileLayout" type="'scroll' | 'cards'" default="'cards'">
+  Layout behavior on mobile (< 576px):
+  
+  - `"cards"` — each row renders as a stacked card with expand/collapse
+  - `"scroll"` — horizontal scroll table
+</ParamField>
+
+<ParamField path="autoResponsive" type="boolean" default={true}>
+  Automatically hide middle columns as the viewport shrinks. First and last columns always stay visible. Middle columns are progressively hidden right-to-left across xl → lg → md breakpoints.
+  
+  Columns with explicit `responsive` or `fixed` props are left untouched.
+</ParamField>
+
+<ParamField path="mobilePageSize" type="number" default={5}>
+  Page size used when the mobile card view is active. Overrides the regular pagination `pageSize` on small screens to keep the card list manageable.
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+/**
+ * Visual state applied to a row.
+ * - `selected`  → blue-25 background + blue-600 left border accent
+ * - `disabled`  → reduced opacity + no pointer events
+ */
+export type AxTableRowState = "selected" | "disabled"
+
+export type AxTableProps<RecordType extends AnyObject = AnyObject> = {
+  rowStates?: Record<string | number, AxTableRowState>
+  headerBg?: string
+  mobileLayout?: "scroll" | "cards"
+  autoResponsive?: boolean
+  mobilePageSize?: number
+} & AntTableProps<RecordType>
+```
+
+#### Usage
+
+```tsx
+import AxTable from "@axmedds/table"
+import type { ColumnsType } from "antd/es/table"
+
+interface Medication {
+  key: string
+  name: string
+  status: "In Stock" | "Low Stock" | "Out of Stock"
+  unitPrice: number
+}
+
+const columns: ColumnsType<Medication> = [
+  { title: "Medication", dataIndex: "name", key: "name" },
+  { title: "Status", dataIndex: "status", key: "status" },
+  { title: "Price", dataIndex: "unitPrice", key: "unitPrice", align: "right" },
+]
+
+const data: Medication[] = [
+  { key: "1", name: "Amoxicillin", status: "In Stock", unitPrice: 0.45 },
+  { key: "2", name: "Ibuprofen", status: "Low Stock", unitPrice: 0.18 },
+]
+
+function InventoryTable() {
+  return (
+    <AxTable<Medication>
+      columns={columns}
+      dataSource={data}
+      rowStates={{ "1": "selected" }}
+      pagination={{ pageSize: 10 }}
+    />
+  )
+}
+```
+
+#### Interactive Selection
+
+```tsx
+const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([])
+
+const rowStates = selectedKeys.reduce((acc, key) => {
+  acc[key] = "selected"
+  return acc
+}, {} as Record<string | number, AxTableRowState>)
+
+<AxTable
+  columns={columns}
+  dataSource={data}
+  rowStates={rowStates}
+  rowSelection={{
+    selectedRowKeys: selectedKeys,
+    onChange: (keys) => setSelectedKeys(keys),
+  }}
+/>
+```
+
+---
+
+### AxTableSkeleton
+
+Skeleton loader for tables with configurable columns and rows.
+
+```tsx
+import { AxTableSkeleton } from "@axmedds/table"
+import type { AxTableSkeletonProps } from "@axmedds/table"
+```
+
+#### Props
+
+<ParamField path="rows" type="number" default={5}>
+  Number of body rows to render.
+</ParamField>
+
+<ParamField path="columns" type="number | SkeletonColumnConfig[]" default={5}>
+  Column structure:
+  
+  - `number` — N equal-width columns
+  - `SkeletonColumnConfig[]` — per-column flex/width control
+</ParamField>
+
+<ParamField path="showHeader" type="boolean" default={true}>
+  Render a header skeleton row.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional class name for the root element.
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+export type SkeletonColumnConfig = {
+  /** Flex ratio for the column (default: 1) */
+  flex?: number
+  /** Fixed width — overrides flex when set */
+  width?: string | number
+}
+
+export type AxTableSkeletonProps = {
+  rows?: number
+  columns?: number | SkeletonColumnConfig[]
+  showHeader?: boolean
+  className?: string
+}
+```
+
+#### Usage
+
+```tsx
+import { AxTableSkeleton } from "@axmedds/table"
+
+// Simple: 5 equal columns, 8 rows
+<AxTableSkeleton rows={8} columns={5} />
+
+// Advanced: custom column widths
+<AxTableSkeleton
+  rows={10}
+  columns={[
+    { flex: 2 },        // 2x width
+    { flex: 1 },        // 1x width
+    { width: 120 },     // fixed 120px
+    { flex: 1 },
+  ]}
+/>
+```
+
+---
+
+### AxDeadlineCell
+
+Table cell that displays deadline countdown with color-coded urgency states.
+
+```tsx
+import { AxDeadlineCell } from "@axmedds/table"
+import type { AxDeadlineCellProps } from "@axmedds/table"
+```
+
+#### Props
+
+<ParamField path="deadline" type="Date | string | number" required>
+  The deadline date. Accepts a Date object, ISO string, or any value parseable by `new Date()`.
+</ParamField>
+
+<ParamField path="urgentDays" type="number" default={7}>
+  Days remaining below which the cell turns red (urgent).
+</ParamField>
+
+<ParamField path="warningDays" type="number" default={14}>
+  Days remaining below which the cell turns orange (warning).
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional class name.
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles.
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+export type AxDeadlineCellProps = {
+  deadline: Date | string | number
+  urgentDays?: number
+  warningDays?: number
+  className?: string
+  style?: React.CSSProperties
+}
+```
+
+#### Usage
+
+```tsx
+import { AxDeadlineCell } from "@axmedds/table"
+import type { ColumnsType } from "antd/es/table"
+
+const columns: ColumnsType<Order> = [
+  {
+    title: "Deadline",
+    dataIndex: "deadline",
+    key: "deadline",
+    render: (deadline: string) => (
+      <AxDeadlineCell 
+        deadline={deadline}
+        urgentDays={7}
+        warningDays={14}
+      />
+    ),
+  },
+]
+```
+
+#### Visual States
+
+- **Overdue** — Red with warning icon: "5d overdue"
+- **Urgent** (≤7 days) — Red with clock icon: "3d left"
+- **Warning** (≤14 days) — Orange with clock icon: "10d left"
+- **OK** (>14 days) — Default color with clock icon: "25d left"
+- **Due today** — Special label: "Due today"
+
+---
+
+### AxPriceCell
+
+Table cell for displaying formatted prices with optional tier labels.
+
+```tsx
+import { AxPriceCell } from "@axmedds/table"
+import type { AxPriceCellProps } from "@axmedds/table"
+```
+
+#### Props
+
+<ParamField path="amount" type="number" required>
+  The numeric amount to format.
+</ParamField>
+
+<ParamField path="currency" type="string" default="USD">
+  ISO 4217 currency code (e.g., "USD", "EUR", "KES").
+</ParamField>
+
+<ParamField path="locale" type="string" default="en-US">
+  BCP 47 locale used for number formatting (e.g., "en-US", "en-GB", "sw-KE").
+</ParamField>
+
+<ParamField path="tier" type="string">
+  Optional tier or label rendered below the price (e.g., "Tier 1", "Best Price"). Use to surface pricing context in competitive bid tables.
+</ParamField>
+
+<ParamField path="tierHighlighted" type="boolean" default={false}>
+  Whether the tier label should be highlighted (e.g., lowest bid).
+</ParamField>
+
+<ParamField path="compact" type="boolean" default={false}>
+  Use compact notation for large numbers (e.g., $1.2M instead of $1,200,000).
+</ParamField>
+
+<ParamField path="unit" type="string">
+  Per-unit label appended after the price (e.g., "/ unit", "/ pack").
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional class name.
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles.
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+export type AxPriceCellProps = {
+  amount: number
+  currency?: string
+  locale?: string
+  tier?: string
+  tierHighlighted?: boolean
+  compact?: boolean
+  unit?: string
+  className?: string
+  style?: React.CSSProperties
+}
+```
+
+#### Usage
+
+```tsx
+import { AxPriceCell } from "@axmedds/table"
+import type { ColumnsType } from "antd/es/table"
+
+const columns: ColumnsType<Bid> = [
+  {
+    title: "Price",
+    dataIndex: "price",
+    key: "price",
+    align: "right",
+    render: (price: number, record) => (
+      <AxPriceCell
+        amount={price}
+        currency="USD"
+        unit="/ unit"
+        tier={record.isLowest ? "Best Price" : undefined}
+        tierHighlighted={record.isLowest}
+      />
+    ),
+  },
+]
+
+// Compact notation for large amounts
+<AxPriceCell amount={1200000} compact /> // "$1.2M"
+
+// Different currency and locale
+<AxPriceCell amount={5000} currency="KES" locale="sw-KE" />
+```

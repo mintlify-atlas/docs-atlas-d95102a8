@@ -1,0 +1,377 @@
+---
+title: AxFileItem
+description: File list item with upload progress, status indicators, and actions
+---
+
+<Note>
+  **Component Location:** `design-system/components/AxFileItem`
+</Note>
+
+## Overview
+
+`AxFileItem` displays an individual file in an upload list with automatic file-type icons, upload progress, status indicators (success/error), and action buttons (remove/retry). Designed to replace Ant Design's default file list UI with a custom design.
+
+## Import
+
+```tsx
+import AxFileItem from '@/design-system/components/AxFileItem'
+import type { AxFileItemProps, AxFileItemStatus, AxFileItemSize } from '@/design-system/components/AxFileItem'
+```
+
+## Basic Usage
+
+```tsx
+<AxFileItem
+  name="quarterly-report.xlsx"
+  fileSize={2457600} // 2.4 MB
+  onRemove={() => handleRemove()}
+/>
+```
+
+## Upload States
+
+```tsx
+{/* Idle - file selected, not uploading */}
+<AxFileItem
+  name="document.pdf"
+  fileSize={1024000}
+  status="idle"
+  onRemove={() => {}}
+/>
+
+{/* Uploading - shows progress bar */}
+<AxFileItem
+  name="document.pdf"
+  fileSize={1024000}
+  status="uploading"
+  percent={45}
+  onRemove={() => {}} // Cancel upload
+/>
+
+{/* Success - green checkmark */}
+<AxFileItem
+  name="document.pdf"
+  fileSize={1024000}
+  status="success"
+  onRemove={() => {}}
+/>
+
+{/* Error - red indicator + retry button */}
+<AxFileItem
+  name="document.pdf"
+  fileSize={1024000}
+  status="error"
+  error="File exceeds 10MB limit"
+  onRetry={() => {}}
+  onRemove={() => {}}
+/>
+```
+
+## With Image Preview
+
+```tsx
+const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+const handleFileSelect = (file: File) => {
+  const url = URL.createObjectURL(file)
+  setPreviewUrl(url)
+}
+
+<AxFileItem
+  name="profile-photo.jpg"
+  fileSize={file.size}
+  preview={previewUrl}
+  onRemove={() => {
+    URL.revokeObjectURL(previewUrl)
+    setPreviewUrl(null)
+  }}
+/>
+```
+
+## Props
+
+<ParamField path="name" type="string" required>
+  File name displayed as the primary label. Used to determine the file-type icon when `icon` is not provided.
+</ParamField>
+
+<ParamField path="fileSize" type="number">
+  File size in bytes. Automatically formatted to human-readable format (e.g., "2.4 MB", "156 KB").
+</ParamField>
+
+<ParamField path="status" type="AxFileItemStatus" default="idle">
+  Current upload status of the file.
+  
+  - `"idle"` — File selected, not yet uploading (default)
+  - `"uploading"` — Upload in progress, shows progress bar
+  - `"success"` — Upload complete, shows green checkmark
+  - `"error"` — Upload failed, shows red indicator and optional retry button
+</ParamField>
+
+<ParamField path="percent" type="number">
+  Upload progress percentage (0–100). Only rendered when `status="uploading"`.
+  
+  Values outside 0–100 are automatically clamped.
+</ParamField>
+
+<ParamField path="error" type="string">
+  Error message displayed below the file name when `status="error"`.
+  
+  Example: `"File exceeds 10MB limit"`
+</ParamField>
+
+<ParamField path="icon" type="React.ReactNode">
+  Custom file-type icon. By default, the icon is inferred from the file extension in `name`:
+  
+  - `.xlsx, .xls, .csv` → `FileExcelOutlined`
+  - `.pdf` → `FilePdfOutlined`
+  - `.doc, .docx` → `FileWordOutlined`
+  - `.jpg, .png, .gif, etc.` → `FileImageOutlined`
+  - All others → `FileOutlined`
+</ParamField>
+
+<ParamField path="preview" type="string">
+  Image preview URL shown as a thumbnail in the icon box. Pass `URL.createObjectURL(file)` or a data URL for image uploads.
+  
+  When set, replaces the file-type icon entirely.
+</ParamField>
+
+<ParamField path="onRemove" type="() => void">
+  Callback fired when the user clicks the remove/cancel button. Always shown regardless of status.
+</ParamField>
+
+<ParamField path="onRetry" type="() => void">
+  Callback fired when the user clicks the retry button. Only shown when `status="error"`.
+</ParamField>
+
+<ParamField path="size" type="AxFileItemSize" default="md">
+  Component size preset.
+  
+  - `"sm"` — Compact size for modals and drawers
+  - `"md"` — Standard size (default)
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable interactions (remove, retry). Reduces opacity to indicate disabled state.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS class name for the root element.
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles applied to the root element.
+</ParamField>
+
+## Type Definitions
+
+### AxFileItemStatus
+
+```tsx
+export type AxFileItemStatus = "idle" | "uploading" | "success" | "error"
+```
+
+| Status | Description | Visual Indicator |
+|--------|-------------|------------------|
+| `idle` | File selected, not uploading | Default state, no indicator |
+| `uploading` | Upload in progress | Progress bar with `percent` |
+| `success` | Upload complete | Green checkmark (`CheckCircleFilled`) |
+| `error` | Upload failed | Red exclamation mark + error message |
+
+### AxFileItemSize
+
+```tsx
+export type AxFileItemSize = "sm" | "md"
+```
+
+### AxFileItemProps
+
+```tsx
+export type AxFileItemProps = {
+  name: string
+  fileSize?: number
+  status?: AxFileItemStatus
+  percent?: number
+  error?: string
+  icon?: React.ReactNode
+  preview?: string
+  onRemove?: () => void
+  onRetry?: () => void
+  size?: AxFileItemSize
+  disabled?: boolean
+  className?: string
+  style?: React.CSSProperties
+}
+```
+
+## Examples
+
+### Complete Upload Flow
+
+```tsx
+const [uploadState, setUploadState] = useState<{
+  status: AxFileItemStatus
+  percent: number
+  error?: string
+}>({
+  status: 'idle',
+  percent: 0
+})
+
+const handleUpload = async (file: File) => {
+  setUploadState({ status: 'uploading', percent: 0 })
+  
+  try {
+    await uploadWithProgress(file, (percent) => {
+      setUploadState({ status: 'uploading', percent })
+    })
+    setUploadState({ status: 'success', percent: 100 })
+  } catch (error) {
+    setUploadState({
+      status: 'error',
+      percent: 0,
+      error: error.message
+    })
+  }
+}
+
+<AxFileItem
+  name={file.name}
+  fileSize={file.size}
+  status={uploadState.status}
+  percent={uploadState.percent}
+  error={uploadState.error}
+  onRetry={() => handleUpload(file)}
+  onRemove={() => setFile(null)}
+/>
+```
+
+### File List
+
+```tsx
+const [files, setFiles] = useState<FileData[]>([])
+
+<div role="list">
+  {files.map((file) => (
+    <AxFileItem
+      key={file.id}
+      name={file.name}
+      fileSize={file.size}
+      status={file.status}
+      percent={file.percent}
+      error={file.error}
+      onRemove={() => removeFile(file.id)}
+      onRetry={() => retryUpload(file.id)}
+    />
+  ))}
+</div>
+```
+
+### Image Gallery with Previews
+
+```tsx
+const [images, setImages] = useState<Array<{
+  file: File
+  preview: string
+}>>([])
+
+const handleImageSelect = (file: File) => {
+  const preview = URL.createObjectURL(file)
+  setImages([...images, { file, preview }])
+}
+
+const handleRemove = (index: number) => {
+  URL.revokeObjectURL(images[index].preview)
+  setImages(images.filter((_, i) => i !== index))
+}
+
+{images.map((img, i) => (
+  <AxFileItem
+    key={i}
+    name={img.file.name}
+    fileSize={img.file.size}
+    preview={img.preview}
+    onRemove={() => handleRemove(i)}
+  />
+))}
+```
+
+### Custom File Icon
+
+```tsx
+import { FilePptOutlined } from '@ant-design/icons'
+
+<AxFileItem
+  name="presentation.pptx"
+  fileSize={5242880}
+  icon={<FilePptOutlined />}
+  onRemove={() => {}}
+/>
+```
+
+### Small Size in Modal
+
+```tsx
+<Modal title="Upload Documents" open={isOpen}>
+  <AxFileItem
+    size="sm"
+    name="contract.pdf"
+    fileSize={1024000}
+    status="uploading"
+    percent={67}
+  />
+</Modal>
+```
+
+### Disabled State
+
+```tsx
+<AxFileItem
+  name="locked-file.pdf"
+  fileSize={1024000}
+  disabled
+  onRemove={() => {}} // Button exists but is disabled
+/>
+```
+
+## File Type Icons
+
+The component automatically maps file extensions to appropriate icons:
+
+| Extension | Icon Component |
+|-----------|----------------|
+| `.xlsx`, `.xls`, `.csv` | `FileExcelOutlined` |
+| `.pdf` | `FilePdfOutlined` |
+| `.doc`, `.docx` | `FileWordOutlined` |
+| `.jpg`, `.jpeg`, `.png`, `.gif`, `.svg`, `.webp` | `FileImageOutlined` |
+| All others | `FileOutlined` |
+
+## File Size Formatting
+
+File sizes are automatically formatted:
+
+- `< 1 KB`: "X B" (bytes)
+- `< 1 MB`: "X.X KB" (kilobytes)
+- `≥ 1 MB`: "X.X MB" (megabytes)
+
+```tsx
+// Input: 1024 bytes → Output: "1.0 KB"
+// Input: 2457600 bytes → Output: "2.4 MB"
+// Input: 512 bytes → Output: "512 B"
+```
+
+## Accessibility
+
+- Root element uses `role="listitem"` for semantic list structure
+- Dynamic `aria-label` describes file name and upload status
+- Progress bar uses `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`
+- Error messages use `role="alert"` for immediate screen reader announcement
+- Action buttons have descriptive `aria-label` attributes
+- Status icons include `aria-label` for screen readers
+
+## Design Notes
+
+- Icon box is 40px × 40px (md) or 32px × 32px (sm)
+- Progress bar uses `transform: scaleX()` for smooth animation
+- Image previews completely replace the file-type icon
+- Error state shows both error icon and retry button (if `onRetry` is provided)
+- File name and size are displayed inline with a middle-dot separator

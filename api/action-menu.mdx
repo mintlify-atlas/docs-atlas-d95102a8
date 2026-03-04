@@ -1,0 +1,321 @@
+---
+title: "AxActionMenu"
+description: "A dropdown menu for contextual actions with icons, dividers, and danger states."
+---
+
+## Overview
+
+`AxActionMenu` is a dropdown menu component designed for contextual actions like edit, delete, duplicate, and more. It supports icons, dividers, danger states, disabled items, and custom triggers.
+
+## Import
+
+```tsx
+import AxActionMenu from "@axmed/design-system/components/AxActionMenu"
+import type { ActionItem, ActionDivider } from "@axmed/design-system/components/AxActionMenu"
+```
+
+## Basic Usage
+
+```tsx
+import { EditOutlined, DeleteOutlined, CopyOutlined } from "@ant-design/icons"
+
+const items = [
+  { key: "edit", label: "Edit", icon: <EditOutlined /> },
+  { key: "duplicate", label: "Duplicate", icon: <CopyOutlined /> },
+  { type: "divider" },
+  { key: "delete", label: "Delete", icon: <DeleteOutlined />, danger: true },
+]
+
+<AxActionMenu items={items} />
+```
+
+## Props
+
+<ParamField path="items" type="(ActionItem | ActionDivider)[]" required>
+  Array of action items and optional dividers. Each item can have an icon, danger state, and click handler.
+</ParamField>
+
+<ParamField path="trigger" type="React.ReactNode">
+  Custom trigger element. Defaults to a "..." (MoreOutlined) icon button. Pass any ReactNode to override (e.g., a button with text).
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'md' | 'lg'" default="'md'">
+  Size of the default trigger button. Ignored when a custom `trigger` is provided.
+</ParamField>
+
+<ParamField path="placement" type="'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight' | ..." default="'bottomRight'">
+  Menu placement relative to the trigger. Supports all Ant Design dropdown placements.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default={false}>
+  Disabled state - prevents the menu from opening.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS class name applied to the dropdown overlay.
+</ParamField>
+
+## ActionItem
+
+<Expandable title="ActionItem Properties">
+
+<ParamField path="key" type="string" required>
+  Unique identifier for the item.
+</ParamField>
+
+<ParamField path="label" type="string" required>
+  Visible label text for the action.
+</ParamField>
+
+<ParamField path="icon" type="React.ReactNode">
+  Optional icon displayed before the label.
+</ParamField>
+
+<ParamField path="danger" type="boolean">
+  Renders the item in red with destructive intent (e.g., Delete, Remove).
+</ParamField>
+
+<ParamField path="disabled" type="boolean">
+  Disable interaction with this item.
+</ParamField>
+
+<ParamField path="onClick" type="() => void">
+  Click handler executed when the item is selected.
+</ParamField>
+
+</Expandable>
+
+```tsx
+type ActionItem = {
+  key: string
+  label: string
+  icon?: React.ReactNode
+  danger?: boolean
+  disabled?: boolean
+  onClick?: () => void
+}
+```
+
+## ActionDivider
+
+<Expandable title="ActionDivider Properties">
+
+<ParamField path="type" type="'divider'" required>
+  Must be `"divider"` to render a horizontal separator.
+</ParamField>
+
+</Expandable>
+
+```tsx
+type ActionDivider = {
+  type: "divider"
+}
+```
+
+## Examples
+
+### Table Row Actions
+
+Commonly used in tables for row-level actions:
+
+```tsx
+import { EditOutlined, EyeOutlined, DeleteOutlined, StopOutlined } from "@ant-design/icons"
+
+function OrderRow({ order }) {
+  const actions = [
+    { key: "edit", label: "Edit Bid", icon: <EditOutlined />, onClick: () => editBid(order.id) },
+    { key: "view", label: "View Details", icon: <EyeOutlined />, onClick: () => viewDetails(order.id) },
+    { type: "divider" },
+    { key: "withdraw", label: "Withdraw", icon: <StopOutlined />, danger: true, onClick: () => withdraw(order.id) },
+    { key: "delete", label: "Delete", icon: <DeleteOutlined />, danger: true, onClick: () => deleteOrder(order.id) },
+  ]
+
+  return (
+    <tr>
+      <td>{order.name}</td>
+      <td>{order.status}</td>
+      <td>
+        <AxActionMenu items={actions} size="sm" />
+      </td>
+    </tr>
+  )
+}
+```
+
+### Custom Trigger Button
+
+Use a custom button as the trigger:
+
+```tsx
+import { DownloadOutlined, FilePdfOutlined, FileExcelOutlined } from "@ant-design/icons"
+
+const exportActions = [
+  { key: "csv", label: "Export as CSV", icon: <FileExcelOutlined /> },
+  { key: "pdf", label: "Export as PDF", icon: <FilePdfOutlined /> },
+  { type: "divider" },
+  { key: "template", label: "Download Template", icon: <DownloadOutlined /> },
+]
+
+<AxActionMenu
+  trigger={
+    <AxButton variant="secondary" icon={<DownloadOutlined />}>
+      Export
+    </AxButton>
+  }
+  items={exportActions}
+/>
+```
+
+### With Dividers and Sections
+
+Group related actions with dividers:
+
+```tsx
+import { EditOutlined, EyeOutlined, SendOutlined, CopyOutlined, StopOutlined, DeleteOutlined } from "@ant-design/icons"
+
+const bidActions = [
+  // Primary actions
+  { key: "edit", label: "Edit Bid", icon: <EditOutlined /> },
+  { key: "view", label: "View Quote", icon: <EyeOutlined /> },
+  { key: "send", label: "Send to Buyer", icon: <SendOutlined /> },
+  
+  { type: "divider" },
+  
+  // Secondary actions
+  { key: "duplicate", label: "Duplicate", icon: <CopyOutlined />, disabled: true },
+  
+  { type: "divider" },
+  
+  // Destructive actions
+  { key: "withdraw", label: "Withdraw Bid", icon: <StopOutlined />, danger: true },
+  { key: "delete", label: "Delete", icon: <DeleteOutlined />, danger: true },
+]
+
+<AxActionMenu items={bidActions} />
+```
+
+### Sizes
+
+```tsx
+// Small - for compact UI like tables
+<AxActionMenu items={actions} size="sm" />
+
+// Medium (default) - standard size
+<AxActionMenu items={actions} size="md" />
+
+// Large - for prominent actions
+<AxActionMenu items={actions} size="lg" />
+```
+
+### Placement
+
+Control where the menu appears:
+
+```tsx
+// Bottom-right (default)
+<AxActionMenu items={actions} placement="bottomRight" />
+
+// Bottom-left
+<AxActionMenu items={actions} placement="bottomLeft" />
+
+// Top-right
+<AxActionMenu items={actions} placement="topRight" />
+
+// Top-left
+<AxActionMenu items={actions} placement="topLeft" />
+```
+
+### Disabled State
+
+```tsx
+<AxActionMenu items={actions} disabled={!hasPermission} />
+```
+
+## Common Patterns
+
+### Card Actions
+
+```tsx
+<Card
+  title="Amoxicillin 500mg"
+  extra={
+    <AxActionMenu
+      items={[
+        { key: "edit", label: "Edit", icon: <EditOutlined /> },
+        { key: "view", label: "View Details", icon: <EyeOutlined /> },
+        { type: "divider" },
+        { key: "archive", label: "Archive", icon: <InboxOutlined /> },
+      ]}
+      size="sm"
+    />
+  }
+>
+  {/* Card content */}
+</Card>
+```
+
+### List Item Actions
+
+```tsx
+<List.Item
+  actions={[
+    <AxActionMenu
+      items={[
+        { key: "edit", label: "Edit", icon: <EditOutlined /> },
+        { key: "delete", label: "Delete", icon: <DeleteOutlined />, danger: true },
+      ]}
+    />
+  ]}
+>
+  {/* List item content */}
+</List.Item>
+```
+
+### Page Header Actions
+
+```tsx
+<PageHeader
+  title="Order Details"
+  extra={[
+    <AxButton key="approve">Approve Order</AxButton>,
+    <AxActionMenu
+      key="more"
+      items={[
+        { key: "download", label: "Download Invoice", icon: <DownloadOutlined /> },
+        { key: "share", label: "Share", icon: <ShareAltOutlined /> },
+        { type: "divider" },
+        { key: "cancel", label: "Cancel Order", icon: <CloseCircleOutlined />, danger: true },
+      ]}
+    />
+  ]}
+/>
+```
+
+## Danger Actions
+
+Use `danger: true` for destructive actions:
+
+```tsx
+const dangerActions = [
+  { key: "edit", label: "Edit", icon: <EditOutlined /> },
+  { type: "divider" },
+  { key: "archive", label: "Archive", icon: <InboxOutlined /> },
+  { key: "delete", label: "Delete", icon: <DeleteOutlined />, danger: true },
+]
+```
+
+Danger items render in red and should be placed at the bottom of the menu, separated by a divider.
+
+## Accessibility
+
+- Default trigger has `aria-label="Actions"`
+- Menu items are keyboard navigable
+- Disabled items are properly marked and not focusable
+- Menu closes on Escape key
+- Menu closes on item selection
+
+## Related Components
+
+- [AxButton](/api/button) - Button component for custom triggers
+- [AxSideNav](/api/sidenav) - Uses ActionMenu for user profile actions
+- [AxTable](/api/table) - Commonly used in table row actions

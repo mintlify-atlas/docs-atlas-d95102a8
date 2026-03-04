@@ -1,0 +1,317 @@
+---
+title: File Item
+description: Display uploaded files with progress, status, and retry/remove actions.
+---
+
+## Overview
+
+File Item shows a single uploaded file with icon, name, size, status indicator (idle, uploading, success, error), progress bar, and action buttons (remove, retry). It's designed to work with AxUploader for complete file upload flows.
+
+## Usage
+
+```tsx
+import { AxFileItem } from "@axmed/design-system"
+
+function FileList() {
+  return (
+    <AxFileItem
+      name="portfolio-2025.xlsx"
+      fileSize={2560000}
+      status="success"
+      onRemove={() => removeFile()}
+    />
+  )
+}
+```
+
+## Status States
+
+### Idle (Default)
+
+File selected, not yet uploading.
+
+```tsx
+<AxFileItem
+  name="report-q4.xlsx"
+  fileSize={1200000}
+  status="idle"
+  onRemove={() => {}}
+/>
+```
+
+### Uploading
+
+Shows progress bar with percentage.
+
+```tsx
+<AxFileItem
+  name="pricing-list.csv"
+  fileSize={800000}
+  status="uploading"
+  percent={45}
+  onRemove={() => {}}
+/>
+```
+
+### Success
+
+Green checkmark indicator.
+
+```tsx
+<AxFileItem
+  name="gmp-certificate.pdf"
+  fileSize={3500000}
+  status="success"
+  onRemove={() => {}}
+/>
+```
+
+### Error
+
+Red indicator, error message, and retry button.
+
+```tsx
+<AxFileItem
+  name="batch-records.docx"
+  fileSize={15000000}
+  status="error"
+  error="File exceeds 10MB limit"
+  onRemove={() => {}}
+  onRetry={() => retryUpload()}
+/>
+```
+
+## Progress Indicator
+
+```tsx
+{[0, 25, 50, 75, 100].map((percent) => (
+  <AxFileItem
+    key={percent}
+    name={`upload-${percent}pct.xlsx`}
+    fileSize={2000000}
+    status="uploading"
+    percent={percent}
+    onRemove={() => {}}
+  />
+))}
+```
+
+## Image Preview
+
+Show a thumbnail instead of the file type icon:
+
+```tsx
+<AxFileItem
+  name="product-photo.jpg"
+  fileSize={1800000}
+  status="success"
+  preview="https://example.com/photo.jpg"  // Or URL.createObjectURL(file)
+  onRemove={() => {}}
+/>
+```
+
+## Sizes
+
+- **`sm`** — Compact (for modals and drawers)
+- **`md`** — Standard (default)
+
+```tsx
+<AxFileItem
+  name="portfolio.xlsx"
+  fileSize={2500000}
+  status="uploading"
+  percent={60}
+  size="sm"
+  onRemove={() => {}}
+/>
+```
+
+## With AxUploader
+
+```tsx
+const [file, setFile] = useState<{ name: string; size: number } | null>(null)
+const [status, setStatus] = useState<"idle" | "uploading" | "success" | "error">("idle")
+const [percent, setPercent] = useState(0)
+
+return (
+  <Flex vertical gap={16}>
+    <AxUploader
+      hint="Supports .xlsx, .xls and .csv (max 10MB)"
+      accept=".xlsx,.xls,.csv"
+      maxSizeMB={10}
+      beforeUpload={(f) => {
+        setFile({ name: f.name, size: f.size })
+        setStatus("uploading")
+        setPercent(0)
+        return false
+      }}
+    />
+    
+    {file && (
+      <AxFileItem
+        name={file.name}
+        fileSize={file.size}
+        status={status}
+        percent={percent}
+        onRemove={() => {
+          setFile(null)
+          setStatus("idle")
+        }}
+      />
+    )}
+  </Flex>
+)
+```
+
+## Multi-File Upload
+
+```tsx
+type FileEntry = {
+  name: string
+  size: number
+  status: "idle" | "uploading" | "success" | "error"
+  percent: number
+  error?: string
+}
+
+const [files, setFiles] = useState<FileEntry[]>([])
+
+return (
+  <Flex vertical gap={16}>
+    <AxUploader
+      description="Drag & drop or choose file to upload"
+      hint="Supports .xlsx, .xls, .csv, .pdf (max 10MB)"
+      accept=".xlsx,.xls,.csv,.pdf"
+      multiple
+      maxSizeMB={10}
+      beforeUpload={(f) => {
+        setFiles(prev => [
+          ...prev,
+          { name: f.name, size: f.size, status: "uploading", percent: 30 }
+        ])
+        return false
+      }}
+    />
+    
+    {files.length > 0 && (
+      <Flex vertical gap={8}>
+        {files.map((f, i) => (
+          <AxFileItem
+            key={i}
+            name={f.name}
+            fileSize={f.size}
+            status={f.status}
+            percent={f.percent}
+            error={f.error}
+            onRemove={() => setFiles(prev => prev.filter((_, j) => j !== i))}
+            onRetry={
+              f.status === "error"
+                ? () => retryUpload(i)
+                : undefined
+            }
+          />
+        ))}
+      </Flex>
+    )}
+  </Flex>
+)
+```
+
+## Props
+
+<ResponseField name="name" type="string" required>
+  File name (required). Displayed as the primary label.
+</ResponseField>
+
+<ResponseField name="fileSize" type="number">
+  File size in bytes. Formatted automatically (e.g. "2.5 MB").
+</ResponseField>
+
+<ResponseField name="status" type="'idle' | 'uploading' | 'success' | 'error'" default="'idle'">
+  Current status of this file item:
+  - `idle` — file selected, not yet uploading (default)
+  - `uploading` — in progress, shows progress bar
+  - `success` — upload complete, green checkmark
+  - `error` — upload failed, red indicator + optional error message
+</ResponseField>
+
+<ResponseField name="percent" type="number">
+  Upload progress percentage (0–100). Only rendered when `status="uploading"`.
+</ResponseField>
+
+<ResponseField name="error" type="string">
+  Error message displayed below the file name when `status="error"`.
+  
+  Example: `"File exceeds 10MB limit"`
+</ResponseField>
+
+<ResponseField name="icon" type="ReactNode">
+  Override the default file-type icon. By default, the icon is inferred from the file extension in `name`.
+</ResponseField>
+
+<ResponseField name="preview" type="string">
+  Image preview URL — shown as a thumbnail in the icon box. Pass a `URL.createObjectURL(file)` or data URL for image uploads. When set, replaces the file type icon entirely.
+</ResponseField>
+
+<ResponseField name="onRemove" type="() => void">
+  Called when the user clicks the remove/cancel button.
+</ResponseField>
+
+<ResponseField name="onRetry" type="() => void">
+  Called when the user clicks the retry button (only shown on error).
+</ResponseField>
+
+<ResponseField name="size" type="'sm' | 'md'" default="'md'">
+  Component size preset:
+  - `sm` — compact: for modals and drawers
+  - `md` — standard (default)
+</ResponseField>
+
+<ResponseField name="disabled" type="boolean">
+  Disable interactions (remove, retry). Reduces opacity.
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional CSS class name
+</ResponseField>
+
+<ResponseField name="style" type="CSSProperties">
+  Inline styles
+</ResponseField>
+
+## File Type Icons
+
+Icons are automatically detected from file extensions:
+
+- **Excel**: `.xlsx`, `.xls`, `.csv` → FileExcelOutlined
+- **PDF**: `.pdf` → FilePdfOutlined
+- **Word**: `.doc`, `.docx` → FileWordOutlined
+- **Images**: `.jpg`, `.jpeg`, `.png`, `.gif`, `.svg`, `.webp` → FileImageOutlined
+- **Other**: FileOutlined
+
+## Best Practices
+
+<Check>Show file size to help users understand upload constraints</Check>
+<Check>Use `status="uploading"` with `percent` for real-time feedback</Check>
+<Check>Provide clear error messages when uploads fail</Check>
+<Check>Use `preview` for image files to show thumbnails</Check>
+
+<Warning>Don't show "Retry" button without an `onRetry` handler — it won't work</Warning>
+<Warning>Always format `fileSize` in bytes — the component handles conversion</Warning>
+
+## Accessibility
+
+- Uses `role="listitem"` for list contexts
+- Progress bar has `role="progressbar"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax`
+- Error messages use `role="alert"` for screen reader announcements
+- Action buttons have proper `aria-label` attributes
+
+## API Reference
+
+See the [File Item API](/api/file-item) for the complete TypeScript interface.
+
+## Related Components
+
+- [Uploader](/components/uploader) — Drag-and-drop file upload zone
+- [Modal](/components/modal) — Use File Item inside upload modals
+- [Button](/components/button) — Retry and remove actions

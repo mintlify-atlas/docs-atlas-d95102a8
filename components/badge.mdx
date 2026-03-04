@@ -1,0 +1,236 @@
+---
+title: Badge
+description: Notification badges and counters for icons and components.
+icon: circle-dot
+---
+
+AxBadge displays notification counters and status indicators on icons, avatars, and other elements. It supports numeric counts, dot indicators, and five semantic tones.
+
+## Basic Usage
+
+<CodeGroup>
+```tsx TypeScript
+import { AxBadge } from '@axmed/design-system'
+import { BellOutlined } from '@ant-design/icons'
+
+function Example() {
+  return (
+    <AxBadge tone="primary" count={5}>
+      <Avatar shape="square" size="large" icon={<BellOutlined />} />
+    </AxBadge>
+  )
+}
+```
+
+```jsx JavaScript
+import { AxBadge } from '@axmed/design-system'
+import { BellOutlined } from '@ant-design/icons'
+
+function Example() {
+  return (
+    <AxBadge tone="primary" count={5}>
+      <Avatar shape="square" size="large" icon={<BellOutlined />} />
+    </AxBadge>
+  )
+}
+```
+</CodeGroup>
+
+## Tones
+
+Five semantic tones mapped to design system colors:
+
+```tsx
+import { Avatar } from 'antd'
+import { BellOutlined } from '@ant-design/icons'
+
+<AxBadge tone="primary" count={12}>   {/* Purple - default nav counts */}
+  <Avatar shape="square" size="large" icon={<BellOutlined />} />
+</AxBadge>
+
+<AxBadge tone="success" count={8}>    {/* Green - completed, verified */}
+  <Avatar shape="square" size="large" icon={<BellOutlined />} />
+</AxBadge>
+
+<AxBadge tone="warning" count={3}>    {/* Orange - draft, expiring soon */}
+  <Avatar shape="square" size="large" icon={<BellOutlined />} />
+</AxBadge>
+
+<AxBadge tone="error" count={5}>      {/* Red - critical alerts, overdue */}
+  <Avatar shape="square" size="large" icon={<BellOutlined />} />
+</AxBadge>
+
+<AxBadge tone="neutral" count={24}>   {/* Gray - informational counts */}
+  <Avatar shape="square" size="large" icon={<BellOutlined />} />
+</AxBadge>
+```
+
+<Info>
+For inline status labels in tables and cards, use [AxTag](/components/tag) instead.
+</Info>
+
+## Dot Indicator
+
+Show a simple dot instead of a count:
+
+```tsx
+import { MailOutlined, BellOutlined, UserOutlined } from '@ant-design/icons'
+
+<AxBadge tone="error" dot>
+  <BellOutlined style={{ fontSize: 24 }} />
+</AxBadge>
+
+<AxBadge tone="primary" dot>
+  <MailOutlined style={{ fontSize: 24 }} />
+</AxBadge>
+
+<AxBadge tone="success" dot>
+  <UserOutlined style={{ fontSize: 24 }} />
+</AxBadge>
+```
+
+## Sizes
+
+```tsx
+<AxBadge tone="primary" count={42} size="sm">   {/* Small - 18px */}
+  <Avatar shape="square" size="large" icon={<BellOutlined />} />
+</AxBadge>
+
+<AxBadge tone="primary" count={42} size="md">   {/* Medium - 22px (default) */}
+  <Avatar shape="square" size="large" icon={<BellOutlined />} />
+</AxBadge>
+```
+
+## Overflow Count
+
+Limit the displayed count:
+
+```tsx
+<AxBadge tone="primary" count={100} overflowCount={99}>
+  <Avatar shape="square" size="large" icon={<BellOutlined />} />
+</AxBadge>
+{/* Displays "99+" */}
+```
+
+## Show Zero
+
+By default, badges hide when count is 0. Show them explicitly:
+
+```tsx
+<AxBadge tone="primary" count={0} showZero>
+  <Avatar shape="square" size="large" icon={<BellOutlined />} />
+</AxBadge>
+```
+
+## Standalone Badge
+
+Display the badge without wrapping a child element:
+
+```tsx
+<AxBadge tone="error" count={5} />
+```
+
+## Common Patterns
+
+### Navigation Badges
+
+```tsx
+import { ShoppingCartOutlined, FileTextOutlined, BellOutlined, MailOutlined } from '@ant-design/icons'
+import { AxBadge, AxText } from '@axmed/design-system'
+
+function NavBar() {
+  const navItems = [
+    { icon: <ShoppingCartOutlined />, label: 'Cart', count: 3, tone: 'primary' },
+    { icon: <FileTextOutlined />, label: 'Draft Bids', count: 7, tone: 'warning' },
+    { icon: <BellOutlined />, label: 'Notifications', count: 0, tone: 'error', dot: true },
+    { icon: <MailOutlined />, label: 'Messages', count: 12, tone: 'primary' },
+  ]
+
+  return (
+    <div style={{ display: 'flex', gap: 24 }}>
+      {navItems.map((item) => (
+        <div key={item.label} style={{ textAlign: 'center', cursor: 'pointer' }}>
+          <AxBadge
+            tone={item.tone}
+            count={item.dot ? undefined : item.count}
+            dot={item.dot}
+            size="sm"
+          >
+            <span style={{ fontSize: 22, color: 'var(--neutral-600)' }}>
+              {item.icon}
+            </span>
+          </AxBadge>
+          <AxText variant="body-xs" color="secondary" style={{ display: 'block', marginTop: 4 }}>
+            {item.label}
+          </AxText>
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+### Alert Badge
+
+```tsx
+import { Avatar } from 'antd'
+import { UserOutlined } from '@ant-design/icons'
+
+<AxBadge tone="error" dot>
+  <Avatar size="large" icon={<UserOutlined />} />
+</AxBadge>
+```
+
+### Status Indicator
+
+```tsx
+<AxBadge tone="success" dot>
+  <span style={{ paddingLeft: 8 }}>Online</span>
+</AxBadge>
+```
+
+### Notification Icon
+
+```tsx
+import { BellOutlined } from '@ant-design/icons'
+
+function NotificationBell({ count }) {
+  return (
+    <AxBadge tone="error" count={count} size="sm">
+      <BellOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
+    </AxBadge>
+  )
+}
+```
+
+## Props
+
+<ResponseField name="tone" type="string" default="primary">
+  Semantic color preset: `primary`, `success`, `warning`, `error`, or `neutral`
+</ResponseField>
+
+<ResponseField name="size" type="string" default="md">
+  Badge size: `sm` (18px) or `md` (22px)
+</ResponseField>
+
+<ResponseField name="count" type="number">
+  Number to display inside the badge
+</ResponseField>
+
+<ResponseField name="dot" type="boolean" default="false">
+  Show a dot indicator instead of a count
+</ResponseField>
+
+<ResponseField name="showZero" type="boolean" default="false">
+  Show the badge when count is zero
+</ResponseField>
+
+<ResponseField name="overflowCount" type="number" default="99">
+  Max count to show before displaying "N+"
+</ResponseField>
+
+<ResponseField name="offset" type="[number, number]">
+  Position offset: `[x, y]` in pixels
+</ResponseField>
+
+See the [full API reference](/api/badge) for all available props.

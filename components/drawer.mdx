@@ -1,0 +1,395 @@
+---
+title: Drawer
+description: Side panels for detailed views, forms, and multi-step flows.
+icon: sidebar
+---
+
+AxDrawer provides slide-out panels from the side of the screen for displaying detailed information, forms, and complex workflows without leaving the current page context.
+
+## Basic Usage
+
+<CodeGroup>
+```tsx TypeScript
+import { AxDrawer, AxButton } from '@axmed/design-system'
+import { useState } from 'react'
+
+function Example() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <AxButton onClick={() => setOpen(true)}>Open Drawer</AxButton>
+      <AxDrawer
+        title="Drawer Title"
+        description="This is a description below the title."
+        open={open}
+        onClose={() => setOpen(false)}
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+            <AxButton variant="secondary" onClick={() => setOpen(false)}>Cancel</AxButton>
+            <AxButton onClick={() => setOpen(false)}>Save</AxButton>
+          </div>
+        }
+      >
+        Drawer body content goes here.
+      </AxDrawer>
+    </>
+  )
+}
+```
+
+```jsx JavaScript
+import { AxDrawer, AxButton } from '@axmed/design-system'
+import { useState } from 'react'
+
+function Example() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <AxButton onClick={() => setOpen(true)}>Open Drawer</AxButton>
+      <AxDrawer
+        title="Drawer Title"
+        description="This is a description below the title."
+        open={open}
+        onClose={() => setOpen(false)}
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+            <AxButton variant="secondary" onClick={() => setOpen(false)}>Cancel</AxButton>
+            <AxButton onClick={() => setOpen(false)}>Save</AxButton>
+          </div>
+        }
+      >
+        Drawer body content goes here.
+      </AxDrawer>
+    </>
+  )
+}
+```
+</CodeGroup>
+
+## Sizes
+
+Four preset widths:
+
+```tsx
+<AxDrawer size="xs" title="XSmall Drawer" open={open}>  {/* 400px */}
+  Quick actions and simple confirmations
+</AxDrawer>
+
+<AxDrawer size="sm" title="Small Drawer" open={open}>   {/* 500px */}
+  Detail views and bid summaries
+</AxDrawer>
+
+<AxDrawer size="md" title="Medium Drawer" open={open}>  {/* 600px - default */}
+  Forms and multi-step flows
+</AxDrawer>
+
+<AxDrawer size="lg" title="Large Drawer" open={open}>   {/* 640px */}
+  Profiles and content-rich side panels
+</AxDrawer>
+```
+
+## Loading State
+
+Show a spinner overlay while fetching data:
+
+```tsx
+import { useState, useEffect } from 'react'
+
+function DrawerWithLoading() {
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const handleOpen = () => {
+    setOpen(true)
+    setLoading(true)
+    fetchData().then(() => setLoading(false))
+  }
+
+  return (
+    <>
+      <AxButton onClick={handleOpen}>View Details</AxButton>
+      <AxDrawer
+        title="Purchase Order"
+        open={open}
+        loading={loading}
+        onClose={() => setOpen(false)}
+      >
+        Order details will appear here once loaded.
+      </AxDrawer>
+    </>
+  )
+}
+```
+
+## Placement
+
+Drawers slide in from the right by default. Change the placement:
+
+```tsx
+<AxDrawer placement="right" title="Right Drawer" open={open}>  {/* default */}
+  Slides in from the right
+</AxDrawer>
+
+<AxDrawer placement="left" title="Left Drawer" open={open}>
+  Slides in from the left
+</AxDrawer>
+```
+
+## Common Patterns
+
+### Detail View
+
+```tsx
+import { AxTag, AxText, AxButton } from '@axmed/design-system'
+import { Divider } from 'antd'
+
+function BidDetailsDrawer({ bidId, open, onClose }) {
+  const lineItems = [
+    { name: 'Amoxicillin 500mg', qty: '5,000 units', price: '$1.20/unit', total: '$6,000' },
+    { name: 'Metformin 850mg', qty: '10,000 units', price: '$0.85/unit', total: '$8,500' },
+  ]
+
+  return (
+    <AxDrawer
+      title="Bid #BID-2024-0892"
+      description="Submitted by PharmaCorp Ltd · 3 days ago"
+      size="sm"
+      open={open}
+      onClose={onClose}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+          <AxButton variant="secondary" onClick={onClose}>Reject</AxButton>
+          <AxButton onClick={onClose}>Accept Bid</AxButton>
+        </div>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        {/* Status */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <AxText variant="body-sm" color="secondary">Status</AxText>
+          <AxTag tone="info" dot>In Review</AxTag>
+        </div>
+
+        <Divider style={{ margin: 0 }} />
+
+        {/* Line items */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <AxText variant="body-sm" weight="medium">Line Items</AxText>
+          {lineItems.map((item) => (
+            <div key={item.name} style={{ background: 'var(--neutral-50)', borderRadius: 8, padding: '12px 16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <AxText variant="body-sm" weight="medium">{item.name}</AxText>
+                <AxText variant="body-sm" weight="semibold">{item.total}</AxText>
+              </div>
+              <AxText variant="body-xs" color="secondary">
+                {item.qty} × {item.price}
+              </AxText>
+            </div>
+          ))}
+        </div>
+
+        <Divider style={{ margin: 0 }} />
+
+        {/* Summary */}
+        {[
+          { label: 'Subtotal', value: '$23,500' },
+          { label: 'Lead Time', value: '14 days' },
+        ].map((row) => (
+          <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <AxText variant="body-sm" color="secondary">{row.label}</AxText>
+            <AxText variant="body-sm" weight="medium">{row.value}</AxText>
+          </div>
+        ))}
+      </div>
+    </AxDrawer>
+  )
+}
+```
+
+### Form Drawer
+
+```tsx
+import { AxInput } from '@axmed/design-system'
+import { Input } from 'antd'
+
+function ReviewQuantitiesDrawer({ open, onClose }) {
+  return (
+    <AxDrawer
+      title="Review quantities"
+      description="Confirm the quantities you can supply before submitting."
+      size="md"
+      open={open}
+      onClose={onClose}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <AxButton variant="ghost" onClick={onClose}>Back</AxButton>
+          <AxButton onClick={onClose}>Accept & Continue</AxButton>
+        </div>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {[
+          { label: 'Amoxicillin 500mg', requested: '5,000 units' },
+          { label: 'Metformin 850mg', requested: '10,000 units' },
+        ].map((item) => (
+          <div key={item.label}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <span style={{ fontSize: 13, fontWeight: 500 }}>{item.label}</span>
+              <AxText variant="body-xs" color="secondary">Requested: {item.requested}</AxText>
+            </div>
+            <AxInput placeholder="Enter quantity you can supply" suffix="units" />
+          </div>
+        ))}
+        <div>
+          <AxText variant="body-sm" weight="medium" style={{ display: 'block', marginBottom: 8 }}>
+            Notes (optional)
+          </AxText>
+          <Input.TextArea
+            placeholder="Add any notes about availability, lead times..."
+            rows={3}
+          />
+        </div>
+      </div>
+    </AxDrawer>
+  )
+}
+```
+
+### Multi-Step Drawer
+
+```tsx
+import { useState } from 'react'
+
+function MultiStepOrderDrawer({ open, onClose }) {
+  const [step, setStep] = useState(0)
+
+  const steps = [
+    { title: 'Confirm order details', description: 'Step 1 of 3' },
+    { title: 'Select delivery address', description: 'Step 2 of 3' },
+    { title: 'Review & submit', description: 'Step 3 of 3' },
+  ]
+
+  return (
+    <AxDrawer
+      title={steps[step].title}
+      description={steps[step].description}
+      size="md"
+      open={open}
+      onClose={onClose}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          {step > 0 ? (
+            <AxButton variant="ghost" onClick={() => setStep(s => s - 1)}>Back</AxButton>
+          ) : (
+            <AxButton variant="ghost" onClick={onClose}>Cancel</AxButton>
+          )}
+          {step < steps.length - 1 ? (
+            <AxButton onClick={() => setStep(s => s + 1)}>Next</AxButton>
+          ) : (
+            <AxButton onClick={onClose}>Submit Order</AxButton>
+          )}
+        </div>
+      }
+    >
+      {/* Render step content based on current step */}
+      {step === 0 && <div>Step 1 content...</div>}
+      {step === 1 && <div>Step 2 content...</div>}
+      {step === 2 && <div>Step 3 content...</div>}
+    </AxDrawer>
+  )
+}
+```
+
+### Profile Panel
+
+```tsx
+import { Avatar, Divider } from 'antd'
+import { UserOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons'
+import { AxTag, AxText } from '@axmed/design-system'
+
+function SupplierProfileDrawer({ open, onClose }) {
+  return (
+    <AxDrawer
+      title="PharmaCorp Ltd"
+      description="Verified supplier · Nairobi, Kenya"
+      size="lg"
+      open={open}
+      onClose={onClose}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <AxButton onClick={onClose}>Close</AxButton>
+        </div>
+      }
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        {/* Identity */}
+        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+          <Avatar size={64} icon={<UserOutlined />} style={{ background: 'var(--purple-600)' }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <AxText variant="body-lg" weight="semibold">PharmaCorp Ltd</AxText>
+            <AxTag tone="success" dot>Verified</AxTag>
+          </div>
+        </div>
+
+        <Divider style={{ margin: 0 }} />
+
+        {/* Contact */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <AxText variant="body-sm" weight="medium">Contact Information</AxText>
+          {[
+            { icon: <MailOutlined />, value: 'contact@pharmacorp.co.ke' },
+            { icon: <PhoneOutlined />, value: '+254 712 345 678' },
+          ].map(({ icon, value }) => (
+            <div key={value} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <span style={{ color: 'var(--neutral-400)', fontSize: 14 }}>{icon}</span>
+              <AxText variant="body-sm" color="secondary">{value}</AxText>
+            </div>
+          ))}
+        </div>
+      </div>
+    </AxDrawer>
+  )
+}
+```
+
+## Props
+
+<ResponseField name="title" type="ReactNode" required>
+  Drawer title text
+</ResponseField>
+
+<ResponseField name="description" type="ReactNode">
+  Muted subtitle displayed below the title
+</ResponseField>
+
+<ResponseField name="open" type="boolean" required>
+  Whether the drawer is visible
+</ResponseField>
+
+<ResponseField name="size" type="string" default="md">
+  Preset width: `xs` (400px), `sm` (500px), `md` (600px), or `lg` (640px)
+</ResponseField>
+
+<ResponseField name="loading" type="boolean" default="false">
+  Show spinner overlay over the drawer body
+</ResponseField>
+
+<ResponseField name="placement" type="string" default="right">
+  Side to slide in from: `right` or `left`
+</ResponseField>
+
+<ResponseField name="footer" type="ReactNode">
+  Custom footer content
+</ResponseField>
+
+<ResponseField name="onClose" type="function" required>
+  Close button and mask click handler
+</ResponseField>
+
+<ResponseField name="destroyOnHidden" type="boolean" default="false">
+  Unmount child components when closed
+</ResponseField>
+
+See the [full API reference](/api/drawer) for all available props.

@@ -1,0 +1,265 @@
+---
+title: AxUploader
+description: Drag-and-drop file upload component with size validation
+---
+
+<Note>
+  **Component Location:** `design-system/components/AxUploader`
+</Note>
+
+## Overview
+
+`AxUploader` is a drag-and-drop file upload zone built on Ant Design's `Upload.Dragger`. It supports file size validation, custom icons, and three size presets for different layout contexts.
+
+## Import
+
+```tsx
+import AxUploader from '@/design-system/components/AxUploader'
+import type { AxUploaderProps, AxUploaderSize } from '@/design-system/components/AxUploader'
+```
+
+## Basic Usage
+
+```tsx
+const handleFileSelect = (file: File) => {
+  console.log('Selected file:', file)
+  // Upload logic here
+}
+
+<AxUploader
+  onChange={(info) => {
+    if (info.file.status !== 'uploading') {
+      handleFileSelect(info.file.originFileObj)
+    }
+  }}
+/>
+```
+
+## With File Size Validation
+
+```tsx
+const [error, setError] = useState<string | null>(null)
+
+<AxUploader
+  description="Drag & drop or choose file to upload"
+  hint="Supports .xlsx, .xls and .csv (max 10MB)"
+  maxSizeMB={10}
+  onReject={(file, reason) => {
+    setError(reason)
+    message.error(reason)
+  }}
+  accept=".xlsx,.xls,.csv"
+/>
+```
+
+## Size Variants
+
+```tsx
+{/* Small - for modals and drawers */}
+<AxUploader size="sm" />
+
+{/* Medium - default */}
+<AxUploader size="md" />
+
+{/* Large - full-width page layouts */}
+<AxUploader size="lg" />
+```
+
+## Props
+
+<ParamField path="description" type="string" default="Drag & drop or choose file to upload">
+  Main text displayed inside the upload area. If the text contains "choose file", that phrase will be styled as a clickable link.
+</ParamField>
+
+<ParamField path="hint" type="string">
+  Hint text shown below the description. Use to communicate file type and size constraints.
+  
+  Example: `"Supports .xlsx, .xls and .csv (max 10MB)"`
+</ParamField>
+
+<ParamField path="icon" type="React.ReactNode">
+  Custom icon to display in the upload area. Defaults to `<CloudUploadOutlined />` from Ant Design icons.
+</ParamField>
+
+<ParamField path="maxSizeMB" type="number">
+  Maximum file size in megabytes. Files exceeding this limit are automatically rejected and `onReject` is called.
+</ParamField>
+
+<ParamField path="onReject" type="(file: File, reason: string) => void">
+  Callback fired when a file is rejected (e.g., exceeds `maxSizeMB`). Use this to display error messages to the user.
+  
+  **Parameters:**
+  - `file`: The rejected File object
+  - `reason`: Human-readable rejection reason (e.g., "File exceeds 10MB limit")
+</ParamField>
+
+<ParamField path="size" type="AxUploaderSize" default="md">
+  Size preset controlling padding and icon sizing.
+  
+  - `"sm"` — Compact size for modals and drawers
+  - `"md"` — Standard size (default)
+  - `"lg"` — Large size for full-width page layouts
+</ParamField>
+
+<ParamField path="showFileList" type="boolean" default="false">
+  Show Ant Design's built-in file list after upload. By default, this is `false` because consumers typically manage file state themselves (e.g., using `AxFileItem`).
+</ParamField>
+
+<ParamField path="...props" type="Omit<UploadProps, 'type' | 'children'>">
+  All other props from Ant Design's `UploadProps` are supported, including:
+  
+  - `accept` — File type filter (e.g., `".xlsx,.csv"`)
+  - `multiple` — Allow multiple file selection
+  - `onChange` — Callback for upload lifecycle events
+  - `beforeUpload` — Custom validation before upload
+  - `customRequest` — Override default upload behavior
+  
+  See [Ant Design Upload](https://ant.design/components/upload) for full API.
+</ParamField>
+
+## Type Definitions
+
+### AxUploaderSize
+
+```tsx
+export type AxUploaderSize = "sm" | "md" | "lg"
+```
+
+### AxUploaderProps
+
+```tsx
+export type AxUploaderProps = {
+  description?: string
+  hint?: string
+  icon?: React.ReactNode
+  maxSizeMB?: number
+  onReject?: (file: File, reason: string) => void
+  size?: AxUploaderSize
+  showFileList?: boolean
+} & Omit<AntUploadProps, "type" | "children">
+```
+
+## Examples
+
+### Excel File Upload
+
+```tsx
+import { message } from 'antd'
+
+<AxUploader
+  description="Drag & drop or choose file to upload"
+  hint="Supports .xlsx, .xls and .csv (max 10MB)"
+  accept=".xlsx,.xls,.csv"
+  maxSizeMB={10}
+  onReject={(file, reason) => {
+    message.error(reason)
+  }}
+  onChange={(info) => {
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} uploaded successfully`)
+    }
+  }}
+/>
+```
+
+### Image Upload with Preview
+
+```tsx
+import { FileImageOutlined } from '@ant-design/icons'
+
+<AxUploader
+  description="Drag & drop or choose image to upload"
+  hint="Supports .jpg, .png, .gif (max 5MB)"
+  icon={<FileImageOutlined />}
+  accept="image/*"
+  maxSizeMB={5}
+  onReject={(file, reason) => {
+    console.error(reason)
+  }}
+  listType="picture"
+  showFileList
+/>
+```
+
+### Custom Upload Handler
+
+```tsx
+const uploadFile = async (file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  
+  const response = await fetch('/api/upload', {
+    method: 'POST',
+    body: formData
+  })
+  
+  return response.json()
+}
+
+<AxUploader
+  customRequest={async ({ file, onSuccess, onError }) => {
+    try {
+      const result = await uploadFile(file as File)
+      onSuccess?.(result)
+    } catch (error) {
+      onError?.(error as Error)
+    }
+  }}
+/>
+```
+
+### Small Size for Modal
+
+```tsx
+<Modal title="Upload Document" open={isOpen}>
+  <AxUploader
+    size="sm"
+    description="Choose file to upload"
+    hint="PDF or Word document (max 5MB)"
+    accept=".pdf,.doc,.docx"
+    maxSizeMB={5}
+  />
+</Modal>
+```
+
+### Manual File Handling
+
+```tsx
+const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+<AxUploader
+  beforeUpload={(file) => {
+    setSelectedFile(file as File)
+    return false // Prevent auto-upload
+  }}
+  showFileList={false}
+/>
+
+{selectedFile && (
+  <AxFileItem
+    name={selectedFile.name}
+    fileSize={selectedFile.size}
+    onRemove={() => setSelectedFile(null)}
+  />
+)}
+```
+
+## Behavior Notes
+
+- **Auto-rejection:** Files exceeding `maxSizeMB` return `Upload.LIST_IGNORE` to prevent them from appearing in the file list
+- **"Choose file" styling:** The component automatically detects "choose file" in the description text and styles it as a clickable link
+- **Default `beforeUpload`:** Returns `false` to prevent automatic upload, giving you control over when and how files are uploaded
+- **Size validation:** Happens in `beforeUpload`, before any upload request is made
+
+## Accessibility
+
+- The upload area is keyboard accessible (Enter/Space to open file picker)
+- Icon is marked `aria-hidden="true"` to avoid redundant announcements
+- Drag-and-drop interactions are announced by screen readers via Ant Design's built-in ARIA support
+
+## Design Notes
+
+- Uses Ant Design's `Upload.Dragger` component internally
+- Icon sizing and padding scale with the `size` prop
+- Border changes to dashed on hover/drag to indicate interactivity
+- The phrase "choose file" is automatically highlighted in cyan when detected in the description

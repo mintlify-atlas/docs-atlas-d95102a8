@@ -1,0 +1,308 @@
+---
+title: AxCompanyLogo
+description: Avatar component for company/supplier logos with fallback initials
+---
+
+<Note>
+  **Component Location:** `design-system/components/AxCompanyLogo`
+</Note>
+
+## Overview
+
+`AxCompanyLogo` displays a company or supplier logo as an avatar. When no image URL is provided, it shows initials derived from the company name with a deterministic color palette. Used in supplier lists, company headers, and anywhere a branded avatar is needed.
+
+## Import
+
+```tsx
+import AxCompanyLogo from '@/design-system/components/AxCompanyLogo'
+import type { AxCompanyLogoProps, AxCompanyLogoSize } from '@/design-system/components/AxCompanyLogo'
+```
+
+## Basic Usage
+
+```tsx
+{/* Initials fallback */}
+<AxCompanyLogo name="PharmaCorp Ltd" />
+
+{/* With logo image */}
+<AxCompanyLogo 
+  name="PharmaCorp Ltd" 
+  src="https://example.com/logos/pharmacorp.png" 
+/>
+```
+
+## Sizes
+
+```tsx
+<AxCompanyLogo name="Axmed" size="sm" />  {/* 28px */}
+<AxCompanyLogo name="Axmed" size="md" />  {/* 36px - default */}
+<AxCompanyLogo name="Axmed" size="lg" />  {/* 48px */}
+<AxCompanyLogo name="Axmed" size="xl" />  {/* 64px */}
+```
+
+## Shapes
+
+```tsx
+{/* Square with rounded corners (default) */}
+<AxCompanyLogo name="Axmed" shape="square" />
+
+{/* Circular */}
+<AxCompanyLogo name="Axmed" shape="circle" />
+```
+
+## Props
+
+<ParamField path="name" type="string" required>
+  Company or supplier name. Used to:
+  1. Derive initials for the fallback avatar
+  2. Generate a deterministic color palette
+  3. Provide alt text when `src` is provided
+  4. Set `aria-label` for accessibility
+</ParamField>
+
+<ParamField path="src" type="string">
+  Logo image URL. When provided, renders an `<img>` avatar instead of initials.
+  
+  If the image fails to load, Ant Design's Avatar will show the initials fallback.
+</ParamField>
+
+<ParamField path="size" type="AxCompanyLogoSize" default="md">
+  Size preset.
+  
+  - `"sm"` — 28px
+  - `"md"` — 36px (default)
+  - `"lg"` — 48px
+  - `"xl"` — 64px
+</ParamField>
+
+<ParamField path="shape" type="'square' | 'circle'" default="square">
+  Avatar shape.
+  
+  - `"square"` — Rounded corners (22% of size)
+  - `"circle"` — Fully circular
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS class name for the avatar.
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles applied to the avatar. Merged with internal styles (size, colors, border-radius).
+</ParamField>
+
+## Type Definitions
+
+### AxCompanyLogoSize
+
+```tsx
+export type AxCompanyLogoSize = "sm" | "md" | "lg" | "xl"
+```
+
+| Size | Dimensions | Font Size | Use Case |
+|------|------------|-----------|----------|
+| `sm` | 28px | 11px | Compact lists, table cells |
+| `md` | 36px | 13px | Default for most contexts |
+| `lg` | 48px | 16px | Headers, prominent displays |
+| `xl` | 64px | 20px | Large cards, profile pages |
+
+### AxCompanyLogoProps
+
+```tsx
+export type AxCompanyLogoProps = {
+  name: string
+  src?: string
+  size?: AxCompanyLogoSize
+  shape?: "square" | "circle"
+  className?: string
+  style?: React.CSSProperties
+}
+```
+
+## Initials Logic
+
+Initials are extracted from the company name:
+
+```tsx
+"PharmaCorp Ltd" → "PC"  // First letter of first two words
+"Axmed"          → "AX"  // First two letters of single word
+"ABC DEF GHI"    → "AD"  // First + second word only
+""               → "?"   // Empty string fallback
+```
+
+Implementation:
+
+```tsx
+function getInitials(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean)
+  if (words.length === 0) return "?"
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase()
+  return (words[0][0] + words[1][0]).toUpperCase()
+}
+```
+
+## Color Palette
+
+Colors are deterministically generated from the company name using a hash function. This ensures the same company always gets the same color.
+
+```tsx
+const PALETTE = [
+  { bg: "var(--primary-100)", color: "var(--primary-600)" },   // Navy
+  { bg: "var(--cyan-100)",    color: "var(--cyan-700)" },      // Cyan
+  { bg: "var(--green-100)",   color: "var(--green-700)" },     // Green
+  { bg: "var(--magenta-100)", color: "var(--magenta-700)" },   // Magenta
+  { bg: "var(--orange-100)",  color: "var(--orange-700)" },    // Orange
+  { bg: "var(--neutral-100)", color: "var(--neutral-700)" },   // Gray
+]
+```
+
+**Hash function:**
+
+```tsx
+function hashName(name: string): number {
+  let h = 0
+  for (let i = 0; i < name.length; i++) {
+    h = (h * 31 + name.charCodeAt(i)) >>> 0
+  }
+  return h
+}
+
+function getPalette(name: string) {
+  return PALETTE[hashName(name) % PALETTE.length]
+}
+```
+
+## Examples
+
+### Supplier List
+
+```tsx
+const suppliers = [
+  { id: 1, name: "PharmaCorp", logo: "/logos/pharmacorp.png" },
+  { id: 2, name: "MedSupply Inc", logo: null },
+  { id: 3, name: "Healthcare Solutions", logo: "/logos/healthcare.png" },
+]
+
+{suppliers.map((supplier) => (
+  <div key={supplier.id} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+    <AxCompanyLogo 
+      name={supplier.name} 
+      src={supplier.logo} 
+      size="md" 
+    />
+    <span>{supplier.name}</span>
+  </div>
+))}
+```
+
+### Table Cell
+
+```tsx
+<Table
+  columns={[
+    {
+      title: 'Supplier',
+      dataIndex: 'name',
+      render: (name, record) => (
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <AxCompanyLogo name={name} src={record.logo} size="sm" />
+          <span>{name}</span>
+        </div>
+      )
+    }
+  ]}
+/>
+```
+
+### Company Header
+
+```tsx
+<div className="company-header">
+  <AxCompanyLogo 
+    name="PharmaCorp Ltd" 
+    src={company.logoUrl} 
+    size="xl" 
+    shape="square" 
+  />
+  <div>
+    <h1>{company.name}</h1>
+    <p>{company.description}</p>
+  </div>
+</div>
+```
+
+### Circular Avatar
+
+```tsx
+<AxCompanyLogo 
+  name="Axmed" 
+  src="/logos/axmed.png" 
+  size="lg" 
+  shape="circle" 
+/>
+```
+
+### Custom Styling
+
+```tsx
+<AxCompanyLogo 
+  name="HealthTech Inc" 
+  size="md"
+  className="supplier-avatar"
+  style={{ border: '2px solid var(--primary-500)' }}
+/>
+```
+
+### No Image - Initials Only
+
+```tsx
+<AxCompanyLogo name="Medicare Solutions" />
+{/* Renders "MS" in a deterministic color */}
+```
+
+## Border Radius Calculation
+
+For square avatars, border radius is calculated as **22% of the size**:
+
+```tsx
+const borderRadius = shape === "circle" ? "50%" : Math.round(px * 0.22)
+
+// Examples:
+// sm (28px): 6px border radius
+// md (36px): 8px border radius
+// lg (48px): 11px border radius
+// xl (64px): 14px border radius
+```
+
+## With Ant Design Avatar
+
+When `src` is provided, the component uses Ant Design's `Avatar` component:
+
+```tsx
+<Avatar
+  src={src}
+  alt={name}
+  size={px}
+  shape={shape === "circle" ? "circle" : "square"}
+  className={rootCls}
+  style={{ borderRadius, ...style }}
+/>
+```
+
+**Benefits:**
+- Built-in image loading states
+- Automatic fallback if image fails to load
+- Optimized rendering
+
+## Accessibility
+
+- When `src` is provided, `alt={name}` ensures screen readers announce the company name
+- When showing initials, `role="img"` and `aria-label={name}` provide semantic meaning
+- Color contrast meets WCAG AA standards (700-weight text on 100-weight backgrounds)
+
+## Design Notes
+
+- Default shape is `square` with rounded corners for a modern, professional look
+- Font sizes scale proportionally with avatar size
+- Color palette is designed for accessibility with high contrast ratios
+- Deterministic coloring ensures visual consistency across sessions
+- Initials are always uppercase for consistency

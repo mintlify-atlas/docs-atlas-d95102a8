@@ -1,0 +1,275 @@
+---
+title: AxStatCard
+description: KPI metric cards with icons, trends, and actions
+---
+
+## Component
+
+### AxStatCard
+
+Metric card for displaying KPI values with optional icon, trend indicator, and action button.
+
+```tsx
+import AxStatCard from "@axmedds/stat-card"
+import type { AxStatCardProps } from "@axmedds/stat-card"
+```
+
+#### Props
+
+<ParamField path="title" type="string" required>
+  Metric label (e.g., "Available RFQs to bid").
+</ParamField>
+
+<ParamField path="value" type="React.ReactNode" required>
+  Metric value — number or formatted string. Renders with tabular-nums for alignment.
+</ParamField>
+
+<ParamField path="icon" type="React.ReactNode">
+  Icon displayed in a tinted container beside the value. Pass an antd icon — the container handles sizing.
+</ParamField>
+
+<ParamField path="iconColor" type="{ bg: string; fg: string }">
+  Background and foreground colors for the icon container.
+  
+  - `bg` — background color (e.g., `"var(--primary-100)"` or `"#E8F5E9"`)
+  - `fg` — icon color (e.g., `"var(--primary-600)"` or `"#43A047"`)
+  
+  **Default:** `{ bg: "var(--primary-100)", fg: "var(--primary-600)" }`
+</ParamField>
+
+<ParamField path="trend" type="{ value: number; label?: string }">
+  Trend indicator displaying percentage change.
+  
+  - Positive values show green arrow up
+  - Negative values show red arrow down
+  - Zero is neutral (no arrow)
+  
+  **Example:** `{ value: 12, label: "vs last month" }`
+</ParamField>
+
+<ParamField path="action" type="{ icon: React.ReactNode; onClick: () => void; label?: string }">
+  Action button rendered as a floating icon circle (bottom-right). Use for quick actions like "Add SKU" or "View all".
+  
+  - `icon` — icon to display
+  - `onClick` — click handler
+  - `label` — accessible label for screen readers
+</ParamField>
+
+<ParamField path="loading" type="boolean" default={false}>
+  Show skeleton loader instead of content.
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'md'" default="md">
+  Card size:
+  
+  - `"sm"` — compact for grids (icon: 40px)
+  - `"md"` — default for dashboard KPIs (icon: 48px)
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional class name.
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Additional inline styles.
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+export type AxStatCardProps = {
+  title: string
+  value: React.ReactNode
+  icon?: React.ReactNode
+  iconColor?: {
+    bg: string
+    fg: string
+  }
+  trend?: {
+    value: number
+    label?: string
+  }
+  action?: {
+    icon: React.ReactNode
+    onClick: () => void
+    label?: string
+  }
+  loading?: boolean
+  size?: "sm" | "md"
+  className?: string
+  style?: React.CSSProperties
+}
+```
+
+#### Usage
+
+```tsx
+import AxStatCard from "@axmedds/stat-card"
+import { ShoppingOutlined, FileTextOutlined, CheckCircleOutlined } from "@ant-design/icons"
+
+// Basic metric
+<AxStatCard
+  title="Available RFQs to bid"
+  value={24}
+  icon={<ShoppingOutlined />}
+/>
+
+// With trend
+<AxStatCard
+  title="Active Bids"
+  value={12}
+  icon={<FileTextOutlined />}
+  trend={{ value: 15, label: "vs last month" }}
+/>
+
+// Custom icon colors
+<AxStatCard
+  title="Completed Orders"
+  value={156}
+  icon={<CheckCircleOutlined />}
+  iconColor={{
+    bg: "var(--green-100)",
+    fg: "var(--green-600)",
+  }}
+/>
+
+// With action button
+<AxStatCard
+  title="Total Inventory"
+  value="1,250"
+  icon={<ShoppingOutlined />}
+  action={{
+    icon: <PlusOutlined />,
+    onClick: () => navigate("/inventory/add"),
+    label: "Add new item",
+  }}
+/>
+
+// Small size
+<AxStatCard
+  title="Low Stock Items"
+  value={8}
+  size="sm"
+/>
+
+// Loading state
+<AxStatCard
+  title="Revenue"
+  value="$0"
+  loading
+/>
+```
+
+#### Trend Formatting
+
+```tsx
+// Positive trend (green, arrow up)
+<AxStatCard
+  title="New Customers"
+  value={45}
+  trend={{ value: 23, label: "vs last week" }}
+/>
+// Displays: "↑ +23% vs last week"
+
+// Negative trend (red, arrow down)
+<AxStatCard
+  title="Open Issues"
+  value={12}
+  trend={{ value: -8, label: "vs last week" }}
+/>
+// Displays: "↓ -8% vs last week"
+
+// Zero trend (neutral, no arrow)
+<AxStatCard
+  title="Pending Orders"
+  value={15}
+  trend={{ value: 0 }}
+/>
+// Displays: "0%"
+```
+
+#### Dashboard Grid
+
+```tsx
+import AxStatCard from "@axmedds/stat-card"
+import { Row, Col } from "antd"
+import {
+  ShoppingOutlined,
+  FileTextOutlined,
+  CheckCircleOutlined,
+  DollarOutlined,
+} from "@ant-design/icons"
+
+function Dashboard() {
+  return (
+    <Row gutter={[16, 16]}>
+      <Col xs={24} sm={12} lg={6}>
+        <AxStatCard
+          title="Available RFQs"
+          value={24}
+          icon={<ShoppingOutlined />}
+          trend={{ value: 12, label: "vs last month" }}
+        />
+      </Col>
+      
+      <Col xs={24} sm={12} lg={6}>
+        <AxStatCard
+          title="Active Bids"
+          value={12}
+          icon={<FileTextOutlined />}
+          iconColor={{
+            bg: "var(--cyan-100)",
+            fg: "var(--cyan-600)",
+          }}
+          trend={{ value: -5, label: "vs last month" }}
+        />
+      </Col>
+      
+      <Col xs={24} sm={12} lg={6}>
+        <AxStatCard
+          title="Won Contracts"
+          value={8}
+          icon={<CheckCircleOutlined />}
+          iconColor={{
+            bg: "var(--green-100)",
+            fg: "var(--green-600)",
+          }}
+          trend={{ value: 33, label: "vs last month" }}
+        />
+      </Col>
+      
+      <Col xs={24} sm={12} lg={6}>
+        <AxStatCard
+          title="Total Revenue"
+          value="$48.2K"
+          icon={<DollarOutlined />}
+          iconColor={{
+            bg: "var(--orange-100)",
+            fg: "var(--orange-600)",
+          }}
+          trend={{ value: 18, label: "vs last month" }}
+        />
+      </Col>
+    </Row>
+  )
+}
+```
+
+#### Icon Color Presets
+
+```tsx
+// Primary (purple)
+iconColor={{ bg: "var(--primary-100)", fg: "var(--primary-600)" }}
+
+// Success (green)
+iconColor={{ bg: "var(--green-100)", fg: "var(--green-600)" }}
+
+// Info (cyan)
+iconColor={{ bg: "var(--cyan-100)", fg: "var(--cyan-600)" }}
+
+// Warning (orange)
+iconColor={{ bg: "var(--orange-100)", fg: "var(--orange-600)" }}
+
+// Error (red)
+iconColor={{ bg: "var(--red-100)", fg: "var(--red-600)" }}
+```

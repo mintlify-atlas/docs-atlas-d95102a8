@@ -1,0 +1,272 @@
+---
+title: Filter Bar
+description: Search, filter, and sort controls for data tables and lists.
+---
+
+## Overview
+
+Filter Bar is a composable toolbar that combines search input, filter dropdowns, sort controls, and action buttons. It automatically displays a result count below the bar and provides a consistent interface for filtering table data, product catalogs, and order lists.
+
+## Usage
+
+```tsx
+import { AxFilterBar } from "@axmed/design-system"
+import { useState } from "react"
+
+function ProductList() {
+  const [search, setSearch] = useState("")
+  const [category, setCategory] = useState<string[]>([])
+  const [status, setStatus] = useState<string | undefined>()
+  const [sortBy, setSortBy] = useState("recent")
+
+  return (
+    <AxFilterBar
+      search={{
+        placeholder: "Search for medicine...",
+        value: search,
+        onChange: (e) => setSearch(e.target.value)
+      }}
+      filters={[
+        {
+          key: "category",
+          placeholder: "Category",
+          options: [
+            { label: "Antibiotics", value: "antibiotics" },
+            { label: "Analgesics", value: "analgesics" },
+          ],
+          multiple: true,
+          value: category,
+          onChange: setCategory,
+        },
+        {
+          key: "status",
+          placeholder: "Status",
+          options: [
+            { label: "In Stock", value: "in_stock" },
+            { label: "Low Stock", value: "low_stock" },
+          ],
+          value: status,
+          onChange: setStatus,
+        },
+      ]}
+      sort={{
+        options: [
+          { label: "Recent", value: "recent" },
+          { label: "Name (A–Z)", value: "name_asc" },
+          { label: "Price (Low)", value: "price_asc" },
+        ],
+        value: sortBy,
+        onChange: setSortBy,
+      }}
+      resultCount="142 medications"
+    />
+  )
+}
+```
+
+## Features
+
+### Search Only
+
+```tsx
+<AxFilterBar
+  search={{ placeholder: "Search for medicine..." }}
+  resultCount="10 medications"
+/>
+```
+
+### Multiple Filters
+
+```tsx
+<AxFilterBar
+  search={{ placeholder: "Search..." }}
+  filters={[
+    {
+      key: "category",
+      placeholder: "Category",
+      options: categoryOptions,
+      multiple: true,
+      width: 180,
+    },
+    {
+      key: "country",
+      placeholder: "Country",
+      options: countryOptions,
+      multiple: true,
+      width: 180,
+    },
+  ]}
+  resultCount="10 products"
+/>
+```
+
+### With Action Button
+
+```tsx
+<AxFilterBar
+  search={{ placeholder: "Search..." }}
+  filters={[{ key: "status", placeholder: "Status", options: statusOptions }]}
+  extra={
+    <AxButton icon={<PlusOutlined />}>
+      Add new
+    </AxButton>
+  }
+  resultCount="24 orders"
+/>
+```
+
+### Multiple Actions
+
+```tsx
+<AxFilterBar
+  search={{ placeholder: "Search..." }}
+  extra={
+    <Flex gap={8}>
+      <AxButton variant="secondary" icon={<DownloadOutlined />}>Export</AxButton>
+      <AxButton icon={<PlusOutlined />}>Add new</AxButton>
+    </Flex>
+  }
+  resultCount="48 records"
+/>
+```
+
+### Filters Only (No Search)
+
+```tsx
+<AxFilterBar
+  search={false}
+  filters={[
+    { key: "country", placeholder: "Country", options: countryOptions },
+    { key: "status", placeholder: "Bid status", options: statusOptions },
+  ]}
+  resultCount="36 opportunities"
+/>
+```
+
+### Sort Without Label
+
+```tsx
+<AxFilterBar
+  search={{ placeholder: "Search..." }}
+  sort={{
+    options: sortOptions,
+    value: "recent",
+    showLabel: false,  // Hides "Sort by" label
+  }}
+  resultCount={15}
+/>
+```
+
+## With Table
+
+```tsx
+const [search, setSearch] = useState("")
+const [category, setCategory] = useState<string[]>([])
+const [sortBy, setSortBy] = useState("recent")
+
+const filtered = useMemo(() => {
+  let data = [...medications]
+  if (search) {
+    data = data.filter(m => m.name.toLowerCase().includes(search.toLowerCase()))
+  }
+  if (category.length > 0) {
+    data = data.filter(m => category.includes(m.category))
+  }
+  if (sortBy === "name_asc") {
+    data.sort((a, b) => a.name.localeCompare(b.name))
+  }
+  return data
+}, [search, category, sortBy])
+
+return (
+  <div>
+    <AxFilterBar
+      search={{ value: search, onChange: (e) => setSearch(e.target.value) }}
+      filters={[{
+        key: "category",
+        options: categoryOptions,
+        value: category,
+        onChange: setCategory,
+      }]}
+      sort={{ options: sortOptions, value: sortBy, onChange: setSortBy }}
+      resultCount={`${filtered.length} medications`}
+    />
+    <AxTable dataSource={filtered} columns={columns} />
+  </div>
+)
+```
+
+## Props
+
+<ResponseField name="search" type="object | false">
+  Search input config. Pass `false` to hide search.
+  
+  - `placeholder?: string` — Placeholder text (default: "Search...")
+  - `value?: string` — Current value (controlled)
+  - `onChange?: (e) => void` — Change handler
+  - `width?: number | string` — Input width
+</ResponseField>
+
+<ResponseField name="filters" type="FilterConfig[]">
+  Array of filter dropdown configs:
+  
+  - `key: string` — Unique key for the filter
+  - `placeholder?: string` — Placeholder text
+  - `options: { label, value }[]` — Select options
+  - `multiple?: boolean` — Allow multiple selections
+  - `maxTagCount?: number` — Max tags to show before "+N more" (default: 1)
+  - `width?: number | string` — Width (default: 160px)
+  - `allowClear?: boolean` — Allow clearing (default: true)
+  - `value?: any` — Current value (controlled)
+  - `onChange?: (value) => void` — Change handler
+</ResponseField>
+
+<ResponseField name="sort" type="object">
+  Sort dropdown config:
+  
+  - `options: { label, value }[]` — Sort options
+  - `value?: string` — Current value (controlled)
+  - `onChange?: (value) => void` — Change handler
+  - `width?: number | string` — Width (default: 130px)
+  - `showLabel?: boolean` — Show "Sort by" label (default: true)
+</ResponseField>
+
+<ResponseField name="resultCount" type="number | string">
+  Result count displayed below the bar. Pass a number (renders "X results") or a custom string like "24 medications".
+</ResponseField>
+
+<ResponseField name="extra" type="ReactNode">
+  Extra content rendered on the right side (e.g., action buttons)
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional class name for the container
+</ResponseField>
+
+## Best Practices
+
+<Check>Use multiple filters with `multiple: true` for faceted search (categories, countries, etc.)</Check>
+<Check>Show result counts to give users feedback on filter effectiveness</Check>
+<Check>Place action buttons in the `extra` slot for quick access to "Add new", "Export", etc.</Check>
+<Check>Use controlled state for all inputs to sync with table data</Check>
+
+<Warning>Don't nest Filter Bar inside the table — it should sit above as a separate toolbar</Warning>
+<Warning>Avoid too many filters (4+) — consider a drawer or advanced search instead</Warning>
+
+## Accessibility
+
+- Wrapped in a `<search>` landmark with `aria-label="Filter results"`
+- Result count has `role="status"` and `aria-live="polite"`
+- All dropdowns have proper `aria-label` attributes
+- Sort dropdown is linked to its label via `aria-labelledby`
+
+## API Reference
+
+See the [Filter Bar API](/api/filter-bar) for the complete TypeScript interface.
+
+## Related Components
+
+- [Table](/components/table) — Filter Bar is designed to work with tables
+- [Input](/components/input) — Used internally for the search field
+- [Button](/components/button) — Add actions to the `extra` slot
+- [Tag](/components/tag) — For displaying active filters

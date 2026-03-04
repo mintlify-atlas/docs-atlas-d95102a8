@@ -1,0 +1,292 @@
+---
+title: Input OTP
+description: One-time password input for verification flows.
+icon: shield-keyhole
+---
+
+AxInputOTP provides a dedicated input component for entering one-time passwords, verification codes, and PINs. It features auto-focus progression, optional masking, and multiple size options including an extra-large hero size.
+
+## Basic Usage
+
+<CodeGroup>
+```tsx TypeScript
+import { AxInputOTP } from '@axmed/design-system'
+import { useState } from 'react'
+
+function Example() {
+  const [value, setValue] = useState('')
+
+  return (
+    <AxInputOTP
+      length={6}
+      value={value}
+      onChange={setValue}
+      label="Verification code"
+      hint="Enter the 6-digit code sent to your email"
+    />
+  )
+}
+```
+
+```jsx JavaScript
+import { AxInputOTP } from '@axmed/design-system'
+import { useState } from 'react'
+
+function Example() {
+  const [value, setValue] = useState('')
+
+  return (
+    <AxInputOTP
+      length={6}
+      value={value}
+      onChange={setValue}
+      label="Verification code"
+      hint="Enter the 6-digit code sent to your email"
+    />
+  )
+}
+```
+</CodeGroup>
+
+## Lengths
+
+Configure the number of input slots:
+
+```tsx
+// 4-digit PIN
+<AxInputOTP length={4} />
+
+// 6-digit OTP (standard)
+<AxInputOTP length={6} />
+
+// 8-digit extended code
+<AxInputOTP length={8} />
+```
+
+## Sizes
+
+Four size options including an extra-large hero size:
+
+```tsx
+<AxInputOTP size="sm" length={6} />   {/* Small */}
+<AxInputOTP size="md" length={6} />   {/* Medium - default */}
+<AxInputOTP size="lg" length={6} />   {/* Large */}
+<AxInputOTP size="xl" length={6} />   {/* Extra Large - 56px hero size */}
+```
+
+## Masked Input
+
+Hide characters for sensitive codes like PINs:
+
+```tsx
+// Default bullet mask
+<AxInputOTP length={4} masked />
+
+// Custom mask character
+<AxInputOTP length={4} masked="*" />
+```
+
+## With Label & Hint
+
+Labels and hints are built into the component:
+
+```tsx
+<AxInputOTP
+  length={6}
+  label="Email verification code"
+  hint="Check your inbox for the 6-digit code"
+  required
+/>
+```
+
+## Error State
+
+```tsx
+<AxInputOTP
+  length={6}
+  error="Invalid code. Please try again."
+  defaultValue="12345"
+/>
+```
+
+## With Separator
+
+Add visual separators between groups of digits:
+
+```tsx
+<AxInputOTP
+  length={6}
+  separator={(index) => (index === 2 ? <span style={{ color: 'var(--neutral-300)' }}>—</span> : null)}
+/>
+```
+
+This creates a 3+3 layout common in authenticator apps.
+
+## Common Patterns
+
+### Email Verification Flow
+
+```tsx
+import { AxInputOTP, AxButton, AxText } from '@axmed/design-system'
+import { MailOutlined } from '@ant-design/icons'
+import { useState } from 'react'
+
+function EmailVerification() {
+  const [value, setValue] = useState('')
+  const isValid = value.length === 6
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
+      <div style={{
+        width: 48,
+        height: 48,
+        borderRadius: 12,
+        background: 'var(--primary-50)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <MailOutlined style={{ fontSize: 22, color: 'var(--primary)' }} />
+      </div>
+      
+      <div style={{ textAlign: 'center' }}>
+        <AxText variant="heading-lg">Check your email</AxText>
+        <AxText variant="body-sm" color="secondary" style={{ marginTop: 8 }}>
+          We sent a 6-digit code to buyer@pharmaco.ke
+        </AxText>
+      </div>
+
+      <AxInputOTP
+        length={6}
+        value={value}
+        onChange={setValue}
+        status={value.length === 6 && value !== '123456' ? 'error' : ''}
+      />
+
+      <AxButton style={{ width: '100%' }} disabled={!isValid}>
+        Verify Email
+      </AxButton>
+      
+      <AxButton variant="ghost" style={{ width: '100%' }}>
+        Resend Code
+      </AxButton>
+    </div>
+  )
+}
+```
+
+### PIN Entry
+
+```tsx
+function PINEntry() {
+  const [value, setValue] = useState('')
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+      <div style={{ textAlign: 'center' }}>
+        <AxText variant="heading-lg">Enter your PIN</AxText>
+        <AxText variant="body-sm" color="secondary">4-digit account PIN</AxText>
+      </div>
+
+      <AxInputOTP
+        length={4}
+        masked
+        size="lg"
+        value={value}
+        onChange={setValue}
+      />
+
+      <AxButton style={{ width: '100%' }} disabled={value.length < 4}>
+        Confirm
+      </AxButton>
+    </div>
+  )
+}
+```
+
+### With Auto-Submit
+
+```tsx
+function AutoSubmitOTP() {
+  const [value, setValue] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = async (newValue: string) => {
+    setValue(newValue)
+    
+    // Auto-submit when complete
+    if (newValue.length === 6) {
+      setLoading(true)
+      try {
+        await verifyCode(newValue)
+        // Handle success
+      } catch (error) {
+        // Handle error
+      } finally {
+        setLoading(false)
+      }
+    }
+  }
+
+  return (
+    <AxInputOTP
+      length={6}
+      value={value}
+      onChange={handleChange}
+      disabled={loading}
+    />
+  )
+}
+```
+
+## Props
+
+<ResponseField name="length" type="number" default="6">
+  Number of individual digit/character slots
+</ResponseField>
+
+<ResponseField name="size" type="string" default="md">
+  Preset size: `sm`, `md`, `lg`, or `xl` (56px hero size)
+</ResponseField>
+
+<ResponseField name="masked" type="boolean | string" default="false">
+  Mask the value. Pass `true` for default bullet (•) or a custom character string
+</ResponseField>
+
+<ResponseField name="label" type="string">
+  Label text displayed above the OTP input
+</ResponseField>
+
+<ResponseField name="hint" type="string">
+  Helper text displayed below the OTP input (neutral gray)
+</ResponseField>
+
+<ResponseField name="error" type="string">
+  Error message displayed below the OTP input in red. Also sets `aria-invalid`
+</ResponseField>
+
+<ResponseField name="required" type="boolean" default="false">
+  Show red asterisk next to label
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Validation status: `error` or `warning`
+</ResponseField>
+
+<ResponseField name="disabled" type="boolean" default="false">
+  Disable the input
+</ResponseField>
+
+<ResponseField name="value" type="string">
+  Controlled value
+</ResponseField>
+
+<ResponseField name="onChange" type="function">
+  Value change callback: `(value: string) => void`
+</ResponseField>
+
+<ResponseField name="separator" type="function">
+  Render function for custom separators: `(index: number) => ReactNode`
+</ResponseField>
+
+See the [full API reference](/api/input-otp) for all available props.

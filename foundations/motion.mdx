@@ -1,0 +1,367 @@
+---
+title: 'Motion'
+description: 'Animation easing curves, durations, and motion principles in the Axmed Design System'
+---
+
+# Motion
+
+The Axmed Design System uses intentional, purposeful animation to enhance user experience. Our motion tokens are based on the 12 Principles of Animation and web motion best practices.
+
+## Motion Principles
+
+Our approach to motion follows these key principles:
+
+<CardGroup cols={2}>
+  <Card title="Purposeful" icon="bullseye">
+    Every animation serves a clear purpose: guiding attention, providing feedback, or showing relationships between elements.
+  </Card>
+  <Card title="Performant" icon="gauge-high">
+    Animations use GPU-accelerated properties (transform, opacity) and respect user motion preferences.
+  </Card>
+  <Card title="Natural" icon="leaf">
+    Easing curves mimic real-world physics: objects accelerate and decelerate naturally, not linearly.
+  </Card>
+  <Card title="Subtle" icon="wand-magic-sparkles">
+    Motion enhances but doesn't distract. Animations are fast enough to feel responsive, not sluggish.
+  </Card>
+</CardGroup>
+
+## Easing Curves
+
+Easing curves define the acceleration and deceleration of animations. We use cubic-bezier curves for precise control.
+
+### Ease Out (Default for Entrances)
+
+Use for elements entering the view. Fast start with smooth deceleration creates a spring-like, natural feel.
+
+```css
+--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+```
+
+**Use for:**
+- Modal entrances
+- Dropdown menus appearing
+- Tooltips showing
+- Content expanding
+- Fade-in animations
+
+### Ease In (Exits)
+
+Use for elements leaving the view. Slow start that accelerates creates a decisive, quick exit.
+
+```css
+--ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+```
+
+**Use for:**
+- Modal dismissals
+- Dropdown menus closing
+- Tooltips hiding
+- Content collapsing
+- Fade-out animations
+
+### Ease In-Out (Symmetric)
+
+Use sparingly for animations that don't have a clear entrance or exit.
+
+```css
+--ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+```
+
+**Use for:**
+- Progress bars
+- Sliders
+- Symmetric state changes
+
+### Ease Spring (Playful)
+
+Playful overshoot effect. Use for celebratory moments and success feedback.
+
+```css
+--ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+```
+
+**Use for:**
+- Success checkmarks
+- Toast notifications entering
+- Celebration animations
+- Attention-grabbing elements
+
+### Ease Drawer (Sheet Slide)
+
+Specialized curve for sheet and drawer animations, inspired by iOS sheet slides and Ionic framework.
+
+```css
+--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+```
+
+**Use for:**
+- Drawer slide-in/out
+- Sheet bottom-to-top entrance
+- Large surface transitions
+
+<CodeGroup>
+```css All Easing Curves
+/* Spring-like entrance — fast start, smooth deceleration */
+--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+/* Decisive exit — slow start, accelerates out */
+--ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+
+/* Symmetric — use sparingly */
+--ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+
+/* Playful overshoot — success checkmarks, toasts */
+--ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+/* iOS sheet slide — aggressive start, long gentle deceleration */
+--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+```
+</CodeGroup>
+
+## Durations
+
+Animation durations are carefully chosen to feel responsive without being rushed or sluggish.
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--duration-fast` | 100ms | Micro-interactions: row select, checkbox tick |
+| `--duration-base` | 150ms | Default: hover states, close buttons |
+| `--duration-slow` | 250ms | Overlays entering/leaving (modals) |
+| `--duration-drawer` | 350ms | Drawer slide — longer for large surfaces |
+
+<CodeGroup>
+```css Duration Tokens
+--duration-fast: 100ms;   // micro-interactions: row select, checkbox tick
+--duration-base: 150ms;   // default: hover states, close buttons
+--duration-slow: 250ms;   // overlays entering/leaving (modal)
+--duration-drawer: 350ms; // drawer slide — longer for large surfaces
+```
+</CodeGroup>
+
+### Duration Guidelines
+
+<AccordionGroup>
+  <Accordion title="Fast (100ms) — Instant Feedback">
+    Use for immediate response to user input. These animations should feel instantaneous:
+    - Checkbox/radio button selection
+    - Table row selection
+    - Toggle switches
+    - Button press states
+  </Accordion>
+
+  <Accordion title="Base (150ms) — Default Transitions">
+    Use for standard UI transitions. This is the default duration for most hover and focus states:
+    - Button hover states
+    - Link color transitions
+    - Icon color changes
+    - Close button interactions
+  </Accordion>
+
+  <Accordion title="Slow (250ms) — Overlay Transitions">
+    Use for larger elements entering or leaving the view:
+    - Modal fade-in/fade-out
+    - Dropdown menu appearance
+    - Tooltip transitions
+    - Alert notifications
+  </Accordion>
+
+  <Accordion title="Drawer (350ms) — Large Surface Animations">
+    Use specifically for drawer and sheet animations that involve large surfaces:
+    - Drawer slide-in from side
+    - Bottom sheet slide-up
+    - Full-screen overlay transitions
+  </Accordion>
+</AccordionGroup>
+
+## Focus Ring
+
+Accessibility focus indicators use consistent styling across all interactive elements:
+
+```css
+--focus-ring-color: var(--primary-focus);   /* #9F9AEB (primary-300) */
+--focus-ring-width: 2px;
+--focus-ring-offset: 2px;
+```
+
+**Usage example:**
+
+```css
+.button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  transition: outline-color var(--duration-base) var(--ease-out);
+}
+```
+
+## Usage Examples
+
+### Button Hover Transition
+
+```css
+.button {
+  background-color: var(--primary);
+  transition: background-color var(--duration-base) var(--ease-out);
+}
+
+.button:hover {
+  background-color: var(--primary-hover);
+}
+```
+
+### Modal Entrance Animation
+
+```css
+.modal {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: 
+    opacity var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+}
+
+.modal.is-open {
+  opacity: 1;
+  transform: scale(1);
+}
+```
+
+### Drawer Slide-In
+
+```css
+.drawer {
+  transform: translateX(-100%);
+  transition: transform var(--duration-drawer) var(--ease-drawer);
+}
+
+.drawer.is-open {
+  transform: translateX(0);
+}
+```
+
+### Success Checkmark (with Spring)
+
+```css
+.checkmark {
+  transform: scale(0);
+  transition: transform var(--duration-base) var(--ease-spring);
+}
+
+.checkmark.show {
+  transform: scale(1);
+}
+```
+
+### Dropdown Menu
+
+```css
+.dropdown-menu {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.dropdown-menu.is-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+```
+
+## Accessibility: Respecting Motion Preferences
+
+The design system automatically honors the user's operating system motion preference using `prefers-reduced-motion`.
+
+<CodeGroup>
+```css Reduced Motion Support
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+</CodeGroup>
+
+This global guard automatically eliminates all animations for users who prefer reduced motion, without requiring per-component media queries.
+
+<Warning>
+  **Never override prefers-reduced-motion**. This is a critical accessibility feature for users with vestibular disorders or motion sensitivity.
+</Warning>
+
+## Animation Best Practices
+
+### Performance
+
+<AccordionGroup>
+  <Accordion title="Use GPU-accelerated properties">
+    Stick to `transform` and `opacity` for smooth 60fps animations:
+    
+    ```css
+    /* Good — GPU accelerated */
+    transform: translateY(0);
+    opacity: 1;
+    
+    /* Avoid — causes layout reflow */
+    top: 0;
+    height: 100px;
+    ```
+  </Accordion>
+
+  <Accordion title="Use will-change sparingly">
+    Only use `will-change` for animations you know will happen:
+    
+    ```css
+    .drawer {
+      will-change: transform;
+    }
+    
+    .drawer.is-open {
+      will-change: auto; /* Remove after animation */
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Choreography
+
+<AccordionGroup>
+  <Accordion title="Sequence related animations">
+    When multiple elements animate together, stagger them slightly:
+    
+    ```css
+    .item:nth-child(1) { transition-delay: 0ms; }
+    .item:nth-child(2) { transition-delay: 50ms; }
+    .item:nth-child(3) { transition-delay: 100ms; }
+    ```
+  </Accordion>
+
+  <Accordion title="Match entrance and exit patterns">
+    If an element slides in from the left, it should slide out to the left (not fade out).
+  </Accordion>
+</AccordionGroup>
+
+### Purposeful Motion
+
+<AccordionGroup>
+  <Accordion title="Every animation needs a reason">
+    Don't animate just because you can. Motion should:
+    - Guide user attention
+    - Provide feedback
+    - Show spatial relationships
+    - Maintain context during transitions
+  </Accordion>
+
+  <Accordion title="Keep it subtle">
+    Animations should enhance the experience, not demand attention. When in doubt, go faster and subtler.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  All motion tokens are defined in `_motion.scss` and automatically included when you import the design system's CSS.
+</Note>

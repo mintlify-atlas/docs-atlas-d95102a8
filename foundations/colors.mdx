@@ -1,0 +1,259 @@
+---
+title: 'Colors'
+description: 'Color palette, brand colors, and semantic color tokens in the Axmed Design System'
+---
+
+# Colors
+
+The Axmed Design System color palette is generated from official brand colors using the OKLCH perceptual color space for consistent lightness and saturation across hues.
+
+## Brand Colors
+
+These are the core brand colors that define Axmed's visual identity:
+
+<CardGroup cols={3}>
+  <Card title="Axmed Navy" icon="square" color="#261C7A">
+    **#261C7A** · Primary brand color (primary-600)
+  </Card>
+  <Card title="Axmed Cyan" icon="square" color="#0CC4FF">
+    **#0CC4FF** · Cyan accent (cyan-500)
+  </Card>
+  <Card title="Axmed Green" icon="square" color="#4FE788">
+    **#4FE788** · Neon brand accent (green-500)
+  </Card>
+  <Card title="Axmed Magenta" icon="square" color="#E73BC1">
+    **#E73BC1** · Magenta accent (magenta-500)
+  </Card>
+  <Card title="Axmed Lime" icon="square" color="#CCFF6C">
+    **#CCFF6C** · Neon brand accent (lime-500)
+  </Card>
+  <Card title="Axmed Black" icon="square" color="#262626">
+    **#262626** · Brand black (neutral-800)
+  </Card>
+</CardGroup>
+
+## Color Palettes
+
+### Primary / Navy
+
+The primary color palette is anchored by Axmed Navy (#261C7A) at the 600 level. Use primary-500 for interactive elements and primary-600 for brand identity.
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--primary-50` | #F3F1FF | Lightest tint, backgrounds |
+| `--primary-100` | #E7E6FA | Light backgrounds, hover states |
+| `--primary-200` | #D0CEF5 | Subtle backgrounds |
+| `--primary-300` | #9F9AEB | Focus rings, light accents |
+| `--primary-400` | #726AE0 | Borders, disabled states |
+| `--primary-500` | #4738CC | **Primary action color** |
+| `--primary-600` | #261C7A | **Brand color (Axmed Navy)** |
+| `--primary-700` | #1F1769 | Hover states |
+| `--primary-800` | #181156 | Dark backgrounds |
+| `--primary-900` | #110B44 | Darker backgrounds |
+| `--primary-950` | #0B0633 | Darkest shade |
+
+### Cyan
+
+Anchored by Axmed Cyan (#0CC4FF) at the 500 level. Used for informational states and links.
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--cyan-50` | #EEF8FF | Light backgrounds |
+| `--cyan-100` | #E3F3FF | Subtle backgrounds |
+| `--cyan-200` | #C5E7FF | Tinted backgrounds |
+| `--cyan-300` | #9BDAFF | Light accents |
+| `--cyan-400` | #6ECFFF | Borders, icons |
+| `--cyan-500` | #0CC4FF | **Brand cyan** |
+| `--cyan-600` | #0099C8 | Interactive elements |
+| `--cyan-700` | #007094 | **Link text (WCAG AA)** |
+| `--cyan-800` | #004D66 | Dark text |
+| `--cyan-900` | #002939 | Darkest text |
+| `--cyan-950` | #001823 | Near-black |
+
+### Green
+
+Neon brand accent anchored by Axmed Green (#4FE788) at the 500 level. Use green-600+ for text on light backgrounds.
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--green-50` | #EBFEF0 | Success backgrounds |
+| `--green-100` | #D5FDDF | Light success states |
+| `--green-200` | #AFFCC5 | Tinted backgrounds |
+| `--green-300` | #64FB9A | Light accents |
+| `--green-400` | #54F38F | Bright accents |
+| `--green-500` | #4FE788 | **Brand green (neon)** |
+| `--green-600` | #3CB66A | **Success (semantic)** |
+| `--green-700` | #2A844C | Success text |
+| `--green-800` | #195931 | Dark success text |
+| `--green-900` | #092E17 | Darkest shade |
+| `--green-950` | #041C0C | Near-black |
+
+### Magenta
+
+Anchored by Axmed Magenta (#E73BC1) at the 500 level.
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--magenta-50` | #FDF0F9 | Light backgrounds |
+| `--magenta-100` | #FBDDF1 | Subtle backgrounds |
+| `--magenta-200` | #F8B9E4 | Tinted backgrounds |
+| `--magenta-300` | #F597DA | Light accents |
+| `--magenta-400` | #F26CCF | Bright accents |
+| `--magenta-500` | #E73BC1 | **Brand magenta** |
+| `--magenta-600` | #B92D9A | Interactive elements |
+| `--magenta-700` | #8D2075 | Text, icons |
+| `--magenta-800` | #60134F | Dark text |
+| `--magenta-900` | #3A082F | Darkest shade |
+| `--magenta-950` | #290420 | Near-black |
+
+### Lime
+
+Neon brand accent anchored by Axmed Lime (#CCFF6C) at the 500 level.
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--lime-50` | #FBFFE8 | Light backgrounds |
+| `--lime-100` | #F7FFED | Subtle backgrounds |
+| `--lime-200` | #EFFFDA | Tinted backgrounds |
+| `--lime-300` | #DEFFAD | Light accents |
+| `--lime-400` | #D5FF90 | Bright accents |
+| `--lime-500` | #CCFF6C | **Brand lime (neon)** |
+| `--lime-600` | #97C900 | Interactive elements |
+| `--lime-700` | #6D9200 | Text, icons |
+| `--lime-800` | #486200 | Dark text |
+| `--lime-900` | #243300 | Darkest shade |
+| `--lime-950` | #131D00 | Near-black |
+
+### Neutral / Grays
+
+UI grays used for text, backgrounds, and borders. Axmed Black (#262626) is at neutral-800.
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--neutral-0` | #FFFFFF | Pure white |
+| `--neutral-50` | #F9FAFB | Lightest background |
+| `--neutral-100` | #F2F4F7 | Light background |
+| `--neutral-200` | #EAECF0 | Subtle borders |
+| `--neutral-300` | #D0D5DD | Borders, dividers |
+| `--neutral-400` | #98A2B3 | Disabled text, placeholders |
+| `--neutral-500` | #667085 | Secondary text |
+| `--neutral-600` | #475467 | Body text |
+| `--neutral-700` | #344054 | Dark text |
+| `--neutral-800` | #262626 | **Brand black** |
+| `--neutral-900` | #101828 | Darkest text |
+
+### Status Colors
+
+#### Red / Error
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--red-50` | #FEF3F2 | Error backgrounds |
+| `--red-500` | #FF4538 | Error accents |
+| `--red-600` | #F5222D | **Error (semantic)** |
+| `--red-700` | #E72315 | Error text |
+| `--red-800` | #D61406 | Dark error text |
+
+#### Orange / Warning
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--orange-25` | #FFFEF6 | Lightest warning background |
+| `--orange-50` | #FFFAEB | Warning backgrounds |
+| `--orange-400` | #FDB022 | Warning accents |
+| `--orange-500` | #FAAD14 | **Warning (semantic)** |
+| `--orange-600` | #F79009 | Warning text |
+
+## Semantic Tokens
+
+These semantic tokens map to specific use cases and provide consistent meaning across the design system.
+
+### Primary Interactive
+
+```css
+--primary:        #4738CC;  /* Primary action color */
+--primary-hover:  #261C7A;  /* Hover state (Navy) */
+--primary-focus:  #9F9AEB;  /* Focus ring color */
+```
+
+### Status / Traffic Lights
+
+```css
+--success: #3CB66A;  /* green-600 */
+--warning: #FAAD14;  /* orange-500 */
+--error:   #F5222D;  /* red-600 */
+```
+
+### Text Colors
+
+```css
+--text-primary:   #262626;  /* Brand black (neutral-800) */
+--text-secondary: #667085;  /* Muted text (neutral-500) */
+--text-link:      #007094;  /* Link text (cyan-700, WCAG AA) */
+--text-disabled:  #98A2B3;  /* Disabled text (neutral-400) */
+```
+
+## Usage Guidelines
+
+### Primary Actions
+
+Use `--primary` (#4738CC) for primary buttons and interactive elements. On hover, transition to `--primary-hover` (#261C7A).
+
+```css
+.button-primary {
+  background-color: var(--primary);
+  color: var(--neutral-0);
+}
+
+.button-primary:hover {
+  background-color: var(--primary-hover);
+}
+```
+
+### Focus States
+
+Use `--primary-focus` (#9F9AEB) for focus rings to ensure visibility:
+
+```css
+.input:focus {
+  outline: 2px solid var(--primary-focus);
+  outline-offset: 2px;
+}
+```
+
+### Status Communication
+
+Use semantic status tokens consistently:
+
+```css
+.alert-success { color: var(--success); }
+.alert-warning { color: var(--warning); }
+.alert-error { color: var(--error); }
+```
+
+### Text Hierarchy
+
+```css
+.heading { color: var(--text-primary); }
+.body-text { color: var(--text-primary); }
+.caption { color: var(--text-secondary); }
+.link { color: var(--text-link); }
+```
+
+## Accessibility
+
+### Contrast Ratios
+
+All text colors meet WCAG AA standards:
+
+- `--text-primary` (#262626) on white: 12.8:1 (AAA)
+- `--text-link` (#007094) on white: 6.2:1 (AA)
+- `--cyan-700` is specifically chosen for links to meet contrast requirements
+
+### Color Blindness
+
+The palette uses distinct hues that remain distinguishable for users with color vision deficiencies. Status colors (green, orange, red) are used alongside icons and labels.
+
+<Note>
+  All color tokens are defined in `_colors.scss` and exposed as CSS custom properties when you import the design system's CSS.
+</Note>

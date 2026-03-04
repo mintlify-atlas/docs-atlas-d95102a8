@@ -1,0 +1,227 @@
+---
+title: Text
+description: Typography component with semantic text variants and styles.
+icon: text
+---
+
+AxText provides a comprehensive typography system with 12 text variants (7 headings + 5 body sizes) and customizable weight, color, and decoration options.
+
+## Basic Usage
+
+<CodeGroup>
+```tsx TypeScript
+import { AxText } from '@axmed/design-system'
+
+function Example() {
+  return (
+    <AxText variant="body-md">
+      Axmed brings just, verifiable, and wide pharmaceutical access to every region.
+    </AxText>
+  )
+}
+```
+
+```jsx JavaScript
+import { AxText } from '@axmed/design-system'
+
+function Example() {
+  return (
+    <AxText variant="body-md">
+      Axmed brings just, verifiable, and wide pharmaceutical access to every region.
+    </AxText>
+  )
+}
+```
+</CodeGroup>
+
+## Heading Variants
+
+Seven heading sizes for different hierarchy levels:
+
+```tsx
+<AxText variant="heading-4xl">Display Heading</AxText>  {/* 48px */}
+<AxText variant="heading-3xl">Hero Heading</AxText>     {/* 40px */}
+<AxText variant="heading-2xl">Page Title</AxText>       {/* 32px */}
+<AxText variant="heading-xl">Section Title</AxText>    {/* 24px */}
+<AxText variant="heading-lg">Card Title</AxText>       {/* 18px */}
+<AxText variant="heading-md">Label / UI Heading</AxText> {/* 14px semibold */}
+<AxText variant="heading-sm">Small Label</AxText>      {/* 13px semibold */}
+```
+
+<Info>
+Headings automatically use `text-wrap: balance` to create even line breaks when wrapping.
+</Info>
+
+## Body Text Variants
+
+Five body text sizes with flexible weight options:
+
+```tsx
+<AxText variant="body-xl" weight="regular">Extra Large Body</AxText>  {/* 18px */}
+<AxText variant="body-lg" weight="regular">Large Body</AxText>       {/* 16px */}
+<AxText variant="body-md" weight="regular">Medium Body</AxText>      {/* 14px - default */}
+<AxText variant="body-sm" weight="regular">Small Body</AxText>       {/* 13px */}
+<AxText variant="body-xs" weight="regular">Extra Small Body</AxText> {/* 12px */}
+```
+
+## Font Weight
+
+Body text supports three weight options (headings have fixed weights):
+
+```tsx
+<AxText variant="body-md" weight="regular">Regular weight (400)</AxText>
+<AxText variant="body-md" weight="medium">Medium weight (500)</AxText>
+<AxText variant="body-md" weight="semibold">Semibold weight (600)</AxText>
+```
+
+## Colors
+
+Five semantic color options:
+
+```tsx
+<AxText variant="body-md" color="primary">Primary Text (#262626)</AxText>
+<AxText variant="body-md" color="secondary">Secondary Text (#667085)</AxText>
+<AxText variant="body-md" color="link">Link Blue (#0099C8)</AxText>
+<AxText variant="body-md" color="disabled">Disabled Gray (#98A2B3)</AxText>
+<AxText variant="body-md" color="inherit">Inherit from parent</AxText>
+```
+
+## Text Styles
+
+### Underline
+
+```tsx
+<AxText variant="body-md" underline>
+  Underlined text for emphasis
+</AxText>
+```
+
+### Italic
+
+```tsx
+<AxText variant="body-md" italic>
+  Italic text for subtle emphasis
+</AxText>
+```
+
+### Monospace
+
+```tsx
+<AxText variant="body-sm" mono>
+  const orderTotal = 1_250.00
+</AxText>
+```
+
+## Ellipsis
+
+Truncate long text with ellipsis:
+
+### Single Line
+
+```tsx
+<AxText variant="body-md" ellipsis>
+  This very long text will be truncated with an ellipsis when it overflows...
+</AxText>
+```
+
+### Multi-Line
+
+```tsx
+<AxText variant="body-md" ellipsis={{ rows: 2 }}>
+  This text will be clamped to two lines. Any overflow content will be hidden
+  and replaced with an ellipsis at the end of the second line.
+</AxText>
+```
+
+### With Tooltip
+
+```tsx
+<AxText 
+  variant="body-md" 
+  ellipsis={{ tooltip: "Full text appears in tooltip" }}
+>
+  Truncated text with tooltip on hover
+</AxText>
+```
+
+## Semantic HTML
+
+Override the rendered HTML element:
+
+```tsx
+<AxText variant="heading-xl" as="h1">Page Title</AxText>
+<AxText variant="body-md" as="span">Inline text</AxText>
+<AxText variant="body-sm" as="label" htmlFor="input-id">Form Label</AxText>
+```
+
+## Common Patterns
+
+### Page Header
+
+```tsx
+<div>
+  <AxText variant="heading-2xl" as="h1">Order Details</AxText>
+  <AxText variant="body-md" color="secondary" style={{ marginTop: 8 }}>
+    Review the details of order #ORD-2024-0892
+  </AxText>
+</div>
+```
+
+### Card Header
+
+```tsx
+<div>
+  <AxText variant="body-sm" weight="semibold">Supplier Name</AxText>
+  <AxText variant="body-xs" color="secondary">
+    Amoxicillin 500mg · Cipla Ltd
+  </AxText>
+</div>
+```
+
+### Code Display
+
+```tsx
+<AxText variant="body-sm" mono style={{ 
+  background: 'var(--neutral-50)', 
+  padding: '4px 8px',
+  borderRadius: 4 
+}}>
+  SKU-2024-MED-00142
+</AxText>
+```
+
+## Props
+
+<ResponseField name="variant" type="string" required>
+  Text style variant: `heading-4xl`, `heading-3xl`, `heading-2xl`, `heading-xl`, `heading-lg`, `heading-md`, `heading-sm`, `body-xl`, `body-lg`, `body-md`, `body-sm`, or `body-xs`
+</ResponseField>
+
+<ResponseField name="weight" type="string" default="regular">
+  Font weight for body text: `regular`, `medium`, or `semibold` (headings ignore this)
+</ResponseField>
+
+<ResponseField name="color" type="string" default="primary">
+  Text color: `primary`, `secondary`, `link`, `disabled`, or `inherit`
+</ResponseField>
+
+<ResponseField name="italic" type="boolean" default="false">
+  Apply italic style
+</ResponseField>
+
+<ResponseField name="underline" type="boolean" default="false">
+  Apply underline decoration
+</ResponseField>
+
+<ResponseField name="mono" type="boolean" default="false">
+  Use monospace font (Fira Code)
+</ResponseField>
+
+<ResponseField name="as" type="string">
+  Override HTML element: `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, `p`, `span`, `label`, or `div`
+</ResponseField>
+
+<ResponseField name="ellipsis" type="boolean | object" default="false">
+  Truncate with ellipsis. Pass `true` for single-line or an object with `rows` and `tooltip`
+</ResponseField>
+
+See the [full API reference](/api/text) for all available props.

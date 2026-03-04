@@ -1,0 +1,243 @@
+---
+title: Stat Card
+description: Display key metrics with icons, trend indicators, and quick actions.
+---
+
+## Overview
+
+Stat Card shows a single metric with an optional icon, trend indicator (up/down arrows), and floating action button. It's designed for dashboard KPIs and analytics summaries.
+
+## Usage
+
+```tsx
+import { AxStatCard } from "@axmed/design-system"
+import { ShoppingOutlined } from "@ant-design/icons"
+
+function Dashboard() {
+  return (
+    <AxStatCard
+      title="Available RFQs to bid"
+      value="142"
+      icon={<ShoppingOutlined />}
+      trend={{ value: 12, label: "vs last month" }}
+    />
+  )
+}
+```
+
+## With Icon & Color
+
+```tsx
+<AxStatCard
+  title="Available RFQs"
+  value="142"
+  icon={<ShoppingOutlined />}
+  iconColor={{
+    bg: "var(--primary-100)",
+    fg: "var(--primary-600)"
+  }}
+/>
+```
+
+## Trend Indicators
+
+Trend automatically shows:
+- **Positive** (green arrow up)
+- **Negative** (red arrow down)
+- **Neutral** (no arrow)
+
+```tsx
+// Positive trend
+<AxStatCard
+  title="Bids Won"
+  value="18"
+  icon={<CheckCircleOutlined />}
+  trend={{ value: 12, label: "vs last month" }}
+/>
+
+// Negative trend
+<AxStatCard
+  title="Response Time"
+  value="4.2h"
+  icon={<ClockCircleOutlined />}
+  trend={{ value: -8, label: "faster" }}
+/>
+
+// Neutral (no change)
+<AxStatCard
+  title="Win Rate"
+  value="67%"
+  icon={<FileSearchOutlined />}
+  trend={{ value: 0, label: "no change" }}
+/>
+```
+
+## With Action Button
+
+```tsx
+<AxStatCard
+  title="Total SKUs in Portfolio"
+  value="1,247"
+  icon={<AppstoreOutlined />}
+  iconColor={{ bg: "var(--green-100)", fg: "var(--green-700)" }}
+  action={{
+    icon: <PlusOutlined />,
+    onClick: () => console.log("Add SKU"),
+    label: "Add new SKU"
+  }}
+/>
+```
+
+The action button appears as a floating icon in the bottom-right corner.
+
+## Dashboard Grid
+
+```tsx
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+    gap: 16,
+  }}
+>
+  <AxStatCard
+    title="Available RFQs to bid"
+    value="142"
+    icon={<ShoppingOutlined />}
+    iconColor={{ bg: "var(--primary-100)", fg: "var(--primary-600)" }}
+    trend={{ value: 12, label: "vs last month" }}
+  />
+  <AxStatCard
+    title="Matching RFQs"
+    value="38"
+    icon={<FileSearchOutlined />}
+    iconColor={{ bg: "var(--cyan-100)", fg: "var(--cyan-700)" }}
+    trend={{ value: -5, label: "vs last month" }}
+  />
+  <AxStatCard
+    title="Total SKUs in Portfolio"
+    value="1,247"
+    icon={<AppstoreOutlined />}
+    iconColor={{ bg: "var(--green-100)", fg: "var(--green-700)" }}
+    action={{
+      icon: <PlusOutlined />,
+      onClick: () => addSKU(),
+      label: "Add new SKU"
+    }}
+  />
+</div>
+```
+
+## Loading State
+
+```tsx
+<AxStatCard
+  title="Available RFQs"
+  value="142"
+  icon={<ShoppingOutlined />}
+  loading={true}
+/>
+```
+
+Shows skeleton placeholders for icon, title, and value.
+
+## Sizes
+
+- **`sm`** — Compact (for dense grids)
+- **`md`** — Standard (default, dashboard KPIs)
+
+```tsx
+<AxStatCard
+  title="Total SKUs"
+  value="1,247"
+  icon={<AppstoreOutlined />}
+  size="sm"
+/>
+
+<AxStatCard
+  title="Total SKUs"
+  value="1,247"
+  icon={<AppstoreOutlined />}
+  size="md"
+/>
+```
+
+## Props
+
+<ResponseField name="title" type="string" required>
+  Metric label — e.g. "Available RFQs to bid"
+</ResponseField>
+
+<ResponseField name="value" type="ReactNode" required>
+  Metric value — number or formatted string. Renders with tabular-nums.
+</ResponseField>
+
+<ResponseField name="icon" type="ReactNode">
+  Icon displayed in a tinted container beside the value. Pass an antd icon.
+</ResponseField>
+
+<ResponseField name="iconColor" type="{ bg: string, fg: string }">
+  Background and foreground colors for the icon container.
+  
+  Default: `{ bg: "var(--primary-100)", fg: "var(--primary-600)" }`
+  
+  Example: `{ bg: "var(--cyan-100)", fg: "var(--cyan-700)" }`
+</ResponseField>
+
+<ResponseField name="trend" type="{ value: number, label?: string }">
+  Trend indicator:
+  - Positive values show green arrow up
+  - Negative values show red arrow down
+  - Zero is neutral (no arrow)
+  
+  Example: `{ value: 12, label: "vs last month" }`
+</ResponseField>
+
+<ResponseField name="action" type="{ icon: ReactNode, onClick: () => void, label?: string }">
+  Action button rendered as a floating icon circle (bottom-right). Use for quick actions like "Add SKU" or "View all".
+</ResponseField>
+
+<ResponseField name="loading" type="boolean" default="false">
+  Show skeleton loader instead of content
+</ResponseField>
+
+<ResponseField name="size" type="'sm' | 'md'" default="'md'">
+  Size preset:
+  - `sm`: compact for dense grids
+  - `md`: standard for dashboard KPIs
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional class name
+</ResponseField>
+
+<ResponseField name="style" type="CSSProperties">
+  Additional inline styles
+</ResponseField>
+
+## Best Practices
+
+<Check>Use icons to visually distinguish metric types (shopping for RFQs, clock for time, etc.)</Check>
+<Check>Show trend indicators for time-based metrics to highlight changes</Check>
+<Check>Use action buttons for quick access to related pages ("Add SKU", "View all")</Check>
+<Check>Keep values short and formatted (use K, M for large numbers)</Check>
+
+<Warning>Don't mix different metric types in the same grid — group related KPIs</Warning>
+<Warning>Avoid more than 6 stat cards in a single row — use responsive grid instead</Warning>
+
+## Accessibility
+
+- Uses semantic HTML with proper heading hierarchy
+- Trend arrows are marked `aria-hidden="true"` with text alternative
+- Action buttons have `aria-label` for screen readers
+- Loading state uses `aria-busy="true"`
+
+## API Reference
+
+See the [Stat Card API](/api/stat-card) for the complete TypeScript interface.
+
+## Related Components
+
+- [Card](/components/card) — Container for stat cards
+- [Text](/components/text) — Used for labels and values
+- [Button](/components/button) — Action button variant

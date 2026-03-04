@@ -1,0 +1,264 @@
+---
+title: Input
+description: Text input fields with labels, hints, and validation states.
+icon: input-text
+---
+
+AxInput provides text input fields with built-in label, hint text, error messaging, and validation state support. No need for separate form item wrappers.
+
+## Basic Usage
+
+<CodeGroup>
+```tsx TypeScript
+import { AxInput } from '@axmed/design-system'
+
+function Example() {
+  return (
+    <AxInput
+      label="Email address"
+      placeholder="you@example.com"
+      hint="We will never share your email."
+    />
+  )
+}
+```
+
+```jsx JavaScript
+import { AxInput } from '@axmed/design-system'
+
+function Example() {
+  return (
+    <AxInput
+      label="Email address"
+      placeholder="you@example.com"
+      hint="We will never share your email."
+    />
+  )
+}
+```
+</CodeGroup>
+
+## With Label & Hint
+
+Labels and hints are built into the component:
+
+```tsx
+<AxInput
+  label="Product Code"
+  hint="Enter the 10-digit product code from the package"
+  placeholder="AMX-2024-001"
+/>
+```
+
+## Required Fields
+
+Show a red asterisk next to the label:
+
+```tsx
+<AxInput
+  label="Email address"
+  required
+  placeholder="you@example.com"
+/>
+```
+
+<Info>
+The `required` prop only adds visual indication. Use HTML5 validation or form libraries for actual validation.
+</Info>
+
+## Sizes
+
+Three size options:
+
+```tsx
+<AxInput size="sm" label="Small" placeholder="Small input" />
+<AxInput size="md" label="Medium (default)" placeholder="Medium input" />
+<AxInput size="lg" label="Large" placeholder="Large input" />
+```
+
+## Validation States
+
+### Error State
+
+```tsx
+<AxInput
+  label="Product Code"
+  error="Product code not found in catalogue"
+  defaultValue="AMX-99999"
+  allowClear
+/>
+```
+
+The `error` prop automatically sets the input border to red and displays the error message below.
+
+### Warning State
+
+```tsx
+<AxInput
+  label="Quantity"
+  status="warning"
+  hint="Double-check this value before submitting"
+  defaultValue="100000"
+/>
+```
+
+## With Icons
+
+### Prefix Icon
+
+```tsx
+import { SearchOutlined } from '@ant-design/icons'
+
+<AxInput
+  label="Search"
+  prefix={<SearchOutlined />}
+  placeholder="Search suppliers..."
+/>
+```
+
+### Suffix Text
+
+```tsx
+<AxInput
+  label="Price"
+  prefix="$"
+  suffix="USD"
+  placeholder="0.00"
+/>
+```
+
+## Disabled State
+
+```tsx
+<AxInput
+  label="Account holder"
+  hint="Read-only"
+  defaultValue="PharmaCorp Ltd"
+  disabled
+/>
+```
+
+## Clear Button
+
+Show a clear icon when the input has a value:
+
+```tsx
+<AxInput
+  label="Email"
+  placeholder="you@example.com"
+  allowClear
+/>
+```
+
+## Common Patterns
+
+### Form Group
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+  <AxInput
+    label="Email address"
+    hint="We will never share your email."
+    placeholder="you@example.com"
+    required
+    allowClear
+  />
+  <AxInput
+    label="Quantity"
+    hint="Must be between 1 and 10,000 units"
+    placeholder="Enter quantity"
+    suffix="units"
+    status="warning"
+  />
+  <AxInput
+    label="Product Code"
+    error="Product code not found in catalogue"
+    defaultValue="AMX-99999"
+    allowClear
+  />
+</div>
+```
+
+### Search Input
+
+```tsx
+import { SearchOutlined } from '@ant-design/icons'
+
+<AxInput
+  prefix={<SearchOutlined />}
+  placeholder="Search medications..."
+  allowClear
+/>
+```
+
+### Numeric Input with Units
+
+```tsx
+<AxInput
+  label="Lead Time"
+  placeholder="0"
+  suffix="days"
+  type="number"
+/>
+```
+
+### Currency Input
+
+```tsx
+<AxInput
+  label="Unit Price"
+  prefix="$"
+  suffix="USD"
+  placeholder="0.00"
+  type="number"
+  step="0.01"
+/>
+```
+
+## Props
+
+<ResponseField name="label" type="string">
+  Label text displayed above the input
+</ResponseField>
+
+<ResponseField name="hint" type="string">
+  Helper text displayed below the input (neutral gray)
+</ResponseField>
+
+<ResponseField name="error" type="string">
+  Error message displayed below the input in red. Also sets `status="error"`
+</ResponseField>
+
+<ResponseField name="required" type="boolean" default="false">
+  Show red asterisk next to label (visual only, does not add validation)
+</ResponseField>
+
+<ResponseField name="size" type="string" default="md">
+  Input size: `sm`, `md`, or `lg`
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Validation status: `error` or `warning`
+</ResponseField>
+
+<ResponseField name="disabled" type="boolean" default="false">
+  Disable the input
+</ResponseField>
+
+<ResponseField name="allowClear" type="boolean" default="false">
+  Show clear button when input has value
+</ResponseField>
+
+<ResponseField name="prefix" type="ReactNode">
+  Icon or text displayed before the input value
+</ResponseField>
+
+<ResponseField name="suffix" type="ReactNode">
+  Icon or text displayed after the input value
+</ResponseField>
+
+<ResponseField name="placeholder" type="string">
+  Placeholder text
+</ResponseField>
+
+See the [full API reference](/api/input) for all available props inherited from Ant Design Input.

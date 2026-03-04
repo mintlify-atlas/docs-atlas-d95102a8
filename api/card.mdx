@@ -1,0 +1,235 @@
+---
+title: AxCard
+description: Container cards with header, footer, and data card variants
+---
+
+## Components
+
+### AxCard
+
+Container card with optional description, footer, and flexible padding control.
+
+```tsx
+import AxCard from "@axmedds/card"
+import type { AxCardProps } from "@axmedds/card"
+```
+
+#### Props
+
+Extends all [Ant Design Card props](https://ant.design/components/card#api).
+
+<ParamField path="description" type="React.ReactNode">
+  Muted subtitle rendered below the title in the card header.
+</ParamField>
+
+<ParamField path="footer" type="React.ReactNode">
+  Custom footer rendered inside the card, below the body. Separated from the body by a top border.
+  
+  Use for action buttons, timestamps, or metadata.
+</ParamField>
+
+<ParamField path="noPadding" type="boolean" default={false}>
+  Remove body padding. Use when the card contains a full-bleed element like a Table, List, or image.
+  
+  Inner content controls its own spacing.
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+export type AxCardProps = {
+  description?: React.ReactNode
+  footer?: React.ReactNode
+  noPadding?: boolean
+} & AntCardProps
+```
+
+#### Usage
+
+```tsx
+import AxCard from "@axmedds/card"
+import AxButton from "@axmedds/button"
+
+// Basic card
+<AxCard title="Inventory Summary">
+  <p>Your inventory contains 1,250 items across 8 categories.</p>
+</AxCard>
+
+// With description
+<AxCard
+  title="Recent Orders"
+  description="Orders placed in the last 30 days"
+>
+  <OrderList />
+</AxCard>
+
+// With footer actions
+<AxCard
+  title="Active RFQs"
+  footer={
+    <Flex justify="space-between" align="center">
+      <span>Last updated: 2 hours ago</span>
+      <AxButton size="small">Refresh</AxButton>
+    </Flex>
+  }
+>
+  <RFQList />
+</AxCard>
+
+// No padding for full-bleed content
+<AxCard title="Medication Inventory" noPadding>
+  <AxTable
+    dataSource={medications}
+    columns={columns}
+    pagination={false}
+  />
+</AxCard>
+```
+
+#### With Extra Actions
+
+```tsx
+import AxCard from "@axmedds/card"
+import AxButton from "@axmedds/button"
+import { MoreOutlined } from "@ant-design/icons"
+
+<AxCard
+  title="Dashboard Stats"
+  description="Key performance indicators"
+  extra={
+    <AxButton variant="text" icon={<MoreOutlined />} />
+  }
+>
+  <StatGrid />
+</AxCard>
+```
+
+---
+
+### AxDataCard
+
+Compact card for displaying label-value pairs with expand/collapse functionality.
+
+```tsx
+import { AxDataCard } from "@axmedds/card"
+import type { AxDataCardProps, AxDataCardField } from "@axmedds/card"
+```
+
+#### Props
+
+<ParamField path="header" type="React.ReactNode" required>
+  Primary content rendered in the card header.
+</ParamField>
+
+<ParamField path="fields" type="AxDataCardField[]" required>
+  Label-value fields rendered as rows in the card body.
+  
+  Each field has:
+  - `label` (string, required) — displayed on the left
+  - `value` (React.ReactNode, required) — displayed on the right
+  - `key` (React.Key, optional) — unique identifier, falls back to label
+</ParamField>
+
+<ParamField path="previewCount" type="number" default={2}>
+  Number of fields visible before the expand toggle appears.
+</ParamField>
+
+<ParamField path="expanded" type="boolean">
+  Whether the overflow section is expanded (controlled mode).
+</ParamField>
+
+<ParamField path="onExpandChange" type="(expanded: boolean) => void">
+  Called when the expand toggle is clicked.
+</ParamField>
+
+<ParamField path="defaultExpanded" type="boolean" default={false}>
+  Default expanded state (uncontrolled mode).
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional class name.
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+export type AxDataCardField = {
+  /** Label displayed on the left */
+  label: string
+  /** Value displayed on the right */
+  value: React.ReactNode
+  /** Unique key — falls back to label if omitted */
+  key?: React.Key
+}
+
+export type AxDataCardProps = {
+  header: React.ReactNode
+  fields: AxDataCardField[]
+  previewCount?: number
+  expanded?: boolean
+  onExpandChange?: (expanded: boolean) => void
+  defaultExpanded?: boolean
+  className?: string
+}
+```
+
+#### Usage
+
+```tsx
+import { AxDataCard } from "@axmedds/card"
+import type { AxDataCardField } from "@axmedds/card"
+import AxTag from "@axmedds/tag"
+
+const fields: AxDataCardField[] = [
+  { label: "Order Number", value: "ORD-2026-001" },
+  { label: "Supplier", value: "Cipla Ltd" },
+  { label: "Date", value: "Feb 10, 2026" },
+  { label: "Status", value: <AxTag tone="success">Delivered</AxTag> },
+  { label: "Amount", value: "$5,400.00" },
+]
+
+<AxDataCard
+  header={
+    <div>
+      <div style={{ fontWeight: 600 }}>Amoxicillin 500mg</div>
+      <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+        12,000 units
+      </div>
+    </div>
+  }
+  fields={fields}
+  previewCount={2}
+/>
+```
+
+#### Mobile Table Replacement
+
+`AxDataCard` is automatically used by `AxTable` when `mobileLayout="cards"` (default) on viewports < 576px.
+
+```tsx
+import AxTable from "@axmedds/table"
+
+// On mobile, each row becomes a DataCard
+<AxTable
+  dataSource={data}
+  columns={columns}
+  mobileLayout="cards" // default
+  mobilePageSize={5}   // default
+/>
+```
+
+#### Controlled Expand State
+
+```tsx
+import { AxDataCard } from "@axmedds/card"
+import { useState } from "react"
+
+const [expanded, setExpanded] = useState(false)
+
+<AxDataCard
+  header="Order Details"
+  fields={fields}
+  expanded={expanded}
+  onExpandChange={setExpanded}
+/>
+```

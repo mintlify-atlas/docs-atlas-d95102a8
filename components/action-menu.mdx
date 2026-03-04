@@ -1,0 +1,230 @@
+---
+title: Action Menu
+description: Dropdown menu for contextual actions with icons, dividers, and danger states.
+---
+
+## Overview
+
+Action Menu provides a dropdown menu triggered by a button (default "..." icon or custom trigger). It's commonly used for table row actions, card overflow menus, and contextual operations.
+
+## Usage
+
+```tsx
+import { AxActionMenu } from "@axmed/design-system"
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons"
+
+function OrderRow() {
+  return (
+    <AxActionMenu
+      items={[
+        { key: "edit", label: "Edit", icon: <EditOutlined /> },
+        { key: "view", label: "View Details", icon: <EyeOutlined /> },
+        { key: "duplicate", label: "Duplicate", icon: <CopyOutlined /> },
+        { type: "divider" },
+        { key: "delete", label: "Delete", icon: <DeleteOutlined />, danger: true },
+      ]}
+    />
+  )
+}
+```
+
+## Custom Trigger
+
+```tsx
+// Button trigger
+<AxActionMenu
+  trigger={<AxButton variant="secondary" size="sm">Actions</AxButton>}
+  items={items}
+/>
+
+// Icon + text trigger
+<AxActionMenu
+  trigger={
+    <AxButton variant="secondary" size="sm" icon={<MoreOutlined />}>
+      More
+    </AxButton>
+  }
+  items={items}
+/>
+```
+
+## With Dividers & Disabled
+
+```tsx
+<AxActionMenu
+  items={[
+    { key: "edit", label: "Edit Bid", icon: <EditOutlined /> },
+    { key: "view", label: "View Quote", icon: <EyeOutlined /> },
+    { key: "send", label: "Send to Buyer", icon: <SendOutlined /> },
+    { type: "divider" },
+    { key: "duplicate", label: "Duplicate", icon: <CopyOutlined />, disabled: true },
+    { type: "divider" },
+    { key: "withdraw", label: "Withdraw Bid", icon: <StopOutlined />, danger: true },
+    { key: "delete", label: "Delete", icon: <DeleteOutlined />, danger: true },
+  ]}
+/>
+```
+
+## Table Row Actions
+
+```tsx
+const rows = [
+  { name: "Amoxicillin 500mg", status: "In Review", price: "$1.20/unit" },
+  { name: "Metformin 850mg", status: "Awarded", price: "$0.85/unit" },
+]
+
+return (
+  <table>
+    {rows.map(row => (
+      <tr key={row.name}>
+        <td>{row.name}</td>
+        <td>{row.status}</td>
+        <td>{row.price}</td>
+        <td>
+          <AxActionMenu
+            size="sm"
+            items={[
+              {
+                key: "edit",
+                label: "Edit Bid",
+                icon: <EditOutlined />,
+                onClick: () => editBid(row)
+              },
+              { key: "view", label: "View Details", icon: <EyeOutlined /> },
+              { type: "divider" },
+              { key: "withdraw", label: "Withdraw", icon: <StopOutlined />, danger: true },
+            ]}
+          />
+        </td>
+      </tr>
+    ))}
+  </table>
+)
+```
+
+## Export Actions
+
+```tsx
+<Flex gap={12}>
+  <AxButton>Add Product</AxButton>
+  <AxActionMenu
+    trigger={
+      <AxButton variant="secondary" icon={<DownloadOutlined />}>
+        Export
+      </AxButton>
+    }
+    items={[
+      { key: "csv", label: "Export as CSV", icon: <FileExcelOutlined /> },
+      { key: "pdf", label: "Export as PDF", icon: <FilePdfOutlined /> },
+      { type: "divider" },
+      { key: "template", label: "Download Template", icon: <DownloadOutlined /> },
+    ]}
+  />
+</Flex>
+```
+
+## Bid Actions
+
+```tsx
+<Flex align="center" gap={12}>
+  <Flex vertical flex={1}>
+    <AxText variant="body-sm" weight="medium">
+      Amoxicillin 500mg — Tender #TND-2024-0892
+    </AxText>
+    <AxText variant="body-xs" color="secondary">
+      Deadline: Dec 31, 2024
+    </AxText>
+  </Flex>
+  <AxButton size="sm">Submit Bid</AxButton>
+  <AxActionMenu
+    size="sm"
+    items={[
+      { key: "edit", label: "Edit Draft", icon: <EditOutlined /> },
+      { key: "view", label: "View Tender", icon: <EyeOutlined /> },
+      { type: "divider" },
+      { key: "withdraw", label: "Withdraw", icon: <StopOutlined />, danger: true },
+    ]}
+  />
+</Flex>
+```
+
+## Props
+
+<ResponseField name="items" type="ActionItem[]" required>
+  Array of menu items. Each item can be:
+  
+  - **ActionItem**: `{ key, label, icon?, danger?, disabled?, onClick? }`
+  - **ActionDivider**: `{ type: "divider" }`
+</ResponseField>
+
+<ResponseField name="trigger" type="ReactNode">
+  Custom trigger element. Defaults to a "..." (MoreOutlined) icon button. Pass any ReactNode to override.
+</ResponseField>
+
+<ResponseField name="size" type="'sm' | 'md' | 'lg'" default="'md'">
+  Size of the default trigger button. Ignored when a custom `trigger` is provided.
+</ResponseField>
+
+<ResponseField name="placement" type="DropdownPlacement" default="'bottomRight'">
+  Menu placement: `bottomRight`, `bottomLeft`, `topRight`, `topLeft`, etc.
+</ResponseField>
+
+<ResponseField name="disabled" type="boolean" default="false">
+  Disabled state — prevents opening
+</ResponseField>
+
+<ResponseField name="className" type="string">
+  Additional class name on the dropdown overlay
+</ResponseField>
+
+## Action Item Props
+
+<ResponseField name="key" type="string" required>
+  Unique key for the item
+</ResponseField>
+
+<ResponseField name="label" type="string" required>
+  Visible label
+</ResponseField>
+
+<ResponseField name="icon" type="ReactNode">
+  Optional icon before the label
+</ResponseField>
+
+<ResponseField name="danger" type="boolean">
+  Renders in red with destructive intent (e.g., Delete, Withdraw)
+</ResponseField>
+
+<ResponseField name="disabled" type="boolean">
+  Disabled state
+</ResponseField>
+
+<ResponseField name="onClick" type="() => void">
+  Click handler
+</ResponseField>
+
+## Best Practices
+
+<Check>Use the default "..." trigger for table rows and compact spaces</Check>
+<Check>Group related actions with dividers (Edit/View, then Delete)</Check>
+<Check>Place destructive actions (Delete, Withdraw) at the bottom with `danger: true`</Check>
+<Check>Use icons for visual scanning — users recognize icons faster than text</Check>
+
+<Warning>Don't nest menus more than one level — use separate menus instead</Warning>
+<Warning>Avoid more than 7 items — long menus are hard to scan</Warning>
+
+## Accessibility
+
+- Trigger button has `aria-label="Actions"`
+- Menu uses Ant Design Dropdown with built-in keyboard navigation
+- Danger items are visually distinguished with red text
+- Disabled items are properly announced by screen readers
+
+## API Reference
+
+See the [Action Menu API](/api/action-menu) for the complete TypeScript interface.
+
+## Related Components
+
+- [Button](/components/button) — Use as custom trigger
+- [Table](/components/table) — Action Menu is commonly used in table rows

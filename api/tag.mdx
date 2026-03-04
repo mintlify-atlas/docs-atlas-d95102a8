@@ -1,0 +1,231 @@
+---
+title: AxTag
+description: Semantic status and category labels with tone presets
+---
+
+## Components
+
+### AxTag
+
+Semantic tag component with 5 preset tones, dot indicators, pill shapes, and solid fills.
+
+```tsx
+import AxTag from "@axmedds/tag"
+import type { AxTagProps, AxTagTone } from "@axmedds/tag"
+```
+
+#### Props
+
+Extends all [Ant Design Tag props](https://ant.design/components/tag#api).
+
+<ParamField path="tone" type="AxTagTone">
+  Semantic tone that maps to a color preset and dot color. Enables a dot indicator by default.
+  
+  - `"success"` — green (completed, delivered, awarded, in stock…)
+  - `"info"` — blue (processing, in review, in transit…)
+  - `"warning"` — orange (not awarded, low stock, needs refresh…)
+  - `"error"` — red (cancelled, rejected, withdrawn…)
+  - `"neutral"` — gray (pending, draft, expired…)
+</ParamField>
+
+<ParamField path="dot" type="boolean">
+  Show a colored dot indicator before the label. Automatically enabled when `tone` is set. Pass `false` to suppress it.
+</ParamField>
+
+<ParamField path="dotColor" type="string">
+  Custom dot color. Overrides the preset dot color from `tone`. Pass any CSS color value.
+</ParamField>
+
+<ParamField path="pill" type="boolean" default={false}>
+  Pill-shaped tag with rounded corners (border-radius: 16px).
+</ParamField>
+
+<ParamField path="fill" type="string">
+  Solid fill background color with white text and no border. Pass a hex/color string or CSS variable.
+  
+  **Example:** `fill="#52C41A"` renders a solid green tag with white text.
+</ParamField>
+
+<ParamField path="small" type="boolean" default={false}>
+  Small tag variant (fontSize: 11px, compact padding). Useful for inline badges like "Be first to bid!" or "+3 more".
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+export type AxTagTone = "success" | "info" | "warning" | "error" | "neutral"
+
+export type AxTagProps = {
+  tone?: AxTagTone
+  dot?: boolean
+  dotColor?: string
+  pill?: boolean
+  fill?: string
+  small?: boolean
+} & AntTagProps
+```
+
+#### Tone Presets
+
+```tsx
+const tonePresets: Record<AxTagTone, { color: string; dotColor: string }> = {
+  success: { color: "success",    dotColor: "var(--success)" },
+  info:    { color: "processing", dotColor: "var(--cyan-600)" },
+  warning: { color: "warning",    dotColor: "var(--warning)" },
+  error:   { color: "error",      dotColor: "var(--error)" },
+  neutral: { color: "default",    dotColor: "var(--neutral-500)" },
+}
+```
+
+#### Usage
+
+```tsx
+import AxTag from "@axmedds/tag"
+
+// Status tags with semantic tones
+<AxTag tone="success">Delivered</AxTag>
+<AxTag tone="info">In Transit</AxTag>
+<AxTag tone="warning">Low Stock</AxTag>
+<AxTag tone="error">Cancelled</AxTag>
+<AxTag tone="neutral">Pending</AxTag>
+
+// Pill shape
+<AxTag tone="success" pill>Completed</AxTag>
+
+// With icons (dot is hidden automatically)
+<AxTag tone="success" icon={<CheckCircleOutlined />}>Delivered</AxTag>
+<AxTag tone="info" icon={<SyncOutlined spin />}>Processing</AxTag>
+
+// Without dot
+<AxTag tone="success" dot={false}>In Stock</AxTag>
+
+// Solid fill for categories
+<AxTag fill="var(--cyan-700)">Antibiotics</AxTag>
+<AxTag fill="var(--primary-500)">Antidiabetics</AxTag>
+<AxTag fill="#FF6B6B">Urgent</AxTag>
+
+// Small badges
+<AxTag small tone="info">5 active</AxTag>
+<AxTag small fill="var(--green-600)">New</AxTag>
+<AxTag small pill tone="warning">Closing soon</AxTag>
+
+// Closeable
+<AxTag closable onClose={() => console.log("closed")}>Kenya</AxTag>
+```
+
+#### In Tables
+
+```tsx
+import AxTag from "@axmedds/tag"
+import type { AxTagTone } from "@axmedds/tag"
+import type { ColumnsType } from "antd/es/table"
+
+const statusToneMap: Record<string, AxTagTone> = {
+  "In Stock": "success",
+  "Low Stock": "warning",
+  "Out of Stock": "error",
+  "Expired": "neutral",
+}
+
+const columns: ColumnsType<Medication> = [
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (status: string) => (
+      <AxTag tone={statusToneMap[status]}>{status}</AxTag>
+    ),
+  },
+  {
+    title: "Category",
+    dataIndex: "category",
+    key: "category",
+    render: (category: string) => (
+      <AxTag fill="var(--cyan-700)">{category}</AxTag>
+    ),
+  },
+]
+```
+
+---
+
+### AxCountryTags
+
+Displays a list of country flags with names, with overflow handling.
+
+```tsx
+import { AxCountryTags } from "@axmedds/tag"
+import type { AxCountryTagsProps } from "@axmedds/tag"
+```
+
+#### Props
+
+<ParamField path="countries" type="string[]" required>
+  Country names or ISO alpha-2 codes (e.g., `"Kenya"`, `"KE"`, `"Nigeria"`).
+  
+  Supports common country names and 2-letter ISO codes. Automatically resolves to flag emojis.
+</ParamField>
+
+<ParamField path="max" type="number" default={3}>
+  Maximum number of tags shown inline before collapsing to "+N more".
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'md'" default="sm">
+  Size variant.
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional class name.
+</ParamField>
+
+#### Type Definitions
+
+```tsx
+export type AxCountryTagsProps = {
+  countries: string[]
+  max?: number
+  size?: "sm" | "md"
+  className?: string
+}
+```
+
+#### Supported Countries
+
+Supports common country names and ISO alpha-2 codes:
+
+- **Africa:** Kenya, Nigeria, Ghana, Tanzania, Uganda, Ethiopia, Rwanda, Zambia, Zimbabwe, South Africa, Egypt, Morocco, Senegal, Ivory Coast, Cameroon, Mozambique, Angola, DRC, Mali, Malawi, Botswana, Namibia
+- **Global:** India, China, USA, UK, Germany, France, Brazil, Pakistan, Bangladesh, Indonesia
+
+#### Usage
+
+```tsx
+import { AxCountryTags } from "@axmedds/tag"
+
+// Basic usage
+<AxCountryTags countries={["Kenya", "Nigeria", "Ghana", "Tanzania"]} />
+
+// With max overflow
+<AxCountryTags 
+  countries={["Kenya", "Nigeria", "Ghana", "Tanzania", "Uganda", "Ethiopia"]}
+  max={3} // Shows first 3, then "+3 more"
+/>
+
+// Using ISO codes
+<AxCountryTags countries={["KE", "NG", "GH"]} />
+
+// In tables
+const columns: ColumnsType<Product> = [
+  {
+    title: "Countries",
+    dataIndex: "countries",
+    key: "countries",
+    render: (countries: string[]) => (
+      <AxCountryTags countries={countries} max={3} />
+    ),
+  },
+]
+```
+
+#### Overflow Tooltip
+
+When more than `max` countries are provided, the overflow tags are hidden and shown in a tooltip on hover over the "+N more" indicator.

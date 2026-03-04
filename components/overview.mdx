@@ -1,0 +1,154 @@
+---
+title: Components Overview
+description: A comprehensive library of 21+ production-ready React components for building pharmaceutical procurement interfaces.
+---
+
+The Axmed Design System provides a complete suite of React components built on Ant Design, customized for pharmaceutical procurement workflows. All components are fully typed with TypeScript and optimized for accessibility.
+
+## Component Categories
+
+### Core Components
+
+Essential UI elements for building any interface.
+
+<CardGroup cols={2}>
+  <Card title="Button" icon="hand-pointer" href="/components/button">
+    Primary actions with multiple variants and states
+  </Card>
+  <Card title="Text" icon="text" href="/components/text">
+    Typography system with headings and body text
+  </Card>
+  <Card title="Input" icon="input-text" href="/components/input">
+    Form inputs with labels, hints, and validation
+  </Card>
+  <Card title="Input OTP" icon="shield-keyhole" href="/components/input-otp">
+    One-time password input for verification flows
+  </Card>
+</CardGroup>
+
+### Data Display
+
+Components for presenting information to users.
+
+<CardGroup cols={3}>
+  <Card title="Table" icon="table" href="/components/table">
+    Responsive data tables with sorting and filtering
+  </Card>
+  <Card title="Tag" icon="tag" href="/components/tag">
+    Status indicators with semantic tones
+  </Card>
+  <Card title="Badge" icon="circle-dot" href="/components/badge">
+    Notification badges and counters
+  </Card>
+  <Card title="Card" icon="rectangle" href="/components/card">
+    Content containers with headers and footers
+  </Card>
+</CardGroup>
+
+### Overlays
+
+Components that appear above the main content.
+
+<CardGroup cols={2}>
+  <Card title="Modal" icon="window" href="/components/modal">
+    Dialog overlays for focused interactions
+  </Card>
+  <Card title="Drawer" icon="sidebar" href="/components/drawer">
+    Side panels for detailed views and forms
+  </Card>
+</CardGroup>
+
+### Navigation & Layout
+
+Components for organizing and navigating content.
+
+<CardGroup cols={3}>
+  <Card title="Header" icon="bars" href="/components/header">
+    Application headers with branding and navigation
+  </Card>
+  <Card title="SideNav" icon="sidebar-left" href="/components/sidenav">
+    Vertical navigation for multi-page applications
+  </Card>
+  <Card title="Steps" icon="list-numbers" href="/components/steps">
+    Multi-step process indicators
+  </Card>
+</CardGroup>
+
+### Utility Components
+
+Specialized components for specific use cases.
+
+<CardGroup cols={3}>
+  <Card title="Empty State" icon="inbox" href="/components/empty-state">
+    Placeholder states for empty data views
+  </Card>
+  <Card title="Brand" icon="palette" href="/components/brand">
+    Axmed logo and branding elements
+  </Card>
+  <Card title="Company Logo" icon="building" href="/components/company-logo">
+    Dynamic company logo display
+  </Card>
+  <Card title="Filter Bar" icon="filter" href="/components/filter-bar">
+    Search and filter controls
+  </Card>
+  <Card title="Action Menu" icon="ellipsis" href="/components/action-menu">
+    Dropdown menus for contextual actions
+  </Card>
+  <Card title="Stat Card" icon="chart-line" href="/components/stat-card">
+    Dashboard metric cards with trends
+  </Card>
+  <Card title="File Item" icon="file" href="/components/file-item">
+    File upload and display component
+  </Card>
+  <Card title="Uploader" icon="upload" href="/components/uploader">
+    Drag-and-drop file upload interface
+  </Card>
+</CardGroup>
+
+## Design Principles
+
+### Consistency
+All components follow the same design language, using consistent spacing, colors, and interaction patterns.
+
+### Accessibility
+Components are built with ARIA attributes, keyboard navigation, and semantic HTML.
+
+### Responsiveness
+Components adapt to different screen sizes with mobile-first design patterns.
+
+### Type Safety
+Full TypeScript support with exported prop types and interfaces.
+
+## Getting Started
+
+All components are imported from the design system package:
+
+```tsx
+import { AxButton, AxText, AxInput } from '@axmed/design-system'
+
+function MyComponent() {
+  return (
+    <div>
+      <AxText variant="heading-lg">Welcome</AxText>
+      <AxInput label="Email" placeholder="you@example.com" />
+      <AxButton>Submit</AxButton>
+    </div>
+  )
+}
+```
+
+## Component Status
+
+All components are production-ready and actively used in the Axmed marketplace platform. They are tested across:
+
+- Modern browsers (Chrome, Firefox, Safari, Edge)
+- Mobile devices (iOS, Android)
+- Screen readers (NVDA, JAWS, VoiceOver)
+
+## Need Help?
+
+Each component page includes:
+- Real code examples from the codebase
+- Prop documentation and types
+- Common use cases and patterns
+- Links to full API references
