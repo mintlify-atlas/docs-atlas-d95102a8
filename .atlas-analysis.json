@@ -1,0 +1,151 @@
+{
+  "projectType": "frontend",
+  "projectName": "Axmed Design System",
+  "projectDescription": "A React component library built on Ant Design for healthcare B2B applications",
+  "theme": "willow",
+  "primaryColor": "#261C7A",
+  "lightColor": "#4A3FAA",
+  "darkColor": "#1A1456",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Foundations",
+            "pages": [
+              "foundations/typography",
+              "foundations/colors",
+              "foundations/spacing",
+              "foundations/motion"
+            ]
+          },
+          {
+            "group": "Components",
+            "pages": [
+              "components/overview",
+              "components/button",
+              "components/text",
+              "components/input",
+              "components/input-otp",
+              "components/table",
+              "components/tag",
+              "components/badge",
+              "components/card",
+              "components/modal",
+              "components/drawer",
+              "components/empty-state",
+              "components/filter-bar",
+              "components/sidenav",
+              "components/header",
+              "components/brand",
+              "components/company-logo",
+              "components/stat-card",
+              "components/steps",
+              "components/action-menu",
+              "components/uploader",
+              "components/file-item"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Core Components",
+            "pages": [
+              "api/button",
+              "api/text",
+              "api/input",
+              "api/input-otp"
+            ]
+          },
+          {
+            "group": "Data Display",
+            "pages": [
+              "api/table",
+              "api/tag",
+              "api/badge",
+              "api/card",
+              "api/stat-card",
+              "api/empty-state"
+            ]
+          },
+          {
+            "group": "Navigation",
+            "pages": [
+              "api/sidenav",
+              "api/header",
+              "api/action-menu",
+              "api/steps"
+            ]
+          },
+          {
+            "group": "Overlays",
+            "pages": [
+              "api/modal",
+              "api/drawer"
+            ]
+          },
+          {
+            "group": "Utility",
+            "pages": [
+              "api/filter-bar",
+              "api/uploader",
+              "api/file-item",
+              "api/brand",
+              "api/company-logo"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "21+ React components built on Ant Design",
+    "Comprehensive design token system (typography, colors, spacing, motion)",
+    "TypeScript-first with full type definitions",
+    "Storybook integration for component development",
+    "Healthcare-focused B2B UI patterns",
+    "Custom theming with Figtree font family",
+    "Responsive and accessible by design"
+  ],
+  "publicApiSurface": [
+    "AxButton",
+    "AxText",
+    "AxTable",
+    "AxTag",
+    "AxBadge",
+    "AxCard",
+    "AxDataCard",
+    "AxModal",
+    "AxDrawer",
+    "AxEmptyState",
+    "AxInput",
+    "AxSearchInput",
+    "AxInputOTP",
+    "AxFilterBar",
+    "AxSideNav",
+    "AxHeader",
+    "AxBrand",
+    "AxCompanyLogo",
+    "AxStatCard",
+    "AxSteps",
+    "AxActionMenu",
+    "AxUploader",
+    "AxFileItem",
+    "AxTableSkeleton",
+    "AxCountryTags",
+    "AxDeadlineCell",
+    "AxPriceCell"
+  ]
+}
