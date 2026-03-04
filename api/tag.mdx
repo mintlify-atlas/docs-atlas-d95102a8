@@ -10,8 +10,8 @@ description: Semantic status and category labels with tone presets
 Semantic tag component with 5 preset tones, dot indicators, pill shapes, and solid fills.
 
 ```tsx
-import AxTag from "@axmedds/tag"
-import type { AxTagProps, AxTagTone } from "@axmedds/tag"
+import AxTag from "axmed-design-system"
+import type { AxTagProps, AxTagTone } from "axmed-design-system"
 ```
 
 #### Props
@@ -80,7 +80,7 @@ const tonePresets: Record<AxTagTone, { color: string; dotColor: string }> = {
 #### Usage
 
 ```tsx
-import AxTag from "@axmedds/tag"
+import AxTag from "axmed-design-system"
 
 // Status tags with semantic tones
 <AxTag tone="success">Delivered</AxTag>
@@ -116,8 +116,8 @@ import AxTag from "@axmedds/tag"
 #### In Tables
 
 ```tsx
-import AxTag from "@axmedds/tag"
-import type { AxTagTone } from "@axmedds/tag"
+import AxTag from "axmed-design-system"
+import type { AxTagTone } from "axmed-design-system"
 import type { ColumnsType } from "antd/es/table"
 
 const statusToneMap: Record<string, AxTagTone> = {
@@ -154,8 +154,8 @@ const columns: ColumnsType<Medication> = [
 Displays a list of country flags with names, with overflow handling.
 
 ```tsx
-import { AxCountryTags } from "@axmedds/tag"
-import type { AxCountryTagsProps } from "@axmedds/tag"
+import { AxCountryTags } from "axmed-design-system"
+import type { AxCountryTagsProps } from "axmed-design-system"
 ```
 
 #### Props
@@ -199,7 +199,7 @@ Supports common country names and ISO alpha-2 codes:
 #### Usage
 
 ```tsx
-import { AxCountryTags } from "@axmedds/tag"
+import { AxCountryTags } from "axmed-design-system"
 
 // Basic usage
 <AxCountryTags countries={["Kenya", "Nigeria", "Ghana", "Tanzania"]} />

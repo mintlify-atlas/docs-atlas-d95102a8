@@ -10,7 +10,7 @@ AxCard provides a versatile container component for grouping related content. It
 
 <CodeGroup>
 ```tsx TypeScript
-import { AxCard } from '@axmed/design-system'
+import { AxCard } from 'axmed-design-system'
 
 function Example() {
   return (
@@ -22,7 +22,7 @@ function Example() {
 ```
 
 ```jsx JavaScript
-import { AxCard } from '@axmed/design-system'
+import { AxCard } from 'axmed-design-system'
 
 function Example() {
   return (
@@ -39,7 +39,7 @@ function Example() {
 Add actions to the card header using the `extra` prop:
 
 ```tsx
-import { AxButton } from '@axmed/design-system'
+import { AxButton } from 'axmed-design-system'
 
 <AxCard
   title="Recent Orders"
@@ -55,7 +55,7 @@ import { AxButton } from '@axmed/design-system'
 Add a footer section with actions or metadata:
 
 ```tsx
-import { AxButton } from '@axmed/design-system'
+import { AxButton } from 'axmed-design-system'
 
 <AxCard
   title="Order Summary"
@@ -76,7 +76,7 @@ import { AxButton } from '@axmed/design-system'
 Remove body padding for full-bleed content like tables:
 
 ```tsx
-import { AxTable } from '@axmed/design-system'
+import { AxTable } from 'axmed-design-system'
 
 <AxCard
   title="Recent Orders"
@@ -126,7 +126,7 @@ Elevate shadow on hover for clickable cards:
 
 ```tsx
 import { ShoppingCartOutlined, ArrowUpOutlined } from '@ant-design/icons'
-import { AxText } from '@axmed/design-system'
+import { AxText } from 'axmed-design-system'
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
   <AxCard>
@@ -161,7 +161,7 @@ import { AxText } from '@axmed/design-system'
 
 ```tsx
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import { AxText } from '@axmed/design-system'
+import { AxText } from 'axmed-design-system'
 
 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
   <AxCard hoverable style={{ cursor: 'pointer', textAlign: 'center' }}>
@@ -188,7 +188,7 @@ import { AxText } from '@axmed/design-system'
 ### Detail / Entity Card
 
 ```tsx
-import { AxTag, AxButton, AxText } from '@axmed/design-system'
+import { AxTag, AxButton, AxText } from 'axmed-design-system'
 import { ClockCircleOutlined } from '@ant-design/icons'
 
 <AxCard
@@ -226,7 +226,7 @@ import { ClockCircleOutlined } from '@ant-design/icons'
 ### Content Panel (Table Wrapper)
 
 ```tsx
-import { AxTable, AxButton } from '@axmed/design-system'
+import { AxTable, AxButton } from 'axmed-design-system'
 
 <AxCard
   title="Recent Orders"
@@ -246,7 +246,7 @@ import { AxTable, AxButton } from '@axmed/design-system'
 ### Empty State Card
 
 ```tsx
-import { AxEmptyState, AxButton } from '@axmed/design-system'
+import { AxEmptyState, AxButton } from 'axmed-design-system'
 import { InboxOutlined } from '@ant-design/icons'
 
 <AxCard
@@ -268,7 +268,7 @@ import { InboxOutlined } from '@ant-design/icons'
 ```tsx
 import { useState } from 'react'
 import { CheckCircleOutlined, ShoppingCartOutlined } from '@ant-design/icons'
-import { AxText } from '@axmed/design-system'
+import { AxText } from 'axmed-design-system'
 
 function RoleSelector() {
   const [selected, setSelected] = useState('buyer')

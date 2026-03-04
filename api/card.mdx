@@ -10,8 +10,8 @@ description: Container cards with header, footer, and data card variants
 Container card with optional description, footer, and flexible padding control.
 
 ```tsx
-import AxCard from "@axmedds/card"
-import type { AxCardProps } from "@axmedds/card"
+import AxCard from "axmed-design-system"
+import type { AxCardProps } from "axmed-design-system"
 ```
 
 #### Props
@@ -47,8 +47,8 @@ export type AxCardProps = {
 #### Usage
 
 ```tsx
-import AxCard from "@axmedds/card"
-import AxButton from "@axmedds/button"
+import AxCard from "axmed-design-system"
+import AxButton from "axmed-design-system"
 
 // Basic card
 <AxCard title="Inventory Summary">
@@ -89,8 +89,8 @@ import AxButton from "@axmedds/button"
 #### With Extra Actions
 
 ```tsx
-import AxCard from "@axmedds/card"
-import AxButton from "@axmedds/button"
+import AxCard from "axmed-design-system"
+import AxButton from "axmed-design-system"
 import { MoreOutlined } from "@ant-design/icons"
 
 <AxCard
@@ -111,8 +111,8 @@ import { MoreOutlined } from "@ant-design/icons"
 Compact card for displaying label-value pairs with expand/collapse functionality.
 
 ```tsx
-import { AxDataCard } from "@axmedds/card"
-import type { AxDataCardProps, AxDataCardField } from "@axmedds/card"
+import { AxDataCard } from "axmed-design-system"
+import type { AxDataCardProps, AxDataCardField } from "axmed-design-system"
 ```
 
 #### Props
@@ -176,9 +176,9 @@ export type AxDataCardProps = {
 #### Usage
 
 ```tsx
-import { AxDataCard } from "@axmedds/card"
-import type { AxDataCardField } from "@axmedds/card"
-import AxTag from "@axmedds/tag"
+import { AxDataCard } from "axmed-design-system"
+import type { AxDataCardField } from "axmed-design-system"
+import AxTag from "axmed-design-system"
 
 const fields: AxDataCardField[] = [
   { label: "Order Number", value: "ORD-2026-001" },
@@ -207,7 +207,7 @@ const fields: AxDataCardField[] = [
 `AxDataCard` is automatically used by `AxTable` when `mobileLayout="cards"` (default) on viewports < 576px.
 
 ```tsx
-import AxTable from "@axmedds/table"
+import AxTable from "axmed-design-system"
 
 // On mobile, each row becomes a DataCard
 <AxTable
@@ -221,7 +221,7 @@ import AxTable from "@axmedds/table"
 #### Controlled Expand State
 
 ```tsx
-import { AxDataCard } from "@axmedds/card"
+import { AxDataCard } from "axmed-design-system"
 import { useState } from "react"
 
 const [expanded, setExpanded] = useState(false)

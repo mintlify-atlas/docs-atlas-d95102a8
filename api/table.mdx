@@ -10,8 +10,8 @@ description: Data table with row states, responsive layouts, and mobile card vie
 A feature-rich data table built on Ant Design Table with row state management, responsive column hiding, and automatic mobile card layouts.
 
 ```tsx
-import AxTable from "@axmedds/table"
-import type { AxTableProps } from "@axmedds/table"
+import AxTable from "axmed-design-system"
+import type { AxTableProps } from "axmed-design-system"
 ```
 
 #### Props
@@ -73,7 +73,7 @@ export type AxTableProps<RecordType extends AnyObject = AnyObject> = {
 #### Usage
 
 ```tsx
-import AxTable from "@axmedds/table"
+import AxTable from "axmed-design-system"
 import type { ColumnsType } from "antd/es/table"
 
 interface Medication {
@@ -134,8 +134,8 @@ const rowStates = selectedKeys.reduce((acc, key) => {
 Skeleton loader for tables with configurable columns and rows.
 
 ```tsx
-import { AxTableSkeleton } from "@axmedds/table"
-import type { AxTableSkeletonProps } from "@axmedds/table"
+import { AxTableSkeleton } from "axmed-design-system"
+import type { AxTableSkeletonProps } from "axmed-design-system"
 ```
 
 #### Props
@@ -180,7 +180,7 @@ export type AxTableSkeletonProps = {
 #### Usage
 
 ```tsx
-import { AxTableSkeleton } from "@axmedds/table"
+import { AxTableSkeleton } from "axmed-design-system"
 
 // Simple: 5 equal columns, 8 rows
 <AxTableSkeleton rows={8} columns={5} />
@@ -204,8 +204,8 @@ import { AxTableSkeleton } from "@axmedds/table"
 Table cell that displays deadline countdown with color-coded urgency states.
 
 ```tsx
-import { AxDeadlineCell } from "@axmedds/table"
-import type { AxDeadlineCellProps } from "@axmedds/table"
+import { AxDeadlineCell } from "axmed-design-system"
+import type { AxDeadlineCellProps } from "axmed-design-system"
 ```
 
 #### Props
@@ -245,7 +245,7 @@ export type AxDeadlineCellProps = {
 #### Usage
 
 ```tsx
-import { AxDeadlineCell } from "@axmedds/table"
+import { AxDeadlineCell } from "axmed-design-system"
 import type { ColumnsType } from "antd/es/table"
 
 const columns: ColumnsType<Order> = [
@@ -279,8 +279,8 @@ const columns: ColumnsType<Order> = [
 Table cell for displaying formatted prices with optional tier labels.
 
 ```tsx
-import { AxPriceCell } from "@axmedds/table"
-import type { AxPriceCellProps } from "@axmedds/table"
+import { AxPriceCell } from "axmed-design-system"
+import type { AxPriceCellProps } from "axmed-design-system"
 ```
 
 #### Props
@@ -340,7 +340,7 @@ export type AxPriceCellProps = {
 #### Usage
 
 ```tsx
-import { AxPriceCell } from "@axmedds/table"
+import { AxPriceCell } from "axmed-design-system"
 import type { ColumnsType } from "antd/es/table"
 
 const columns: ColumnsType<Bid> = [
